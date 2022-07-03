@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         cardTheme: const CardTheme(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
-              Radius.circular(6.0),
+              Radius.circular(5.0),
             ),
           ),
         ),
