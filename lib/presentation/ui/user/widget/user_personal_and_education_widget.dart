@@ -35,7 +35,7 @@ class UserPersonalAndEducationWidget extends StatelessWidget {
                 if (i == 0) {
                   iconData = FontAwesomeIcons.bookBookmark;
                 } else if (i == 1) {
-                  iconData = FontAwesomeIcons.chain;
+                  iconData = FontAwesomeIcons.link;
                 } else {
                   iconData = FontAwesomeIcons.calendar;
                 }

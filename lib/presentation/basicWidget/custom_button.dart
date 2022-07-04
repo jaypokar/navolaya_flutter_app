@@ -4,18 +4,20 @@ class ButtonWidget extends StatelessWidget {
   final String buttonText;
   final Function onPressButton;
   final bool isWrap;
+  final double padding;
 
   const ButtonWidget({
     required this.buttonText,
     required this.onPressButton,
     this.isWrap = false,
+    this.padding = 10,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: EdgeInsets.all(padding),
       child: ElevatedButton(
         style: isWrap
             ? ElevatedButton.styleFrom(
@@ -25,7 +27,7 @@ class ButtonWidget extends StatelessWidget {
             : ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(40),
                 onPrimary: Colors.white,
-                shape: const StadiumBorder(),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
               ),
         onPressed: () {
           onPressButton();
@@ -36,7 +38,7 @@ class ButtonWidget extends StatelessWidget {
             buttonText,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),

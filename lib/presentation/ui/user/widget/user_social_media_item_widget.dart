@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:navolaya_flutter/core/color_constants.dart';
 
 class UserSocialMedialItemWidget extends StatelessWidget {
   final Map<String, dynamic> data;

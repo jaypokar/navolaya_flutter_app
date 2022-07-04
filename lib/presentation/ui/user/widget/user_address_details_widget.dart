@@ -28,8 +28,8 @@ class UserAddressDetailsWidget extends StatelessWidget {
             Expanded(
               child: Text(
                 'LBS College Marg, Raja Park, Jaipur',
-                style: TextStyle(color: ColorConstants.textColor1, fontSize: 12),
-              ),
+                  style: TextStyle(color: ColorConstants.textColor2, fontSize: 12),
+                ),
             ),
             SizedBox(
               width: 5,
@@ -53,8 +53,8 @@ class UserAddressDetailsWidget extends StatelessWidget {
             Expanded(
               child: Text(
                 'Unnati Tower, Vidyadharnagar, Jaipur There are many variations of passages',
-                style: TextStyle(color: ColorConstants.textColor1, fontSize: 12),
-              ),
+                  style: TextStyle(color: ColorConstants.textColor2, fontSize: 12),
+                ),
             ),
             SizedBox(
               width: 5,

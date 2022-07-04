@@ -21,7 +21,7 @@ class UserAboutMeWidget extends StatelessWidget {
           ),
           Text(
               'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised.',
-              style: TextStyle(color: ColorConstants.textColor1, fontSize: 12)),
+              style: TextStyle(color: ColorConstants.textColor2, fontSize: 12)),
         ],
       ),
     );

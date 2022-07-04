@@ -1,9 +1,31 @@
 import 'package:flutter/material.dart';
 
-enum ImageType { logo, checkIcon, kidAvatar, kidIcon, quizIcon, testIcon, coachIcon }
+enum ImageType { textLogo, imageBg, firstIntroImage }
 
 class CommonFunctions {
   const CommonFunctions();
+
+  MaterialColor createMaterialColor(Color color) {
+    final List<double> strengths = <double>[.05];
+    final Map<int, Color> swatch = <int, Color>{};
+    final int r = color.red, g = color.green, b = color.blue;
+
+    for (int i = 1; i < 10; i++) {
+      strengths.add(0.1 * i);
+    }
+    // ignore: avoid_function_literals_in_foreach_calls
+
+    for (final strength in strengths) {
+      final double ds = 0.5 - strength;
+      swatch[(strength * 1000).round()] = Color.fromRGBO(
+        r + ((ds < 0 ? r : (255 - r)) * ds).round(),
+        g + ((ds < 0 ? g : (255 - g)) * ds).round(),
+        b + ((ds < 0 ? b : (255 - b)) * ds).round(),
+        1,
+      );
+    }
+    return MaterialColor(color.value, swatch);
+  }
 
   void showSnackBar(
       {required BuildContext context,
@@ -21,20 +43,12 @@ class CommonFunctions {
   }
 
   String getImage(ImageType imageType) {
-    if (imageType == ImageType.logo) {
-      return "assets/icon/logo.jpg";
-    } else if (imageType == ImageType.checkIcon) {
-      return "assets/icon/check_icon.png";
-    } else if (imageType == ImageType.kidAvatar) {
-      return "assets/icon/kid_avatar.png";
-    } else if (imageType == ImageType.kidIcon) {
-      return "assets/icon/kid_icon.png";
-    } else if (imageType == ImageType.quizIcon) {
-      return "assets/icon/quiz_icon.png";
-    } else if (imageType == ImageType.testIcon) {
-      return "assets/icon/test_icon.svg";
-    } else if (imageType == ImageType.coachIcon) {
-      return "assets/icon/coach_icon.png";
+    if (imageType == ImageType.textLogo) {
+      return "assets/images/navolaya_text_logo.png";
+    } else if (imageType == ImageType.imageBg) {
+      return "assets/images/img_bg.png";
+    } else if (imageType == ImageType.firstIntroImage) {
+      return "assets/images/first_intro_img.png";
     }
 
     return "";

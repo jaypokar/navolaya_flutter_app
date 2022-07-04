@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:navolaya_flutter/util/constants.dart';
+import 'package:navolaya_flutter/core/route_generator.dart';
 
 import '../../../../core/color_constants.dart';
 
@@ -13,7 +13,7 @@ class UserItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(userDetailPage, arguments: image);
+        Navigator.of(context).pushNamed(RouteGenerator.userDetailPage, arguments: image);
       },
       child: Container(
         margin: const EdgeInsets.all(5),

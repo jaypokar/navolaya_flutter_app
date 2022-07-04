@@ -15,9 +15,9 @@ class UserDetailPage extends StatefulWidget {
 }
 
 class _UserDetailPageState extends State<UserDetailPage> {
-  bool _pinned = false;
-  bool _snap = false;
-  bool _floating = false;
+  final bool _pinned = false;
+  final bool _snap = false;
+  final bool _floating = false;
 
   //ScrollController _controller;
 

@@ -14,7 +14,7 @@ class UserQualificationItemWidget extends StatelessWidget {
       children:  [
         Icon(
           iconData,
-          color: iconData == FontAwesomeIcons.shirt?Colors.red: ColorConstants.textColor1,
+          color: iconData == FontAwesomeIcons.shirt ? Colors.red : ColorConstants.textColor2,
           size: 14,
         ),
         const SizedBox(
@@ -23,7 +23,7 @@ class UserQualificationItemWidget extends StatelessWidget {
         Text(
           title,
           style: const TextStyle(
-            color: ColorConstants.textColor1,
+            color: ColorConstants.textColor2,
             fontSize: 12,
           ),
         ),

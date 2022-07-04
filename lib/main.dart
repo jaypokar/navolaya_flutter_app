@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:navolaya_flutter/util/common_functions.dart';
 
 import 'core/color_constants.dart';
 import 'core/global_nav_key.dart';
 import 'core/route_generator.dart';
-import 'util/constants.dart';
+import 'injection_container.dart';
+import 'injection_container.dart' as di;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  di.init().then((value) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
         ),
         fontFamily: 'Montserrat',
         primaryColor: ColorConstants.appColor,
-        primarySwatch: createMaterialColor(ColorConstants.appColor),
+        primarySwatch: sl<CommonFunctions>().createMaterialColor(ColorConstants.appColor),
         brightness: Brightness.light,
         scaffoldBackgroundColor: Colors.white,
         cardColor: Colors.grey[500],
@@ -40,8 +42,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: splashScreen,
-      onGenerateRoute: RouteGenerator.generateRoute,
+      initialRoute: RouteGenerator.splashScreen,
+      onGenerateRoute: sl<RouteGenerator>().generateRoute,
     );
   }
 }

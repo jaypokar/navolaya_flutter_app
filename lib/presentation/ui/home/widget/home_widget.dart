@@ -65,8 +65,8 @@ class _HomeWidgetState extends State<HomeWidget> with SingleTickerProviderStateM
           ),
           child: TabBar(
             indicatorColor: ColorConstants.appColor,
-            labelColor: ColorConstants.textColor1,
-            unselectedLabelColor: ColorConstants.textColor1,
+            labelColor: ColorConstants.textColor2,
+            unselectedLabelColor: ColorConstants.textColor2,
             indicator: BoxDecoration(color: Colors.black12.withOpacity(0.1)),
             controller: _tabController,
             tabs: tabs

@@ -1,13 +1,19 @@
 import 'dart:ui';
 
 class ColorConstants {
-  static const colorPrimary = Color(0xFF7BB054);
-  static const colorPrimaryDark = Color(0xFF7BB054);
+  static const colorPrimary = Color(0xFF6AB344);
+  static const colorPrimaryDark = Color(0xFF548D35);
   static const colorAccent = Color(0xFFEB5481);
   static const colorBackground = Color(0xFF293040);
   static const addressBackground = Color(0xFFEBEBED);
-  static const textColor1 = Color(0xFF808285);
-  static const textColor2 = Color(0x00ff8023);
-  static const appColor = Color(0xFF7BB054);
+  static const textColor1 = Color(0xFF333333);
+  static const textColor2 = Color(0xFF404040);
+  static const textColor3 = Color(0xFF7D7D7D);
+  static const textColor4 = Color(0xFFBDBDBD);
+  static const greyColor = Color(0xFFE3E3E3);
+  static const inputBorderColor = Color(0xFFC8C8C8);
+
+  //static const textColor2 = Color(0x00ff8023);
+  static const appColor = Color(0xFF6AB344);
   static const red = Color(0xffff0202);
 }
