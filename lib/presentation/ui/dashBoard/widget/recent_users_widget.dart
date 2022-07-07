@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:navolaya_flutter/presentation/ui/home/widget/user_item_widget.dart';
+import 'package:navolaya_flutter/presentation/ui/dashBoard/widget/user_item_widget.dart';
 
 class RecentUsersWidget extends StatelessWidget {
   const RecentUsersWidget({Key? key}) : super(key: key);

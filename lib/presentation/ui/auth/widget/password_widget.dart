@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
 
 import '../../../../core/color_constants.dart';
-import '../../../../core/string_file.dart';
-import '../../../../injection_container.dart';
+import '../../../../resources/string_resources.dart';
 import '../../../basicWidget/custom_button.dart';
 
 class SetNewPasswordWidget extends StatefulWidget {
@@ -31,10 +30,9 @@ class _SetNewPasswordWidgetState extends State<SetNewPasswordWidget> {
             SizedBox(
               height: widget.screenHeight,
             ),
-            Text(
-              sl<StringFile>().passwordPageTitle,
-              style:
-                  const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 28),
+            const Text(
+              StringResources.passwordPageTitle,
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 28),
             ),
             const SizedBox(
               height: 10,
@@ -43,12 +41,12 @@ class _SetNewPasswordWidgetState extends State<SetNewPasswordWidget> {
             const SizedBox(
               height: 10,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: Text(
-                sl<StringFile>().passwordPageSubTitle,
+                StringResources.passwordPageSubTitle,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   color: ColorConstants.textColor1,
                   height: 1.8,
                   fontSize: 14,
@@ -70,7 +68,7 @@ class _SetNewPasswordWidgetState extends State<SetNewPasswordWidget> {
                 ),
                 decoration: InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                    labelText: sl<StringFile>().passwordHint,
+                    labelText: StringResources.passwordHint,
                     counterText: "",
                     suffixIcon: IconButton(
                         onPressed: () {
@@ -85,7 +83,7 @@ class _SetNewPasswordWidgetState extends State<SetNewPasswordWidget> {
               height: 10,
             ),
             ButtonWidget(
-                buttonText: sl<StringFile>().submit.toUpperCase(),
+                buttonText: StringResources.submit.toUpperCase(),
                 onPressButton: () {
                   //widget.pageController.jumpToPage(1);
                   Navigator.pushReplacementNamed(context, RouteGenerator.registrationPage);
@@ -96,14 +94,13 @@ class _SetNewPasswordWidgetState extends State<SetNewPasswordWidget> {
             Column(
               children: [
                 RichText(
-                  text: TextSpan(
-                    style: const TextStyle(
-                        fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
+                  text: const TextSpan(
+                    style: TextStyle(fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
                     children: <TextSpan>[
-                      TextSpan(text: sl<StringFile>().forgotPassword),
+                      TextSpan(text: StringResources.forgotPassword),
                       TextSpan(
-                          text: sl<StringFile>().resetNow,
-                          style: const TextStyle(
+                          text: StringResources.resetNow,
+                          style: TextStyle(
                               fontWeight: FontWeight.bold, color: ColorConstants.appColor)),
                     ],
                   ),
@@ -116,14 +113,14 @@ class _SetNewPasswordWidgetState extends State<SetNewPasswordWidget> {
                     widget.pageController.jumpToPage(0);
                   },
                   child: RichText(
-                    text: TextSpan(
-                      style: const TextStyle(
-                          fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
+                    text: const TextSpan(
+                      style:
+                          TextStyle(fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
                       children: <TextSpan>[
-                        TextSpan(text: sl<StringFile>().changePhoneNumber),
+                        TextSpan(text: StringResources.changePhoneNumber),
                         TextSpan(
-                            text: sl<StringFile>().goBack,
-                            style: const TextStyle(
+                            text: StringResources.goBack,
+                            style: TextStyle(
                                 fontWeight: FontWeight.bold, color: ColorConstants.appColor)),
                       ],
                     ),

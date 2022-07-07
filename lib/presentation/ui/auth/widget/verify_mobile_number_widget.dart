@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:navolaya_flutter/core/string_file.dart';
+import 'package:navolaya_flutter/resources/string_resources.dart';
 
 import '../../../../core/color_constants.dart';
-import '../../../../injection_container.dart';
 import '../../../basicWidget/custom_button.dart';
 
 class VerifyMobileNumberWidget extends StatefulWidget {
@@ -37,9 +36,9 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
             SizedBox(
               height: widget.screenHeight,
             ),
-            Text(
-              sl<StringFile>().verificationPageTitle,
-              style: const TextStyle(
+            const Text(
+              StringResources.verificationPageTitle,
+              style: TextStyle(
                 color: ColorConstants.textColor1,
                 fontWeight: FontWeight.bold,
                 fontSize: 28,
@@ -57,12 +56,12 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
             const SizedBox(
               height: 10,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: Text(
-                sl<StringFile>().verificationPageSubTitle,
+                StringResources.verificationPageSubTitle,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                     height: 1.8,
                     color: ColorConstants.textColor1,
                     fontWeight: FontWeight.w400,
@@ -166,7 +165,7 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
               height: 10,
             ),
             ButtonWidget(
-                buttonText: sl<StringFile>().verify.toUpperCase(),
+                buttonText: StringResources.verify.toUpperCase(),
                 onPressButton: () {
                   widget.pageController.jumpToPage(2);
                 }),
@@ -176,14 +175,13 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
             Column(
               children: [
                 RichText(
-                  text: TextSpan(
-                    style: const TextStyle(
-                        fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
+                  text: const TextSpan(
+                    style: TextStyle(fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
                     children: <TextSpan>[
-                      TextSpan(text: sl<StringFile>().receivedOTP),
+                      TextSpan(text: StringResources.receivedOTP),
                       TextSpan(
-                          text: sl<StringFile>().resendOTP,
-                          style: const TextStyle(
+                          text: StringResources.resendOTP,
+                          style: TextStyle(
                               fontWeight: FontWeight.bold, color: ColorConstants.appColor)),
                     ],
                   ),
@@ -196,14 +194,14 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
                     widget.pageController.jumpToPage(0);
                   },
                   child: RichText(
-                    text: TextSpan(
-                      style: const TextStyle(
-                          fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
+                    text: const TextSpan(
+                      style:
+                          TextStyle(fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
                       children: <TextSpan>[
-                        TextSpan(text: sl<StringFile>().changePhoneNumber),
+                        TextSpan(text: StringResources.changePhoneNumber),
                         TextSpan(
-                            text: sl<StringFile>().goBack,
-                            style: const TextStyle(
+                            text: StringResources.goBack,
+                            style: TextStyle(
                                 fontWeight: FontWeight.bold, color: ColorConstants.appColor)),
                       ],
                     ),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-enum ImageType { textLogo, imageBg, firstIntroImage }
-
 class CommonFunctions {
   const CommonFunctions();
 
@@ -40,17 +38,5 @@ class CommonFunctions {
       backgroundColor: bgColor,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  String getImage(ImageType imageType) {
-    if (imageType == ImageType.textLogo) {
-      return "assets/images/navolaya_text_logo.png";
-    } else if (imageType == ImageType.imageBg) {
-      return "assets/images/img_bg.png";
-    } else if (imageType == ImageType.firstIntroImage) {
-      return "assets/images/first_intro_img.png";
-    }
-
-    return "";
   }
 }

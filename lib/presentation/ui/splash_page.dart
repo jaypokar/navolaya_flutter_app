@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
-import 'package:navolaya_flutter/util/common_functions.dart';
-
-import '../../injection_container.dart';
+import 'package:navolaya_flutter/resources/image_resources.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -17,15 +15,13 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
-        image: DecorationImage(
-            image: AssetImage(sl<CommonFunctions>().getImage(ImageType.imageBg)),
-            fit: BoxFit.cover),
+        image: DecorationImage(image: AssetImage(ImageResources.imgBg), fit: BoxFit.cover),
       ),
       padding: const EdgeInsets.all(20),
       child: Center(
-        child: Image.asset(sl<CommonFunctions>().getImage(ImageType.textLogo)),
+        child: Image.asset(ImageResources.textLogo),
       ),
     );
   }
@@ -38,7 +34,7 @@ class SplashScreenState extends State<SplashScreen> {
         () => {
               Navigator.pushReplacementNamed(
                 context,
-                RouteGenerator.introPage,
+                RouteGenerator.dashBoardPage,
               )
             });
   }

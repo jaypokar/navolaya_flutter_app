@@ -12,6 +12,8 @@ class ColorConstants {
   static const textColor4 = Color(0xFFBDBDBD);
   static const greyColor = Color(0xFFE3E3E3);
   static const inputBorderColor = Color(0xFFC8C8C8);
+  static const dashBoardTabColor = Color(0xFF858585);
+  static const dashBoardDrawerItemColor = Color(0xFF727272);
 
   //static const textColor2 = Color(0x00ff8023);
   static const appColor = Color(0xFF6AB344);

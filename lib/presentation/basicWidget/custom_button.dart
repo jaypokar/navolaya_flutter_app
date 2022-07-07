@@ -22,7 +22,7 @@ class ButtonWidget extends StatelessWidget {
         style: isWrap
             ? ElevatedButton.styleFrom(
                 onPrimary: Colors.white,
-                shape: const StadiumBorder(),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
               )
             : ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(40),

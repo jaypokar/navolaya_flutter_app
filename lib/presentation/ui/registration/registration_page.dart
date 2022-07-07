@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:navolaya_flutter/presentation/ui/registration/widget/additional_info_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/registration/widget/basic_info_widget.dart';
+import 'package:navolaya_flutter/presentation/ui/registration/widget/step_indicator_widget.dart';
 
 import '../../../core/color_constants.dart';
-import '../../../injection_container.dart';
-import '../../../util/common_functions.dart';
+import '../../../resources/image_resources.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -14,15 +15,7 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
   final PageController _controller = PageController();
-  int _selectedIndex = 0;
-
-  List<Widget> _buildPageIndicator() {
-    final List<Widget> pageIndicatorViews = [];
-    for (int i = 0; i < 2; i++) {
-      pageIndicatorViews.add(i == _selectedIndex ? _indicator(true, i) : _indicator(false, i));
-    }
-    return pageIndicatorViews;
-  }
+  final indicatorNotifier = ValueNotifier<int>(0);
 
   @override
   Widget build(BuildContext context) {
@@ -33,18 +26,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
             height: 60,
           ),
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
               image: DecorationImage(
-                  image: AssetImage(sl<CommonFunctions>().getImage(ImageType.imageBg)),
+                  image: AssetImage(
+                    ImageResources.imgBg,
+                  ),
                   fit: BoxFit.cover),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 40,
               ),
-              child: Image(
-                image: AssetImage(sl<CommonFunctions>().getImage(ImageType.textLogo)),
+              child: Image.asset(
+                ImageResources.textLogo,
                 fit: BoxFit.cover,
               ),
             ),
@@ -62,10 +57,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         color: ColorConstants.greyColor,
                         thickness: 5,
                       ))),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _buildPageIndicator(),
-              ),
+              StepIndicatorWidget(indicatorNotifier: indicatorNotifier),
             ],
           ),
           const SizedBox(
@@ -74,54 +66,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
           Expanded(
             flex: 7,
             child: PageView(
+              physics: const NeverScrollableScrollPhysics(),
               onPageChanged: (int page) {
-                setState(() {
-                  _selectedIndex = page;
-                });
+                indicatorNotifier.value = page;
               },
               controller: _controller,
               children: [
                 BasicInfoWidget(pageController: _controller),
-                BasicInfoWidget(pageController: _controller)
+                const AdditionalInfoWidget()
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _indicator(bool isActive, int position) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
-      margin: const EdgeInsets.symmetric(horizontal: 8.0),
-      height: isActive ? 40 : 32.0,
-      width: isActive ? 40 : 32.0,
-      decoration: BoxDecoration(
-        boxShadow: [
-          isActive
-              ? BoxShadow(
-                  color: ColorConstants.appColor.withOpacity(0.72),
-                  blurRadius: 1.0,
-                  spreadRadius: 1.0,
-                  offset: const Offset(
-                    0.0,
-                    0.0,
-                  ),
-                )
-              : const BoxShadow(
-                  color: Colors.transparent,
-                )
-        ],
-        shape: BoxShape.circle,
-        color: isActive ? ColorConstants.appColor : ColorConstants.greyColor,
-      ),
-      child: Center(
-        child: Text(
-          '${(position + 1)}',
-          style:
-              TextStyle(color: isActive ? Colors.white : ColorConstants.textColor4, fontSize: 16),
-        ),
       ),
     );
   }

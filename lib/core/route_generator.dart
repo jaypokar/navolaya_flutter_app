@@ -4,10 +4,9 @@ import 'package:navolaya_flutter/presentation/ui/introScreen/intro_page.dart';
 import 'package:navolaya_flutter/presentation/ui/registration/registration_page.dart';
 import 'package:navolaya_flutter/presentation/ui/user/user_detail_page.dart';
 
-import '../presentation/ui/home/home_page.dart';
+import '../presentation/ui/dashBoard/dashboard_page.dart';
 import '../presentation/ui/splash_page.dart';
 
-// ignore: avoid_classes_with_only_static_members
 class RouteGenerator {
   /*Route Names*/
   static const splashScreen = '/';
@@ -15,7 +14,7 @@ class RouteGenerator {
   static const loginPage = '/loginPage';
   static const authenticationPage = '/authenticationPage';
   static const registrationPage = "/registration";
-  static const homePage = '/home';
+  static const dashBoardPage = '/dashBoard';
   static const userDetailPage = '/userDetail';
 
   const RouteGenerator();
@@ -33,8 +32,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const AuthenticationPage());
       case registrationPage:
         return MaterialPageRoute(builder: (_) => const RegistrationPage());
-      case homePage:
-        return MaterialPageRoute(builder: (_) => const HomePage());
+      case dashBoardPage:
+        return MaterialPageRoute(builder: (_) => const DashBoardPage());
       case userDetailPage:
         if (args is String) {
           return MaterialPageRoute(builder: (_) => UserDetailPage(image: args));

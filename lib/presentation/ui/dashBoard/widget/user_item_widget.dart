@@ -1,3 +1,4 @@
+import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
@@ -11,8 +12,10 @@ class UserItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
+    return BouncingWidget(
+      duration: const Duration(milliseconds: 50),
+      scaleFactor: 1.0,
+      onPressed: () {
         Navigator.of(context).pushNamed(RouteGenerator.userDetailPage, arguments: image);
       },
       child: Container(
@@ -59,7 +62,7 @@ class UserItemWidget extends StatelessWidget {
                             color: ColorConstants.appColor,
                             size: 10,
                           ),
-                           SizedBox(width: 4,),
+                          SizedBox(width: 4,),
                           Text(
                             'Navolaya',
                             style: TextStyle(

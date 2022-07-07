@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../core/color_constants.dart';
+import '../../../../resources/image_resources.dart';
 
-class TabWidget extends StatelessWidget {
+class TabWidget extends StatefulWidget {
   final TabController controller;
-  const TabWidget({required this.controller,Key? key}) : super(key: key);
 
+  const TabWidget({required this.controller, Key? key}) : super(key: key);
+
+  @override
+  State<TabWidget> createState() => _TabWidgetState();
+}
+
+class _TabWidgetState extends State<TabWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 65,
+      height: 62,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         color: Colors.white,
@@ -22,34 +28,46 @@ class TabWidget extends StatelessWidget {
           ),
         ],
       ),
-      child:  TabBar(
+      child: TabBar(
         labelColor: ColorConstants.appColor,
         unselectedLabelColor: Colors.grey,
-        indicatorSize: TabBarIndicatorSize.tab,
-        indicatorWeight: 3,
-        indicatorColor: ColorConstants.appColor,
-        onTap: (index){
-          if(index == 2){
+        indicator: const UnderlineTabIndicator(
+          borderSide: BorderSide(
+            color: ColorConstants.appColor,
+            width: 3.0,
+          ),
+          insets: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 59.0),
+        ),
+        onTap: (index) {
+          if (index == 2) {
             return;
           }
-          controller.index = index;
+          setState(() {
+            widget.controller.index = index;
+          });
         },
-        tabs: const[
+        tabs: [
           Tab(
             text: null,
-            icon: Icon(
-              FontAwesomeIcons.house,
-              size: 25,
+            icon: Image.asset(
+              ImageResources.homeIcon,
+              height: 22,
+              color: widget.controller.index == 0
+                  ? ColorConstants.appColor
+                  : ColorConstants.dashBoardTabColor,
             ),
           ),
           Tab(
             text: null,
-            icon: Icon(
-              FontAwesomeIcons.peopleGroup,
-              size: 25,
+            icon: Image.asset(
+              ImageResources.groupIcon,
+              height: 22,
+              color: widget.controller.index == 1
+                  ? ColorConstants.appColor
+                  : ColorConstants.dashBoardTabColor,
             ),
           ),
-          IgnorePointer(
+          const IgnorePointer(
             child: Tab(
               text: '',
               icon: null,
@@ -57,16 +75,22 @@ class TabWidget extends StatelessWidget {
           ),
           Tab(
             text: null,
-            icon: Icon(
-              FontAwesomeIcons.facebookMessenger,
-              size: 25,
+            icon: Image.asset(
+              ImageResources.chatIcon,
+              height: 22,
+              color: widget.controller.index == 3
+                  ? ColorConstants.appColor
+                  : ColorConstants.dashBoardTabColor,
             ),
           ),
           Tab(
             text: null,
-            icon: Icon(
-              Icons.notifications,
-              size: 30,
+            icon: Image.asset(
+              ImageResources.notificationBellIcon,
+              height: 22,
+              color: widget.controller.index == 4
+                  ? ColorConstants.appColor
+                  : ColorConstants.dashBoardTabColor,
             ),
           ),
         ],

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../injection_container.dart';
-import '../../../util/common_functions.dart';
+import '../../../resources/image_resources.dart';
 import 'widget/mobile_number_widget.dart';
 import 'widget/password_widget.dart';
 import 'widget/verify_mobile_number_widget.dart';
@@ -35,16 +34,15 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              image: DecorationImage(
-                  image: AssetImage(sl<CommonFunctions>().getImage(ImageType.imageBg)),
-                  fit: BoxFit.cover),
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(image: AssetImage(ImageResources.imgBg), fit: BoxFit.cover),
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
+            child: const Padding(
+              padding: EdgeInsets.symmetric(
                 horizontal: 40,
               ),
               child: Image(
-                image: AssetImage(sl<CommonFunctions>().getImage(ImageType.textLogo)),
+                image: AssetImage(ImageResources.textLogo),
                 fit: BoxFit.cover,
               ),
             ),

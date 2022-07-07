@@ -1,11 +1,10 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:navolaya_flutter/core/string_file.dart';
+import 'package:navolaya_flutter/resources/string_resources.dart';
 
 import '../../../../core/color_constants.dart';
 import '../../../../core/logger.dart';
-import '../../../../injection_container.dart';
 import '../../../basicWidget/custom_button.dart';
 
 class MobileNumberWidget extends StatelessWidget {
@@ -30,9 +29,9 @@ class MobileNumberWidget extends StatelessWidget {
             SizedBox(
               height: screenHeight,
             ),
-            Text(
-              sl<StringFile>().welcomeBack,
-              style: const TextStyle(
+            const Text(
+              StringResources.welcomeBack,
+              style: TextStyle(
                 color: ColorConstants.textColor1,
                 fontWeight: FontWeight.bold,
                 fontSize: 28,
@@ -50,12 +49,12 @@ class MobileNumberWidget extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: Text(
-                sl<StringFile>().mobileNumberPageSubtitle,
+                StringResources.mobileNumberPageSubtitle,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                     height: 1.8,
                     color: ColorConstants.textColor1,
                     fontWeight: FontWeight.w400,
@@ -73,6 +72,7 @@ class MobileNumberWidget extends StatelessWidget {
                 borderRadius: const BorderRadius.all(Radius.circular(5)),
               ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     flex: 1,
@@ -80,15 +80,15 @@ class MobileNumberWidget extends StatelessWidget {
                       onChanged: (countryCode) {
                         logger.i("New Country selected: $countryCode");
                       },
-                      flagWidth: 24,
+                      flagWidth: 20,
                       padding: const EdgeInsets.all(0),
                       initialSelection: 'IN',
+                      textOverflow: TextOverflow.fade,
                       textStyle: const TextStyle(
                         color: ColorConstants.textColor3,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
+                        fontSize: 10,
                       ),
-                      favorite: const ['+91', 'IN'],
+                      favorite: const ['+91'],
                       showCountryOnly: false,
                       showOnlyCountryWhenClosed: false,
                       alignLeft: true,
@@ -113,11 +113,11 @@ class MobileNumberWidget extends StatelessWidget {
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                       ],
-                      decoration: InputDecoration(
-                        labelText: sl<StringFile>().phoneNumberHint,
+                      decoration: const InputDecoration(
+                        labelText: StringResources.phoneNumberHint,
                         isDense: true,
                         counterText: '',
-                        hintStyle: const TextStyle(
+                        hintStyle: TextStyle(
                           color: ColorConstants.textColor3,
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
@@ -133,7 +133,7 @@ class MobileNumberWidget extends StatelessWidget {
               height: 10,
             ),
             ButtonWidget(
-                buttonText: sl<StringFile>().continueText.toUpperCase(),
+                buttonText: StringResources.continueText.toUpperCase(),
                 onPressButton: () {
                   pageController.jumpToPage(1);
                 }),
