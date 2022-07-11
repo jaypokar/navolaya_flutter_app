@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../../resources/image_resources.dart';
+import 'package:navolaya_flutter/presentation/ui/dashBoard/widget/bottom_sheet_filter_widget.dart';
 
 class FloatingActionButtonWidget extends StatelessWidget {
   const FloatingActionButtonWidget({Key? key}) : super(key: key);
@@ -10,6 +9,17 @@ class FloatingActionButtonWidget extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
+        Transform.translate(
+          offset: const Offset(0.0, 25.0),
+          child: GestureDetector(
+            onTap: () {},
+            child: const SizedBox(
+              height: 80,
+              width: 100,
+              child: Text(''),
+            ),
+          ),
+        ),
         Transform.translate(
           offset: const Offset(0.0, 20.0),
           child: SizedBox(
@@ -28,184 +38,25 @@ class FloatingActionButtonWidget extends StatelessWidget {
             ),
           ),
         ),
-        Transform.translate(
-          offset: const Offset(0.0, 25.0),
-          child: GestureDetector(
-            onTap: () {},
-            child: const SizedBox(
-              height: 80,
-              width: 100,
-              child: Text(''),
-            ),
-          ),
-        ),
       ],
     );
   }
 
   void callBottomSheet(BuildContext context) {
     showModalBottomSheet(
+        constraints: BoxConstraints.loose(
+            Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.62)),
+        // <= this is set to 3/4 of screen size.
+        isScrollControlled: true,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10.0),
-            topRight: Radius.circular(10.0),
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
           ),
         ),
         context: context,
         builder: (_) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              InkWell(
-                onTap: () {},
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Image.asset(
-                        ImageResources.closeIcon,
-                        height: 16,
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 80,
-                      width: 80,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(70),
-                        child: Image.asset(
-                          'assets/1.jpg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          'Jenova Eberhardt',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Student JNV Farmer',
-                          style: TextStyle(fontSize: 12),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 80,
-                      width: 80,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(70),
-                        child: Image.asset(
-                          'assets/1.jpg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          'Jenova Eberhardt',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Student JNV Farmer',
-                          style: TextStyle(fontSize: 12),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 80,
-                      width: 80,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(70),
-                        child: Image.asset(
-                          'assets/1.jpg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          'Jenova Eberhardt',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Student JNV Farmer',
-                          style: TextStyle(fontSize: 12),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 80,
-                      width: 80,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(70),
-                        child: Image.asset(
-                          'assets/1.jpg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          'Jenova Eberhardt',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Student JNV Farmer',
-                          style: TextStyle(fontSize: 12),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ],
-          );
+          return const BottomSheetFilterWidget();
         });
   }
 }

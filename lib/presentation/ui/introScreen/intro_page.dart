@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/custom_button.dart';
 import 'package:navolaya_flutter/presentation/ui/introScreen/widget/indicator_widget.dart';
+import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
+import '../../../injection_container.dart';
 import 'widget/first_intro_widget.dart';
 
 class IntroPage extends StatefulWidget {
@@ -16,8 +18,6 @@ class IntroPage extends StatefulWidget {
 class _IntroPageState extends State<IntroPage> {
   final PageController _controller = PageController();
 
-  final indicatorNotifier = ValueNotifier<int>(0);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +26,7 @@ class _IntroPageState extends State<IntroPage> {
           Expanded(
             flex: 7,
             child: PageView(
-              onPageChanged: (int page) => indicatorNotifier.value = page,
+              onPageChanged: (int page) => sl<UiNotifiers>().indicatorNotifier.value = page,
               controller: _controller,
               children: const [
                 FirstIntroWidget(),
@@ -35,7 +35,7 @@ class _IntroPageState extends State<IntroPage> {
               ],
             ),
           ),
-          IndicatorWidget(indicatorNotifier: indicatorNotifier),
+          const IndicatorWidget(),
           Padding(
               padding: const EdgeInsets.all(20),
               child: ButtonWidget(
@@ -46,5 +46,11 @@ class _IntroPageState extends State<IntroPage> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    sl<UiNotifiers>().indicatorNotifier.dispose();
+    super.dispose();
   }
 }

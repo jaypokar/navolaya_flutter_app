@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/color_constants.dart';
+import '../../../../injection_container.dart';
+import '../../../uiNotifiers/ui_notifiers.dart';
 
-class UserTabsWidget extends StatefulWidget {
-  final ValueNotifier<int> tabChangeNotifier;
-
-  const UserTabsWidget({required this.tabChangeNotifier, Key? key}) : super(key: key);
+class ConnectionTabsWidget extends StatefulWidget {
+  const ConnectionTabsWidget({Key? key}) : super(key: key);
 
   @override
-  State<UserTabsWidget> createState() => _UserTabsWidgetState();
+  State<ConnectionTabsWidget> createState() => _ConnectionTabsWidgetState();
 }
 
-class _UserTabsWidgetState extends State<UserTabsWidget> with SingleTickerProviderStateMixin {
+class _ConnectionTabsWidgetState extends State<ConnectionTabsWidget>
+    with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -36,14 +37,14 @@ class _UserTabsWidgetState extends State<UserTabsWidget> with SingleTickerProvid
       ),
       child: TabBar(
         indicatorColor: ColorConstants.appColor,
-        labelColor: ColorConstants.textColor2,
+        labelColor: ColorConstants.textColor6,
         controller: _tabController,
         unselectedLabelColor: ColorConstants.textColor2,
         indicator: BoxDecoration(color: Colors.black12.withOpacity(0.1)),
         onTap: (index) {
-          widget.tabChangeNotifier.value = index;
+          sl<UiNotifiers>().connectionRequestTabNotifier.value = index;
         },
-        tabs: ['Recent', 'Near By', 'Popular']
+        tabs: ['Received Requests', 'Sent Requests']
             .map((e) => Tab(
                   child: Text(
                     e,

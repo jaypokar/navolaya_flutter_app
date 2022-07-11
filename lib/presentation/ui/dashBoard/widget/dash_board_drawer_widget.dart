@@ -5,7 +5,9 @@ import 'package:navolaya_flutter/resources/image_resources.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
 class DashBoardDrawerWidget extends StatefulWidget {
-  const DashBoardDrawerWidget({Key? key}) : super(key: key);
+  final TabController tabController;
+
+  const DashBoardDrawerWidget({required this.tabController, Key? key}) : super(key: key);
 
   @override
   State<DashBoardDrawerWidget> createState() => _DashBoardDrawerWidgetState();
@@ -101,6 +103,7 @@ class _DashBoardDrawerWidgetState extends State<DashBoardDrawerWidget> {
                     title: drawerItemList[i]['title'].toString(),
                     icon: drawerItemList[i]['icon'].toString(),
                     index: i,
+                    tabController: widget.tabController,
                   );
                 },
                 itemCount: drawerItemList.length,

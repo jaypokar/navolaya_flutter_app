@@ -2,12 +2,18 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:navolaya_flutter/presentation/ui/dashBoard/widget/dash_board_drawer_widget.dart';
+import 'package:navolaya_flutter/presentation/ui/messages/messages_widget.dart';
+import 'package:navolaya_flutter/presentation/ui/notifications/notifications_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/user/widget/tab_widget.dart';
 import 'package:navolaya_flutter/resources/image_resources.dart';
 
+import '../../../injection_container.dart';
+import '../../../resources/string_resources.dart';
+import '../../uiNotifiers/ui_notifiers.dart';
 import '../dashBoard/widget/floating_action_button_widget.dart';
-import 'widget/dummy_widget.dart';
-import 'widget/home_widget.dart';
+import '../home/home_widget.dart';
+import '../home/widget/dummy_widget.dart';
+import '../myConnections/my_connections_widget.dart';
 
 class DashBoardPage extends StatefulWidget {
   const DashBoardPage({Key? key}) : super(key: key);
@@ -17,29 +23,27 @@ class DashBoardPage extends StatefulWidget {
 }
 
 class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateMixin {
-  final String _selectedTitle = 'Discover';
   late List<Widget> _widgetOptions;
   late TabController _tabController;
   final PageStorageBucket _bucket = PageStorageBucket();
 
   @override
   void initState() {
-    super.initState();
     _widgetOptions = <Widget>[
       const HomeWidget(
         key: PageStorageKey('home'),
       ),
-      const DummyWidget(
-        key: PageStorageKey('connect'),
+      const MyConnectionsWidget(
+        key: PageStorageKey('myConnections'),
       ),
       const DummyWidget(
         key: PageStorageKey('search'),
       ),
-      const DummyWidget(
-        key: PageStorageKey('chat'),
+      const MessagesWidget(
+        key: PageStorageKey('messages'),
       ),
-      const DummyWidget(
-        key: PageStorageKey('notification'),
+      const NotificationsWidget(
+        key: PageStorageKey('notifications'),
       ),
     ];
 
@@ -55,7 +59,18 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
           //Trigger your request
         }
       }
+      if (_tabController.index == 0) {
+        sl<UiNotifiers>().dashBoardTitleNotifier.value = StringResources.discover;
+      } else if (_tabController.index == 1) {
+        sl<UiNotifiers>().dashBoardTitleNotifier.value = StringResources.myConnections;
+      } else if (_tabController.index == 3) {
+        sl<UiNotifiers>().dashBoardTitleNotifier.value = StringResources.messages;
+      } else if (_tabController.index == 4) {
+        sl<UiNotifiers>().dashBoardTitleNotifier.value = StringResources.notifications;
+      }
     });
+
+    super.initState();
   }
 
   @override
@@ -64,7 +79,7 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
       length: 5,
       initialIndex: 0,
       child: Scaffold(
-        drawer: const DashBoardDrawerWidget(),
+        drawer: DashBoardDrawerWidget(tabController: _tabController),
         appBar: AppBar(
           leading: Builder(builder: (ctx) {
             return IconButton(
@@ -79,9 +94,14 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
                   ),
                 ));
           }),
-          title: Text(
-            _selectedTitle,
-            style: const TextStyle(color: Colors.white),
+          title: ValueListenableBuilder<String>(
+            valueListenable: sl<UiNotifiers>().dashBoardTitleNotifier,
+            builder: (_, title, __) {
+              return Text(
+                title,
+                style: const TextStyle(color: Colors.white),
+              );
+            },
           ),
           centerTitle: true,
           actions: [
@@ -122,7 +142,9 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
               ),
             ]),
         floatingActionButton: const FloatingActionButtonWidget(),
-        bottomNavigationBar: TabWidget(controller: _tabController),
+        bottomNavigationBar: TabWidget(
+          controller: _tabController,
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterDocked,
       ),
     );
@@ -131,6 +153,8 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
   @override
   void dispose() {
     _tabController.dispose();
+    sl<UiNotifiers>().dashBoardTitleNotifier.dispose();
+    sl<UiNotifiers>().recentNearByPopularUserTabNotifier.dispose();
     super.dispose();
   }
 }

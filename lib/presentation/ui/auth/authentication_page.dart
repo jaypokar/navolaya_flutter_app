@@ -35,7 +35,8 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(image: AssetImage(ImageResources.imgBg), fit: BoxFit.cover),
+              image:
+                  const DecorationImage(image: AssetImage(ImageResources.imgBg), fit: BoxFit.cover),
             ),
             child: const Padding(
               padding: EdgeInsets.symmetric(

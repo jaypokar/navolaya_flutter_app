@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
 
-import '../../dashBoard/widget/recent_users_widget.dart';
-import '../../dashBoard/widget/user_tabs_widget.dart';
-import 'dummy_widget.dart';
+import '../../../injection_container.dart';
+import 'widget/dummy_widget.dart';
+import 'widget/recent_users_widget.dart';
+import 'widget/user_tabs_widget.dart';
 
 class HomeWidget extends StatefulWidget {
   const HomeWidget({Key? key}) : super(key: key);
@@ -14,7 +16,6 @@ class HomeWidget extends StatefulWidget {
 class _HomeWidgetState extends State<HomeWidget> with AutomaticKeepAliveClientMixin {
   late List<Widget> _widgetOptions;
   final PageStorageBucket _bucket = PageStorageBucket();
-  final _tabChangeNotifier = ValueNotifier(0);
 
   @override
   void initState() {
@@ -38,10 +39,10 @@ class _HomeWidgetState extends State<HomeWidget> with AutomaticKeepAliveClientMi
 
     return Column(
       children: [
-        UserTabsWidget(tabChangeNotifier: _tabChangeNotifier),
+        const UserTabsWidget(),
         Expanded(
           child: ValueListenableBuilder<int>(
-              valueListenable: _tabChangeNotifier,
+              valueListenable: sl<UiNotifiers>().recentNearByPopularUserTabNotifier,
               builder: (_, pos, __) {
                 return PageStorage(
                   bucket: _bucket,

@@ -4,7 +4,9 @@ import 'package:navolaya_flutter/presentation/ui/registration/widget/basic_info_
 import 'package:navolaya_flutter/presentation/ui/registration/widget/step_indicator_widget.dart';
 
 import '../../../core/color_constants.dart';
+import '../../../injection_container.dart';
 import '../../../resources/image_resources.dart';
+import '../../uiNotifiers/ui_notifiers.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -15,7 +17,6 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
   final PageController _controller = PageController();
-  final indicatorNotifier = ValueNotifier<int>(0);
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +50,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ),
           Stack(
             alignment: Alignment.center,
-            children: [
-              const Center(
+            children: const [
+              Center(
                   child: SizedBox(
                       width: 50,
                       child: Divider(
                         color: ColorConstants.greyColor,
                         thickness: 5,
                       ))),
-              StepIndicatorWidget(indicatorNotifier: indicatorNotifier),
+              StepIndicatorWidget(),
             ],
           ),
           const SizedBox(
@@ -68,7 +69,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             child: PageView(
               physics: const NeverScrollableScrollPhysics(),
               onPageChanged: (int page) {
-                indicatorNotifier.value = page;
+                sl<UiNotifiers>().stepsIndicatorNotifier.value = page;
               },
               controller: _controller,
               children: [
@@ -80,5 +81,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    sl<UiNotifiers>().stepsIndicatorNotifier.dispose();
+    super.dispose();
   }
 }

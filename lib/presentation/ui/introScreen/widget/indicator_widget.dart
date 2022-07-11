@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/color_constants.dart';
+import '../../../../injection_container.dart';
+import '../../../uiNotifiers/ui_notifiers.dart';
 
 class IndicatorWidget extends StatelessWidget {
-  final ValueNotifier<int> indicatorNotifier;
-
-  const IndicatorWidget({required this.indicatorNotifier, Key? key}) : super(key: key);
+  const IndicatorWidget({Key? key}) : super(key: key);
 
   List<Widget> _buildPageIndicator(int position) {
     final List<Widget> pageIndicatorViews = [];
@@ -18,7 +18,7 @@ class IndicatorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int>(
-      valueListenable: indicatorNotifier,
+      valueListenable: sl<UiNotifiers>().indicatorNotifier,
       builder: (_, pos, __) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,

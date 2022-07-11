@@ -5,6 +5,7 @@ import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
+import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,6 +54,7 @@ Future<void> _initExternalDependencies() async {
   sl.registerLazySingleton(() => SessionManager(sl()));
   sl.registerLazySingleton(() => const CommonFunctions());
   sl.registerLazySingleton(() => const RouteGenerator());
+  sl.registerLazySingleton(() => UiNotifiers());
 
   final dio = Dio();
   (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {

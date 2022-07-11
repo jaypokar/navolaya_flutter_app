@@ -1,4 +1,3 @@
-import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
@@ -12,10 +11,8 @@ class UserItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BouncingWidget(
-      duration: const Duration(milliseconds: 50),
-      scaleFactor: 1.0,
-      onPressed: () {
+    return InkWell(
+      onTap: () {
         Navigator.of(context).pushNamed(RouteGenerator.userDetailPage, arguments: image);
       },
       child: Container(

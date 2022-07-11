@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
+import 'package:navolaya_flutter/resources/string_resources.dart';
 
 import '../../../../core/color_constants.dart';
+import '../../../../injection_container.dart';
 import '../../../../resources/image_resources.dart';
 
-class TabWidget extends StatefulWidget {
+class TabWidget extends StatelessWidget {
   final TabController controller;
 
   const TabWidget({required this.controller, Key? key}) : super(key: key);
 
-  @override
-  State<TabWidget> createState() => _TabWidgetState();
-}
-
-class _TabWidgetState extends State<TabWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,6 +27,7 @@ class _TabWidgetState extends State<TabWidget> {
         ],
       ),
       child: TabBar(
+        controller: controller,
         labelColor: ColorConstants.appColor,
         unselectedLabelColor: Colors.grey,
         indicator: const UnderlineTabIndicator(
@@ -42,30 +41,38 @@ class _TabWidgetState extends State<TabWidget> {
           if (index == 2) {
             return;
           }
-          setState(() {
-            widget.controller.index = index;
-          });
+          //setState((){widget.controller.index = index;});
         },
         tabs: [
-          Tab(
-            text: null,
-            icon: Image.asset(
-              ImageResources.homeIcon,
-              height: 22,
-              color: widget.controller.index == 0
-                  ? ColorConstants.appColor
-                  : ColorConstants.dashBoardTabColor,
-            ),
+          ValueListenableBuilder(
+            valueListenable: sl<UiNotifiers>().dashBoardTitleNotifier,
+            builder: (_, title, __) {
+              return Tab(
+                text: null,
+                icon: Image.asset(
+                  ImageResources.homeIcon,
+                  height: 22,
+                  color: title == StringResources.discover
+                      ? ColorConstants.appColor
+                      : ColorConstants.dashBoardTabColor,
+                ),
+              );
+            },
           ),
-          Tab(
-            text: null,
-            icon: Image.asset(
-              ImageResources.groupIcon,
-              height: 22,
-              color: widget.controller.index == 1
-                  ? ColorConstants.appColor
-                  : ColorConstants.dashBoardTabColor,
-            ),
+          ValueListenableBuilder(
+            valueListenable: sl<UiNotifiers>().dashBoardTitleNotifier,
+            builder: (_, title, __) {
+              return Tab(
+                text: null,
+                icon: Image.asset(
+                  ImageResources.groupIcon,
+                  height: 22,
+                  color: title == StringResources.myConnections
+                      ? ColorConstants.appColor
+                      : ColorConstants.dashBoardTabColor,
+                ),
+              );
+            },
           ),
           const IgnorePointer(
             child: Tab(
@@ -73,25 +80,35 @@ class _TabWidgetState extends State<TabWidget> {
               icon: null,
             ),
           ),
-          Tab(
-            text: null,
-            icon: Image.asset(
-              ImageResources.chatIcon,
-              height: 22,
-              color: widget.controller.index == 3
-                  ? ColorConstants.appColor
-                  : ColorConstants.dashBoardTabColor,
-            ),
+          ValueListenableBuilder(
+            valueListenable: sl<UiNotifiers>().dashBoardTitleNotifier,
+            builder: (_, title, __) {
+              return Tab(
+                text: null,
+                icon: Image.asset(
+                  ImageResources.chatIcon,
+                  height: 22,
+                  color: title == StringResources.messages
+                      ? ColorConstants.appColor
+                      : ColorConstants.dashBoardTabColor,
+                ),
+              );
+            },
           ),
-          Tab(
-            text: null,
-            icon: Image.asset(
-              ImageResources.notificationBellIcon,
-              height: 22,
-              color: widget.controller.index == 4
-                  ? ColorConstants.appColor
-                  : ColorConstants.dashBoardTabColor,
-            ),
+          ValueListenableBuilder(
+            valueListenable: sl<UiNotifiers>().dashBoardTitleNotifier,
+            builder: (_, title, __) {
+              return Tab(
+                text: null,
+                icon: Image.asset(
+                  ImageResources.notificationBellIcon,
+                  height: 22,
+                  color: title == StringResources.notifications
+                      ? ColorConstants.appColor
+                      : ColorConstants.dashBoardTabColor,
+                ),
+              );
+            },
           ),
         ],
       ),

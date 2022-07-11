@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:navolaya_flutter/presentation/ui/auth/authentication_page.dart';
+import 'package:navolaya_flutter/presentation/ui/blockedUsers/blocked_users_page.dart';
+import 'package:navolaya_flutter/presentation/ui/connectionRequests/connection_requests_page.dart';
+import 'package:navolaya_flutter/presentation/ui/editProfile/edit_profile_page.dart';
+import 'package:navolaya_flutter/presentation/ui/helpAndInfo/help_and_info_page.dart';
 import 'package:navolaya_flutter/presentation/ui/introScreen/intro_page.dart';
 import 'package:navolaya_flutter/presentation/ui/registration/registration_page.dart';
+import 'package:navolaya_flutter/presentation/ui/settings/settings_page.dart';
 import 'package:navolaya_flutter/presentation/ui/user/user_detail_page.dart';
 
 import '../presentation/ui/dashBoard/dashboard_page.dart';
@@ -13,9 +18,14 @@ class RouteGenerator {
   static const introPage = '/introPage';
   static const loginPage = '/loginPage';
   static const authenticationPage = '/authenticationPage';
-  static const registrationPage = "/registration";
-  static const dashBoardPage = '/dashBoard';
-  static const userDetailPage = '/userDetail';
+  static const registrationPage = "/registrationPage";
+  static const dashBoardPage = '/dashBoardPage';
+  static const userDetailPage = '/userDetailPage';
+  static const connectionRequestPage = '/connectionRequestPage';
+  static const editProfilePage = '/editProfilePage';
+  static const settingsPage = '/settingsPage';
+  static const blockedUserPage = '/blockedUsersPage';
+  static const helpAndInfoPage = '/helpAndInfoPage';
 
   const RouteGenerator();
 
@@ -34,6 +44,16 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const RegistrationPage());
       case dashBoardPage:
         return MaterialPageRoute(builder: (_) => const DashBoardPage());
+      case connectionRequestPage:
+        return MaterialPageRoute(builder: (_) => const ConnectionRequestsPage());
+      case editProfilePage:
+        return MaterialPageRoute(builder: (_) => const EditProfilePage());
+      case settingsPage:
+        return MaterialPageRoute(builder: (_) => const SettingsPage());
+      case blockedUserPage:
+        return MaterialPageRoute(builder: (_) => const BlockedUsersPage());
+      case helpAndInfoPage:
+        return MaterialPageRoute(builder: (_) => const HelpAndInfoPage());
       case userDetailPage:
         if (args is String) {
           return MaterialPageRoute(builder: (_) => UserDetailPage(image: args));

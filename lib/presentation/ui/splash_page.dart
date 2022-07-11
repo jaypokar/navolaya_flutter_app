@@ -34,7 +34,7 @@ class SplashScreenState extends State<SplashScreen> {
         () => {
               Navigator.pushReplacementNamed(
                 context,
-                RouteGenerator.dashBoardPage,
+                RouteGenerator.introPage,
               )
             });
   }

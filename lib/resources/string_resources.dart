@@ -42,4 +42,48 @@ class StringResources {
   static const String settings = 'Settings';
   static const String helpAndInfo = 'Help & Info';
   static const String logout = 'Logout';
+
+  static const String filters = 'Filters';
+  static const String searchByName = 'Search By Name';
+  static const String searchByLocalityAddress = 'Search By Locality Address';
+  static const String apply = 'Apply';
+  static const String clearAll = 'Clear All';
+  static const String remove = 'Remove';
+  static const String cancel = 'Cancel';
+
+  static const String discover = 'Discover';
+  static const String notifications = 'Notifications';
+
+  static const String updatePersonalDetails = 'Update Personal Details';
+  static const String updateAdditionalDetails = 'Update Additional Details';
+  static const String updateSocialProfiles = 'Update Social Profiles';
+  static const String updatePhone = 'Update Phone';
+  static const String updateEmail = 'Update Email';
+
+  static const String save = 'Save';
+
+  static const String generalSettings = 'General Settings';
+  static const String allowNotifications = 'Allow Notifications';
+  static const String privacySettings = 'Privacy Settings';
+  static const String phoneNumber = 'Phone Number';
+  static const String emailAddress = 'Email Address';
+  static const String profileImage = 'Profile Image';
+  static const String birthDayAndMonth = 'Birth Day & Month';
+  static const String birthYear = 'Birth Year';
+  static const String socialProfiles = 'Social Profiles';
+  static const String findMeNearBy = 'Find me near by';
+  static const String all = 'All';
+  static const String none = 'none';
+  static const String changePassword = 'Change Password';
+  static const String blockedUsers = 'Blocked Users';
+  static const String deleteAccount = 'Delete Account';
+  static const String unBlockedUsers = 'unblock';
+
+  static const String aboutUs = 'About Us';
+  static const String privacyPolicy = 'Privacy Policy';
+  static const String termsAndCondition = 'Terms And Conditions';
+  static const String faq = 'FAQs';
+  static const String contactUs = 'Contact us';
+  static const String phoneNumbers = 'Phone Numbers';
+  static const String socialMedia = 'Social Media';
 }
