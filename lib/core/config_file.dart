@@ -5,7 +5,11 @@ class ConfigFile {
 
   static const String clientSecret = 'Z1WE08cIoI66s4pHArle5H8awfUSszumw1UxU70V';
 
-  static const String apiBaseURL = 'https://codeclinic.in/kreeda_tantra_dev/public/';
+  static const String apiBaseURL = 'http://13.126.76.74:3000/api/user/';
+  static const String imgBaseURL = 'http://13.126.76.74:3000/api/user/';
+
+  static const String allContentsAPIUrl = '${apiBaseURL}all/contents';
+  static const String allMastersAPIUrl = '${apiBaseURL}all/masters';
 
   /*Session value keys*/
   static const String _userData = 'user_data';

@@ -28,7 +28,7 @@ class DropDownWidget<T> extends StatefulWidget {
     this.margin = 0,
     this.height = 50,
     this.textSize = 14,
-    this.showDropDown = false,
+    this.showDropDown = true,
     Key? key,
   }) : super(key: key);
 

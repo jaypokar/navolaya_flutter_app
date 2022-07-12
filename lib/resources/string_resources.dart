@@ -1,4 +1,7 @@
 class StringResources {
+  static const String checkInternetConnection = 'Please check the network connection';
+  static const String unexpectedErrorOccurred = 'Unexpected Error occurred';
+  static const String responseTypeError = 'Response Type Error Occurred';
   static const String introScreenTitleOne = 'Contrary To Popular';
   static const String introScreenSubTitleOne =
       'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy textever since the 15000';
