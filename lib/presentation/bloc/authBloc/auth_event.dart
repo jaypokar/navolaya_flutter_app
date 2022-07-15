@@ -75,3 +75,10 @@ class InitiateUpdateForgotPasswordEvent extends AuthEvent {
   @override
   List<Object?> get props => [countryCode, phone, otpNumber, newPassword];
 }
+
+class InitiateLogout extends AuthEvent {
+  const InitiateLogout();
+
+  @override
+  List<Object?> get props => [];
+}

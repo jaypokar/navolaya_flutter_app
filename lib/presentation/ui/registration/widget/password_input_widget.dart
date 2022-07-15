@@ -36,7 +36,7 @@ class _PasswordInputWidgetState extends State<PasswordInputWidget> {
                     _isObscure = !_isObscure;
                   });
                 },
-                icon: const Icon(Icons.remove_red_eye))),
+                icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility))),
       ),
     );
   }

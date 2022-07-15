@@ -28,7 +28,6 @@ class SetNewPasswordWidget extends StatefulWidget {
 
 class _SetNewPasswordWidgetState extends State<SetNewPasswordWidget> {
   final TextEditingController _newPassController = TextEditingController();
-  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -67,29 +66,6 @@ class _SetNewPasswordWidgetState extends State<SetNewPasswordWidget> {
               height: 10,
             ),
             PasswordInputWidget(textEditingController: _newPassController),
-            /*Container(
-              height: 40,
-              margin: const EdgeInsets.all(10),
-              child: TextField(
-                controller: _newPassController,
-                obscureText: _isObscure,
-                keyboardType: TextInputType.text,
-                style: const TextStyle(
-                  fontSize: 14,
-                ),
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                    labelText: StringResources.passwordHint,
-                    counterText: "",
-                    suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _isObscure = !_isObscure;
-                          });
-                        },
-                        icon: const Icon(Icons.remove_red_eye))),
-              ),
-            ),*/
             const SizedBox(
               height: 10,
             ),

@@ -30,7 +30,7 @@ class AuthRepositoryImpl implements AuthRepository {
     //--->
     //--->
     final possibleData = await _baseAPIService.executeAPI(
-        url: ConfigFile.logoutAPIUrl,
+        url: ConfigFile.loginAPIUrl,
         queryParameters: {
           'country_code': countryCode,
           'phone': phone,
@@ -58,12 +58,13 @@ class AuthRepositoryImpl implements AuthRepository {
     final possibleData = await _baseAPIService.executeAPI(
         url: ConfigFile.logoutAPIUrl,
         queryParameters: {},
-        isTokenNeeded: false,
+        isTokenNeeded: true,
         apiType: ApiType.put);
 
     if (possibleData.isLeft()) {
       return left(Failure(possibleData.getLeft()!.error));
     }
+    await _baseAPIService.initiateLogoutProcess();
     return right(unit);
   }
 

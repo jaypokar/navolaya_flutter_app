@@ -11,7 +11,6 @@ import 'package:navolaya_flutter/data/model/verify_otp_model.dart';
 import '../../../domain/auth_repository.dart';
 
 part 'auth_event.dart';
-
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -80,6 +79,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           data = possibleData.fold(
             (l) => AuthErrorState(message: l.error),
             (r) => UpdateForgotPasswordState(updateForgotPasswordData: r),
+          );
+        } else if (event is InitiateLogout) {
+          final possibleData = await _repository.logoutAPI();
+          data = possibleData.fold(
+            (l) => AuthErrorState(message: l.error),
+            (r) => const LogoutState(),
           );
         }
 

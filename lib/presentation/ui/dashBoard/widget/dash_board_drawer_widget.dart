@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/core/color_constants.dart';
 import 'package:navolaya_flutter/presentation/ui/dashBoard/widget/drawer_list_item_widget.dart';
 import 'package:navolaya_flutter/resources/image_resources.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
+
+import '../../../basicWidget/loading_widget.dart';
+import '../../../bloc/authBloc/auth_bloc.dart';
 
 class DashBoardDrawerWidget extends StatefulWidget {
   final TabController tabController;
@@ -114,28 +118,36 @@ class _DashBoardDrawerWidgetState extends State<DashBoardDrawerWidget> {
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: ElevatedButton.icon(
-                icon: Image.asset(
-                  ImageResources.logoutIcon,
-                  color: Colors.white,
-                  height: 17,
-                  width: 17,
-                ),
-                onPressed: () {},
-                label: Text(
-                  StringResources.logout.toUpperCase(),
-                  style: const TextStyle(
-                      fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: ColorConstants.appColor,
-                  padding: const EdgeInsets.all(10),
-                  minimumSize: const Size.fromHeight(40),
-                ),
-              ),
-            ),
+            BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {
+              if (state is AuthLoadingState) {
+                return const LoadingWidget();
+              } else {
+                return Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: ElevatedButton.icon(
+                    icon: Image.asset(
+                      ImageResources.logoutIcon,
+                      color: Colors.white,
+                      height: 17,
+                      width: 17,
+                    ),
+                    onPressed: () {
+                      context.read<AuthBloc>().add(const InitiateLogout());
+                    },
+                    label: Text(
+                      StringResources.logout.toUpperCase(),
+                      style: const TextStyle(
+                          fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: ColorConstants.appColor,
+                      padding: const EdgeInsets.all(10),
+                      minimumSize: const Size.fromHeight(40),
+                    ),
+                  ),
+                );
+              }
+            }),
             Expanded(
               child: Image.asset(
                 ImageResources.textLogoGradient,

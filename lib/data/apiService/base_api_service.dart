@@ -9,4 +9,6 @@ abstract class BaseAPIService {
       required Map<String, dynamic> queryParameters,
       bool isTokenNeeded = true,
       required ApiType apiType});
+
+  Future<void> initiateLogoutProcess();
 }

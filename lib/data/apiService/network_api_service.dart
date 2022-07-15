@@ -84,9 +84,7 @@ class NetworkAPIService implements BaseAPIService {
               e.response!.statusCode == 402 ||
               e.response!.statusCode == 500) {
             if (e.response!.statusCode == 401 || e.response!.statusCode == 403) {
-              await _sessionManager.initiateLogout();
-              Navigator.of(GlobalNavKey.navState.currentState!.context)
-                  .popUntil(ModalRoute.withName(RouteGenerator.authenticationPage));
+              await initiateLogoutProcess();
             }
           }
           return Left(
@@ -110,6 +108,13 @@ class NetworkAPIService implements BaseAPIService {
     } else {
       return left(const Failure(StringResources.checkInternetConnection));
     }
+  }
+
+  @override
+  Future<void> initiateLogoutProcess() async {
+    await _sessionManager.initiateLogout();
+    Navigator.of(GlobalNavKey.navState.currentState!.context)
+        .popUntil(ModalRoute.withName(RouteGenerator.authenticationPage));
   }
 }
 

@@ -45,7 +45,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           showMessage(false, state.validatePhoneData.message!);
           _isUserRegistered = state.validatePhoneData.data!.isUserAccountVerified == 1;
           sl<UiNotifiers>().mobileVerificationTitleNotifier.value = _mobileNumber;
-          _controller.jumpToPage(1);
+          _controller.jumpToPage(_isUserRegistered ? 2 : 1);
         } else if (state is VerifyOtpState) {
           showMessage(false, state.verifyOtpData.message!);
           _isUserRegistered
