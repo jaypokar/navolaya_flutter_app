@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navolaya_flutter/core/config_file.dart';
 import 'package:navolaya_flutter/presentation/ui/auth/authentication_page.dart';
 import 'package:navolaya_flutter/presentation/ui/blockedUsers/blocked_users_page.dart';
 import 'package:navolaya_flutter/presentation/ui/connectionRequests/connection_requests_page.dart';
@@ -41,7 +42,16 @@ class RouteGenerator {
       case authenticationPage:
         return MaterialPageRoute(builder: (_) => const AuthenticationPage());
       case registrationPage:
-        return MaterialPageRoute(builder: (_) => const RegistrationPage());
+        if (args is Map<String, dynamic>) {
+          String countryCode = args[ConfigFile.countryCodeKey];
+          String mobileNumber = args[ConfigFile.mobileNumberKey];
+          return MaterialPageRoute(
+              builder: (_) => RegistrationPage(
+                    countryCode: countryCode,
+                    mobileNumber: mobileNumber,
+                  ));
+        }
+        return _errorRoute();
       case dashBoardPage:
         return MaterialPageRoute(builder: (_) => const DashBoardPage());
       case connectionRequestPage:

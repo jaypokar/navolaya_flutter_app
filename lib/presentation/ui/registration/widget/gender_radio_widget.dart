@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class GenderRadioWidget extends StatefulWidget {
   String? gender;
+  final Function? onValueSelect;
 
-  GenderRadioWidget({this.gender, Key? key}) : super(key: key);
+  GenderRadioWidget({this.gender, this.onValueSelect, Key? key}) : super(key: key);
 
   @override
   State<GenderRadioWidget> createState() => _GenderRadioWidgetState();
@@ -39,9 +40,11 @@ class _GenderRadioWidgetState extends State<GenderRadioWidget> {
             vertical: VisualDensity.minimumDensity,
           ),
           onChanged: (value) {
-            setState(() {
-              widget.gender = value!;
-            });
+            widget.gender = value!;
+            if (widget.onValueSelect != null) {
+              widget.onValueSelect!(value);
+            }
+            setState(() {});
           },
         ),
         const Text("Female"),

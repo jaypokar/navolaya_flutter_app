@@ -5,6 +5,7 @@ import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/domain/master_repository.dart';
 import 'package:navolaya_flutter/resources/image_resources.dart';
 
+import '../../data/sessionManager/session_manager.dart';
 import '../../injection_container.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -42,16 +43,27 @@ class SplashScreenState extends State<SplashScreen> {
   }
 
   void fetchInitialData() async {
-    //await sl<MasterRepository>().fetchAllContentsData();
-
+    await sl<MasterRepository>().fetchAllContentsData();
     await sl<MasterRepository>().fetchAllMasterData();
-    Timer(
-        const Duration(seconds: 2),
-        () => {
-              Navigator.pushReplacementNamed(
-                context,
-                RouteGenerator.introPage,
-              )
-            });
+
+    Timer(const Duration(seconds: 2), () {
+      if (sl<SessionManager>().isUserFirstTimeIn()) {
+        sl<SessionManager>().setUserFirstTimeIn();
+        Navigator.pushReplacementNamed(
+          context,
+          RouteGenerator.introPage,
+        );
+      } else if (sl<SessionManager>().isUserLoggedIn()) {
+        Navigator.pushReplacementNamed(
+          context,
+          RouteGenerator.dashBoardPage,
+        );
+      } else {
+        Navigator.pushReplacementNamed(
+          context,
+          RouteGenerator.authenticationPage,
+        );
+      }
+    });
   }
 }

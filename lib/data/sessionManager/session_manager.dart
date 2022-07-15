@@ -1,45 +1,50 @@
+import 'dart:convert';
+
+import 'package:navolaya_flutter/core/config_file.dart';
+import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionManager {
   final SharedPreferences _preferences;
 
-  //LoginData? _loginData;
+  LoginAndBasicInfoModel? _loginData;
+
   SessionManager(this._preferences);
 
-/* Future<void> initiateUserLogin(LoginData loginDetails) async  {
+  Future<void> initiateUserLogin(LoginAndBasicInfoModel loginDetails) async {
     _loginData = null;
     final userDetails = json.encode(loginDetails.toJson());
-    _preferences.setString(userData, userDetails);
-    _preferences.setBool(isLoggedIn, true);
+    _preferences.setString(ConfigFile.userDataKey, userDetails);
+    _preferences.setBool(ConfigFile.isLoggedInKey, true);
   }
 
-  LoginData? _getUserDetails() {
-    if(_loginData == null) {
-      final value = _preferences.getString(userData) ?? '';
+  LoginAndBasicInfoModel? _getUserDetails() {
+    if (_loginData == null) {
+      final value = _preferences.getString(ConfigFile.userDataKey) ?? '';
       final userDetails = json.decode(value) as Map<String, dynamic>;
-      _loginData = LoginData.fromJson(userDetails);
+      _loginData = LoginAndBasicInfoModel.fromJson(userDetails);
     }
     return _loginData;
   }
 
-  dynamic getToken() {
-    return _getUserDetails()?.accessToken;
+  String getToken() {
+    return _getUserDetails()?.data!.authToken ?? '';
   }
 
-  String getUserName() {
-    return '${_getUserDetails()?.firstName} ${_getUserDetails()?.lastName} ';
+  bool isUserFirstTimeIn() {
+    return _preferences.getBool(ConfigFile.isUserFirstTimeInKey) ?? true;
   }
 
-  LoginData? getUserDetails(){
-    return _getUserDetails();
+  void setUserFirstTimeIn() {
+    _preferences.setBool(ConfigFile.isUserFirstTimeInKey, false);
   }
 
   bool isUserLoggedIn() {
-    return _preferences.getBool(isLoggedIn) ?? false;
+    return _preferences.getBool(ConfigFile.isLoggedInKey) ?? false;
   }
 
   Future<void> initiateLogout() async {
     _loginData = null;
-    await _preferences.clear();
-  }*/
+    await _preferences.setBool(ConfigFile.isLoggedInKey, false);
+  }
 }

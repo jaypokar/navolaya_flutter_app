@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
 import '../../../../core/color_constants.dart';
+import '../../../../injection_container.dart';
+import '../../../../util/common_functions.dart';
 import '../../../basicWidget/custom_button.dart';
+import '../../../basicWidget/loading_widget.dart';
+import '../../../bloc/authBloc/auth_bloc.dart';
 
 class VerifyMobileNumberWidget extends StatefulWidget {
   final PageController pageController;
-  final TextEditingController mobileTextController;
   final double screenHeight;
+  final Function verifyOTP;
+  final Function reSendOTP;
+  final String mobileNumber;
 
   const VerifyMobileNumberWidget(
       {required this.pageController,
-      required this.mobileTextController,
       required this.screenHeight,
+      required this.verifyOTP,
+      required this.reSendOTP,
+      required this.mobileNumber,
       Key? key})
       : super(key: key);
 
@@ -56,17 +66,23 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
             const SizedBox(
               height: 10,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-              child: Text(
-                StringResources.verificationPageSubTitle,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    height: 1.8,
-                    color: ColorConstants.textColor1,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14),
-              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+              child: ValueListenableBuilder<String>(
+                  valueListenable: sl<UiNotifiers>().mobileVerificationTitleNotifier,
+                  builder: (_, number, __) {
+                    final verificationSubTitleHint =
+                        StringResources.verificationPageSubTitle.replaceAll("{number}", number);
+                    return Text(
+                      verificationSubTitleHint,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          height: 1.8,
+                          color: ColorConstants.textColor1,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14),
+                    );
+                  }),
             ),
             const SizedBox(
               height: 10,
@@ -164,26 +180,54 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
             const SizedBox(
               height: 10,
             ),
-            ButtonWidget(
-                buttonText: StringResources.verify.toUpperCase(),
-                onPressButton: () {
-                  widget.pageController.jumpToPage(2);
-                }),
+            BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {
+              if (state is AuthLoadingState) {
+                return const LoadingWidget();
+              } else {
+                return ButtonWidget(
+                  buttonText: StringResources.verify.toUpperCase(),
+                  onPressButton: () {
+                    if (_textController1.text.isEmpty ||
+                        _textController2.text.isEmpty ||
+                        _textController3.text.isEmpty ||
+                        _textController4.text.isEmpty) {
+                      sl<CommonFunctions>().showSnackBar(
+                          context: context,
+                          message: StringResources.pleaseEnterOTP,
+                          bgColor: Colors.orange,
+                          textColor: Colors.white);
+                      return;
+                    }
+
+                    widget.verifyOTP(_textController1.text +
+                        _textController2.text +
+                        _textController3.text +
+                        _textController4.text);
+                  },
+                );
+              }
+            }),
             SizedBox(
               height: widget.screenHeight + 20,
             ),
             Column(
               children: [
-                RichText(
-                  text: const TextSpan(
-                    style: TextStyle(fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
-                    children: <TextSpan>[
-                      TextSpan(text: StringResources.receivedOTP),
-                      TextSpan(
-                          text: StringResources.resendOTP,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: ColorConstants.appColor)),
-                    ],
+                InkWell(
+                  onTap: () {
+                    widget.reSendOTP();
+                  },
+                  child: RichText(
+                    text: const TextSpan(
+                      style:
+                          TextStyle(fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
+                      children: <TextSpan>[
+                        TextSpan(text: StringResources.receivedOTP),
+                        TextSpan(
+                            text: StringResources.resendOTP,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, color: ColorConstants.appColor)),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(

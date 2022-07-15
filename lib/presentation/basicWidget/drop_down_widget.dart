@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:navolaya_flutter/data/model/masters_model.dart';
 
 import '../../core/color_constants.dart';
 
@@ -16,6 +17,7 @@ class DropDownWidget<T> extends StatefulWidget {
   final double height;
   final double textSize;
   final bool showDropDown;
+  final Function? onValueSelect;
 
   DropDownWidget({
     this.value,
@@ -29,6 +31,7 @@ class DropDownWidget<T> extends StatefulWidget {
     this.height = 50,
     this.textSize = 14,
     this.showDropDown = true,
+    this.onValueSelect,
     Key? key,
   }) : super(key: key);
 
@@ -90,18 +93,34 @@ class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
           fontFamily: 'Montserrat',
         ),
         onChanged: (newValue) {
-          setState(() {
-            widget.value = newValue;
-          });
+          widget.value = newValue;
+          if (widget.onValueSelect != null) {
+            widget.onValueSelect!(newValue);
+          }
+          setState(() {});
         },
       ),
     );
   }
 
   Widget setText(T value) {
+    late final String title;
     if (value is String) {
-      return Text(value);
+      title = value;
+    } else if (value is JnvRelations) {
+      title = value.title!;
+    } else if (value is JnvHouses) {
+      title = value.title!;
+    } else if (value is OccupationAreas) {
+      title = value.title!;
+    } else if (value is Schools) {
+      title = value.city!;
     }
-    return const Text('');
+
+    return Text(title,
+        style: const TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.w600,
+        ));
   }
 }

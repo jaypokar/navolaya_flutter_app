@@ -72,6 +72,7 @@ class Data {
 
     if (json['jnvHouses'] != null) {
       jnvHouses = [];
+      jnvHouses?.add(JnvHouses(id: '', title: 'House'));
       json['jnvHouses'].forEach((v) {
         jnvHouses?.add(JnvHouses.fromJson(v));
       });
@@ -79,6 +80,7 @@ class Data {
 
     if (json['jnvRelations'] != null) {
       jnvRelations = [];
+      jnvRelations?.add(JnvRelations(id: '', title: 'Relation with JNV'));
       json['jnvRelations'].forEach((v) {
         jnvRelations?.add(JnvRelations.fromJson(v));
       });
@@ -86,6 +88,8 @@ class Data {
 
     if (json['schools'] != null) {
       schools = [];
+      schools?.add(Schools(
+          id: '', city: "Select School", district: "Select School", state: "Select School"));
       json['schools'].forEach((v) {
         schools?.add(Schools.fromJson(v));
       });
@@ -93,6 +97,7 @@ class Data {
 
     if (json['occupationAreas'] != null) {
       occupationAreas = [];
+      occupationAreas?.add(OccupationAreas(id: '', title: 'Occupation Area'));
       json['occupationAreas'].forEach((v) {
         occupationAreas?.add(OccupationAreas.fromJson(v));
       });
@@ -100,37 +105,34 @@ class Data {
 
     if (json['occupations'] != null) {
       occupations = [];
+      occupations
+          ?.add(Occupations(id: '', area: 'Profession', title: 'Profession', isSeparator: false));
       json['occupations'].forEach((v) {
         Map<String, dynamic> keyValues = v as Map<String, dynamic>;
         final key = keyValues.keys.first;
-        final values = keyValues.values.first as List<dynamic>;
-        occupations?.add(Occupations(isSeparator: true, id: key, title: key));
-        for (int i = 0; i < values.length; i++) {
-          final jsonData = values[i] as Map<String, dynamic>;
-          String id = jsonData['id'] as String;
-          String title = jsonData['title'] as String;
-          occupations?.add(Occupations(isSeparator: false, title: title, id: id));
-        }
+        occupations?.add(Occupations(isSeparator: true, id: key, title: key, area: key));
+        v[key].forEach((element) {
+          occupations?.add(Occupations.fromJson(element, false, key));
+        });
       });
     }
 
     if (json['qualifications'] != null) {
       qualifications = [];
+      qualifications?.add(Qualifications(
+          id: '',
+          area: 'Graduation',
+          title: 'Graduation',
+          isSeparator: false,
+          shortName: 'Graduation'));
       json['qualifications'].forEach((v) {
         Map<String, dynamic> keyValues = v as Map<String, dynamic>;
         final key = keyValues.keys.first;
-        final values = keyValues.values.first as List<dynamic>;
-
-        qualifications?.add(Qualifications(isSeparator: true, id: key, shortName: key, title: key));
-
-        for (int i = 0; i < values.length; i++) {
-          final jsonData = values[i] as Map<String, dynamic>;
-          String id = jsonData['id'] as String;
-          String title = jsonData['title'] as String;
-          String shortname = jsonData['shortname'] as String;
-          qualifications
-              ?.add(Qualifications(isSeparator: false, shortName: shortname, title: title, id: id));
-        }
+        qualifications?.add(
+            Qualifications(isSeparator: true, area: key, id: key, shortName: key, title: key));
+        v[key].forEach((element) {
+          qualifications?.add(Qualifications.fromJson(element, false, key));
+        });
       });
     }
 
@@ -332,8 +334,14 @@ class Occupations {
   bool? isSeparator;
   String? id;
   String? title;
+  String? area;
 
-  Occupations({this.isSeparator, this.id, this.title});
+  Occupations({this.isSeparator, this.id, this.title, this.area});
+
+  Occupations.fromJson(dynamic json, this.isSeparator, this.area) {
+    id = json['id'];
+    title = json['title'];
+  }
 
   @override
   String toString() {
@@ -345,10 +353,17 @@ class Occupations {
 class Qualifications {
   bool? isSeparator;
   String? id;
+  String? area;
   String? shortName;
   String? title;
 
-  Qualifications({this.isSeparator, this.id, this.shortName, this.title});
+  Qualifications({this.isSeparator, this.area, this.id, this.shortName, this.title});
+
+  Qualifications.fromJson(dynamic json, this.isSeparator, this.area) {
+    id = json['id'];
+    title = json['title'];
+    shortName = json['shortname'];
+  }
 
   @override
   String toString() {

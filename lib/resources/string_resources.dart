@@ -11,11 +11,12 @@ class StringResources {
   static const String mobileNumberPageSubtitle =
       'Weather you are creating an account or, signIn back in let’s start with your phone number';
   static const String phoneNumberHint = 'Enter Phone Number';
+  static const String pleaseEnterOTP = 'Please Enter OTP';
   static const String continueText = 'continue';
 
   static const String verificationPageTitle = 'Verification Code';
   static const String verificationPageSubTitle =
-      'We sent you a SMS with a verification code on your number entered number Enter the 4-digit code to verify the account';
+      'We sent you a SMS with a verification code on {number}, Enter the 4-digit code to verify the number';
   static const String verify = 'Verify';
 
   static const String receivedOTP = 'Didn\'t receive the OTP? ';
@@ -24,6 +25,7 @@ class StringResources {
   static const String goBack = 'Go Back';
 
   static const String passwordPageTitle = 'Enter Password';
+  static const String pleaseEnterPassword = 'Please enter password';
   static const String passwordPageSubTitle =
       'Let’s enter your secure password to access the app. Many more features you are allowed to access after the successful signIn';
   static const String passwordHint = 'Enter Password';
@@ -33,6 +35,14 @@ class StringResources {
   static const String submit = 'Submit';
 
   static const String enterNameHint = 'Enter Name';
+  static const String pleaseEnterName = 'Please enter name';
+  static const String pleaseSelectSchool = 'Please select school';
+  static const String pleaseSelectRelationWithJNV = 'Please select relation with JNV';
+  static const String pleaseSelectGraduations = 'Please select graduations';
+  static const String pleaseSelectHouse = 'Please select house';
+  static const String pleaseSelectOccupationArea = 'Please select occupation area';
+  static const String pleaseSelectProfession = 'Please select profession';
+
   static const String next = 'Next';
 
   static const String birthDate = 'Birth Date';

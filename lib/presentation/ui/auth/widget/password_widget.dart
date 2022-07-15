@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:navolaya_flutter/core/route_generator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:navolaya_flutter/presentation/ui/registration/widget/password_input_widget.dart';
 
 import '../../../../core/color_constants.dart';
+import '../../../../injection_container.dart';
 import '../../../../resources/string_resources.dart';
+import '../../../../util/common_functions.dart';
 import '../../../basicWidget/custom_button.dart';
+import '../../../basicWidget/loading_widget.dart';
+import '../../../bloc/authBloc/auth_bloc.dart';
 
 class SetNewPasswordWidget extends StatefulWidget {
   final double screenHeight;
   final PageController pageController;
+  final Function login;
 
-  const SetNewPasswordWidget({required this.pageController, required this.screenHeight, Key? key})
-      : super(key: key);
+  const SetNewPasswordWidget({
+    required this.pageController,
+    required this.screenHeight,
+    required this.login,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<SetNewPasswordWidget> createState() => _SetNewPasswordWidgetState();
@@ -56,7 +66,8 @@ class _SetNewPasswordWidgetState extends State<SetNewPasswordWidget> {
             const SizedBox(
               height: 10,
             ),
-            Container(
+            PasswordInputWidget(textEditingController: _newPassController),
+            /*Container(
               height: 40,
               margin: const EdgeInsets.all(10),
               child: TextField(
@@ -78,16 +89,30 @@ class _SetNewPasswordWidgetState extends State<SetNewPasswordWidget> {
                         },
                         icon: const Icon(Icons.remove_red_eye))),
               ),
-            ),
+            ),*/
             const SizedBox(
               height: 10,
             ),
-            ButtonWidget(
-                buttonText: StringResources.submit.toUpperCase(),
-                onPressButton: () {
-                  //widget.pageController.jumpToPage(1);
-                  Navigator.pushReplacementNamed(context, RouteGenerator.registrationPage);
-                }),
+            BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {
+              if (state is AuthLoadingState) {
+                return const LoadingWidget();
+              } else {
+                return ButtonWidget(
+                  buttonText: StringResources.submit.toUpperCase(),
+                  onPressButton: () {
+                    if (_newPassController.text.isEmpty) {
+                      sl<CommonFunctions>().showSnackBar(
+                          context: context,
+                          message: StringResources.pleaseEnterPassword,
+                          bgColor: Colors.orange,
+                          textColor: Colors.white);
+                      return;
+                    }
+                    widget.login(_newPassController.text);
+                  },
+                );
+              }
+            }),
             SizedBox(
               height: widget.screenHeight + 20,
             ),
