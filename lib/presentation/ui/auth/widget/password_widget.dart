@@ -6,6 +6,7 @@ import '../../../../core/color_constants.dart';
 import '../../../../injection_container.dart';
 import '../../../../resources/string_resources.dart';
 import '../../../../util/common_functions.dart';
+import '../../../basicWidget/auth_rich_text_widget.dart';
 import '../../../basicWidget/custom_button.dart';
 import '../../../basicWidget/loading_widget.dart';
 import '../../../bloc/authBloc/auth_bloc.dart';
@@ -14,11 +15,13 @@ class SetNewPasswordWidget extends StatefulWidget {
   final double screenHeight;
   final PageController pageController;
   final Function login;
+  final Function navigateToUpdatePassword;
 
   const SetNewPasswordWidget({
     required this.pageController,
     required this.screenHeight,
     required this.login,
+    required this.navigateToUpdatePassword,
     Key? key,
   }) : super(key: key);
 
@@ -94,38 +97,18 @@ class _SetNewPasswordWidgetState extends State<SetNewPasswordWidget> {
             ),
             Column(
               children: [
-                RichText(
-                  text: const TextSpan(
-                    style: TextStyle(fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
-                    children: <TextSpan>[
-                      TextSpan(text: StringResources.forgotPassword),
-                      TextSpan(
-                          text: StringResources.resetNow,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: ColorConstants.appColor)),
-                    ],
-                  ),
+                AuthRichTextWidget(
+                  onClickEvent: () => widget.navigateToUpdatePassword(),
+                  textOne: StringResources.forgotPassword,
+                  textTwo: StringResources.resetNow,
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                InkWell(
-                  onTap: () {
-                    widget.pageController.jumpToPage(0);
-                  },
-                  child: RichText(
-                    text: const TextSpan(
-                      style:
-                          TextStyle(fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
-                      children: <TextSpan>[
-                        TextSpan(text: StringResources.changePhoneNumber),
-                        TextSpan(
-                            text: StringResources.goBack,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, color: ColorConstants.appColor)),
-                      ],
-                    ),
-                  ),
+                AuthRichTextWidget(
+                  onClickEvent: () => widget.pageController.jumpToPage(0),
+                  textOne: StringResources.changePhoneNumber,
+                  textTwo: StringResources.goBack,
                 ),
               ],
             ),

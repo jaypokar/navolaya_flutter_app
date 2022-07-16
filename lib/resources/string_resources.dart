@@ -14,6 +14,10 @@ class StringResources {
   static const String pleaseEnterOTP = 'Please Enter OTP';
   static const String continueText = 'continue';
 
+  static const String updatePassword = 'Update Password';
+  static const String newPassword = 'New Password';
+  static const String updatePasswordSubTitle =
+      'We sent you a SMS with a verification code \non your new number {number}\nEnter the 4-digit code to verify the account';
   static const String verificationPageTitle = 'Verification Code';
   static const String verificationPageSubTitle =
       'We sent you a SMS with a verification code on {number}, Enter the 4-digit code to verify the number';
@@ -99,4 +103,7 @@ class StringResources {
   static const String contactUs = 'Contact us';
   static const String phoneNumbers = 'Phone Numbers';
   static const String socialMedia = 'Social Media';
+
+  static const String gallery = 'Gallery';
+  static const String camera = 'Camera';
 }

@@ -29,4 +29,6 @@ class ImageResources {
   static const String fbIcon = "$assetIconBase/fb_icon.png";
   static const String twitterIcon = "$assetIconBase/twitter_icon.png";
   static const String linkedinIcon = "$assetIconBase/linkedin_icon.png";
+  static const String galleryIcon = "$assetIconBase/gallery_icon.png";
+  static const String cameraColoredIcon = "$assetIconBase/camera_colored_icon.png";
 }

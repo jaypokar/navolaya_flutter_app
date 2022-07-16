@@ -76,6 +76,23 @@ class InitiateUpdateForgotPasswordEvent extends AuthEvent {
   List<Object?> get props => [countryCode, phone, otpNumber, newPassword];
 }
 
+class InitiateUpdateAdditionalInfo extends AuthEvent {
+  final String userImage;
+  final String house;
+  final String birthDate;
+  final String aboutMe;
+
+  const InitiateUpdateAdditionalInfo({
+    required this.userImage,
+    required this.house,
+    required this.birthDate,
+    required this.aboutMe,
+  });
+
+  @override
+  List<Object?> get props => [userImage, house, birthDate, aboutMe];
+}
+
 class InitiateLogout extends AuthEvent {
   const InitiateLogout();
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class UiNotifiers {
   // this are few ui notifiers for maintaining ui state and helps in improving app performance by avoiding unnecessary builds.
   ///
+  ///
   //Step and intro screen pager indicator notifier
   final _indicatorNotifier = ValueNotifier<int>(0);
 

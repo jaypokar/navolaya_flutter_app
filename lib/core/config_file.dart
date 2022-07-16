@@ -18,11 +18,7 @@ class ConfigFile {
   static const String logoutAPIUrl = '${apiBaseURL}auth/logout';
   static const String updateBasicInfoAPIUrl = '${apiBaseURL}auth/basic-info';
   static const String updateForgotPasswordAPIUrl = '${apiBaseURL}auth/update-forgot-password';
-
-  /*Session value keys*/
-  static const String userDataKey = 'user_data';
-  static const String isLoggedInKey = 'is_logged_in';
-  static const String isUserFirstTimeInKey = 'is_userFirstTime_in';
+  static const String updateAdditionalInfoAPIUrl = '${apiBaseURL}profile/additional-info';
 
   //Router data keys
   static const String countryCodeKey = 'countryCode';

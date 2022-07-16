@@ -65,6 +65,10 @@ dependencies:
   country_code_picker: ^2.0.2
   # expandable widget package for expanding a view in settings page
   expandable: ^5.0.1
+  # Image picker dependency to upload image from either camera or gallery
+  image_picker: ^0.8.5+3
+  # Image cropper for setting aspect ratio and cropping image to set into the view properly
+  image_cropper: ^2.0.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

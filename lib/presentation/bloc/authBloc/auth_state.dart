@@ -81,6 +81,15 @@ class UpdateForgotPasswordState extends AuthState {
   List<Object?> get props => [updateForgotPasswordData];
 }
 
+class UpdateAdditionalInfoState extends AuthState {
+  final UpdateAdditionalInfoModel updateAdditionalInfo;
+
+  const UpdateAdditionalInfoState({required this.updateAdditionalInfo});
+
+  @override
+  List<Object?> get props => [updateAdditionalInfo];
+}
+
 class LogoutState extends AuthState {
   const LogoutState();
 

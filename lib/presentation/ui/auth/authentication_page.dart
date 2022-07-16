@@ -58,7 +58,6 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         } else if (state is SendOtpState) {
           showMessage(false, state.sendOtpData.message!);
         } else if (state is LoginState) {
-          showMessage(false, state.loginAndBasicInfoData.message!);
           Navigator.of(context).pushReplacementNamed(RouteGenerator.dashBoardPage);
         }
       },
@@ -109,6 +108,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                     screenHeight: _screenHeight,
                     pageController: _controller,
                     login: login,
+                    navigateToUpdatePassword: navigateToUpdatePassword,
                   ),
                 ],
               ),
@@ -156,6 +156,16 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             password: password,
           ),
         );
+  }
+
+  void navigateToUpdatePassword() {
+    Navigator.of(context).pushNamed(
+      RouteGenerator.updatePasswordPage,
+      arguments: {
+        ConfigFile.countryCodeKey: _countryCode,
+        ConfigFile.mobileNumberKey: _mobileNumber,
+      },
+    );
   }
 
   void showMessage(bool isError, String message) {

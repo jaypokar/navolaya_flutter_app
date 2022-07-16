@@ -1,11 +1,15 @@
 import 'dart:convert';
 
-import 'package:navolaya_flutter/core/config_file.dart';
 import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionManager {
   final SharedPreferences _preferences;
+
+  /*Session value keys*/
+  final String userDataKey = 'user_data';
+  final String isLoggedInKey = 'is_logged_in';
+  final String isUserFirstTimeInKey = 'is_userFirstTime_in';
 
   LoginAndBasicInfoModel? _loginData;
 
@@ -14,13 +18,13 @@ class SessionManager {
   Future<void> initiateUserLogin(LoginAndBasicInfoModel loginDetails) async {
     _loginData = null;
     final userDetails = json.encode(loginDetails.toJson());
-    _preferences.setString(ConfigFile.userDataKey, userDetails);
-    _preferences.setBool(ConfigFile.isLoggedInKey, true);
+    _preferences.setString(userDataKey, userDetails);
+    _preferences.setBool(isLoggedInKey, true);
   }
 
   LoginAndBasicInfoModel? _getUserDetails() {
     if (_loginData == null) {
-      final value = _preferences.getString(ConfigFile.userDataKey) ?? '';
+      final value = _preferences.getString(userDataKey) ?? '';
       final userDetails = json.decode(value) as Map<String, dynamic>;
       _loginData = LoginAndBasicInfoModel.fromJson(userDetails);
     }
@@ -32,19 +36,19 @@ class SessionManager {
   }
 
   bool isUserFirstTimeIn() {
-    return _preferences.getBool(ConfigFile.isUserFirstTimeInKey) ?? true;
+    return _preferences.getBool(isUserFirstTimeInKey) ?? true;
   }
 
   void setUserFirstTimeIn() {
-    _preferences.setBool(ConfigFile.isUserFirstTimeInKey, false);
+    _preferences.setBool(isUserFirstTimeInKey, false);
   }
 
   bool isUserLoggedIn() {
-    return _preferences.getBool(ConfigFile.isLoggedInKey) ?? false;
+    return _preferences.getBool(isLoggedInKey) ?? false;
   }
 
   Future<void> initiateLogout() async {
     _loginData = null;
-    await _preferences.setBool(ConfigFile.isLoggedInKey, false);
+    await _preferences.setBool(isLoggedInKey, false);
   }
 }

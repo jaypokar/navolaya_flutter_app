@@ -4,9 +4,11 @@ import 'package:connectivity/connectivity.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/data/repositoryImpl/auth_repository_impl.dart';
-import 'package:navolaya_flutter/data/repositoryImpl/master_respository_impl.dart';
+import 'package:navolaya_flutter/data/repositoryImpl/master_repository_impl.dart';
 import 'package:navolaya_flutter/domain/auth_repository.dart';
 import 'package:navolaya_flutter/domain/master_repository.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
@@ -74,6 +76,8 @@ Future<void> _initExternalDependencies() async {
   sl.registerLazySingleton(() => const CommonFunctions());
   sl.registerLazySingleton(() => const RouteGenerator());
   sl.registerLazySingleton(() => UiNotifiers());
+  sl.registerLazySingleton(() => ImagePicker());
+  sl.registerLazySingleton(() => ImageCropper());
 
   final dio = Dio();
   (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {

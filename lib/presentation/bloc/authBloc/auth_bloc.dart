@@ -1,9 +1,10 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/core/logger.dart';
 import 'package:navolaya_flutter/data/model/basic_info_request_model.dart';
 import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
 import 'package:navolaya_flutter/data/model/send_otp_model.dart';
+import 'package:navolaya_flutter/data/model/update_additional_info_model.dart';
 import 'package:navolaya_flutter/data/model/update_forgot_password_model.dart';
 import 'package:navolaya_flutter/data/model/validate_phone_model.dart';
 import 'package:navolaya_flutter/data/model/verify_otp_model.dart';
@@ -79,6 +80,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           data = possibleData.fold(
             (l) => AuthErrorState(message: l.error),
             (r) => UpdateForgotPasswordState(updateForgotPasswordData: r),
+          );
+        } else if (event is InitiateUpdateAdditionalInfo) {
+          final possibleData = await _repository.updateAdditionalInfoAPI(
+            userImage: event.userImage,
+            birthDate: event.birthDate,
+            aboutMe: event.aboutMe,
+            house: event.house,
+          );
+
+          data = possibleData.fold(
+            (l) => AuthErrorState(message: l.error),
+            (r) => UpdateAdditionalInfoState(updateAdditionalInfo: r),
           );
         } else if (event is InitiateLogout) {
           final possibleData = await _repository.logoutAPI();

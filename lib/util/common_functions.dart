@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class CommonFunctions {
@@ -25,18 +27,24 @@ class CommonFunctions {
     return MaterialColor(color.value, swatch);
   }
 
-  void showSnackBar(
-      {required BuildContext context,
-      required String message,
-      required Color bgColor,
-      required Color textColor}) {
+  void showSnackBar({required BuildContext context,
+    required String message,
+    required Color bgColor,
+    required Color textColor}) {
     final snackBar = SnackBar(
       content: Text(
         message,
+        textAlign: TextAlign.center,
         style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold),
       ),
       backgroundColor: bgColor,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  String getFileSizeString({required int bytes, int decimals = 0}) {
+    const suffixes = ["b", "kb", "mb", "gb", "tb"];
+    var i = (log(bytes) / log(1024)).floor();
+    return ((bytes / pow(1024, i)).toStringAsFixed(decimals)) + suffixes[i];
   }
 }

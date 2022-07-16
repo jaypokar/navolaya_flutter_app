@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:navolaya_flutter/presentation/basicWidget/auth_rich_text_widget.dart';
+import 'package:navolaya_flutter/presentation/basicWidget/otp_widget.dart';
 import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
@@ -90,91 +92,10 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  height: 50,
-                  width: 50,
-                  margin: const EdgeInsets.all(5),
-                  child: TextField(
-                    controller: _textController1,
-                    keyboardType: TextInputType.number,
-                    maxLength: 1,
-                    textAlign: TextAlign.center,
-                    onChanged: (_) {
-                      FocusScope.of(context).nextFocus();
-                    },
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                      isDense: true,
-                      counterText: '',
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 50,
-                  width: 50,
-                  margin: const EdgeInsets.all(5),
-                  child: TextField(
-                    controller: _textController2,
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number,
-                    onChanged: (_) {
-                      FocusScope.of(context).nextFocus();
-                    },
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                      isDense: true,
-                      counterText: '',
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 50,
-                  width: 50,
-                  margin: const EdgeInsets.all(5),
-                  child: TextField(
-                    controller: _textController3,
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number,
-                    onChanged: (_) {
-                      FocusScope.of(context).nextFocus();
-                    },
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                      isDense: true,
-                      counterText: '',
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 50,
-                  width: 50,
-                  margin: const EdgeInsets.all(5),
-                  child: TextField(
-                    controller: _textController4,
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number,
-                    onChanged: (_) {
-                      FocusScope.of(context).nextFocus();
-                    },
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                      isDense: true,
-                      counterText: '',
-                    ),
-                  ),
-                ),
+                OtpWidget(textEditingController: _textController1),
+                OtpWidget(textEditingController: _textController2),
+                OtpWidget(textEditingController: _textController3),
+                OtpWidget(textEditingController: _textController4),
               ],
             ),
             const SizedBox(
@@ -212,45 +133,17 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
             ),
             Column(
               children: [
-                InkWell(
-                  onTap: () {
-                    widget.reSendOTP();
-                  },
-                  child: RichText(
-                    text: const TextSpan(
-                      style:
-                          TextStyle(fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
-                      children: <TextSpan>[
-                        TextSpan(text: StringResources.receivedOTP),
-                        TextSpan(
-                            text: StringResources.resendOTP,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, color: ColorConstants.appColor)),
-                      ],
-                    ),
-                  ),
+                AuthRichTextWidget(
+                  onClickEvent: () => widget.reSendOTP(),
+                  textOne: StringResources.receivedOTP,
+                  textTwo: StringResources.resendOTP,
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () {
-                    widget.pageController.jumpToPage(0);
-                  },
-                  child: RichText(
-                    text: const TextSpan(
-                      style:
-                          TextStyle(fontSize: 14.0, color: Colors.black, fontFamily: 'Montserrat'),
-                      children: <TextSpan>[
-                        TextSpan(text: StringResources.changePhoneNumber),
-                        TextSpan(
-                            text: StringResources.goBack,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, color: ColorConstants.appColor)),
-                      ],
-                    ),
-                  ),
-                ),
+                const SizedBox(height: 10),
+                AuthRichTextWidget(
+                  onClickEvent: () => widget.pageController.jumpToPage(0),
+                  textOne: StringResources.changePhoneNumber,
+                  textTwo: StringResources.goBack,
+                )
               ],
             ),
             const SizedBox(

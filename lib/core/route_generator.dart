@@ -8,6 +8,7 @@ import 'package:navolaya_flutter/presentation/ui/helpAndInfo/help_and_info_page.
 import 'package:navolaya_flutter/presentation/ui/introScreen/intro_page.dart';
 import 'package:navolaya_flutter/presentation/ui/registration/registration_page.dart';
 import 'package:navolaya_flutter/presentation/ui/settings/settings_page.dart';
+import 'package:navolaya_flutter/presentation/ui/updatePassword/update_password_page.dart';
 import 'package:navolaya_flutter/presentation/ui/user/user_detail_page.dart';
 
 import '../presentation/ui/dashBoard/dashboard_page.dart';
@@ -20,6 +21,7 @@ class RouteGenerator {
   static const loginPage = '/loginPage';
   static const authenticationPage = '/authenticationPage';
   static const registrationPage = "/registrationPage";
+  static const updatePasswordPage = "/updatePasswordPage";
   static const dashBoardPage = '/dashBoardPage';
   static const userDetailPage = '/userDetailPage';
   static const connectionRequestPage = '/connectionRequestPage';
@@ -47,6 +49,17 @@ class RouteGenerator {
           String mobileNumber = args[ConfigFile.mobileNumberKey];
           return MaterialPageRoute(
               builder: (_) => RegistrationPage(
+                    countryCode: countryCode,
+                    mobileNumber: mobileNumber,
+                  ));
+        }
+        return _errorRoute();
+      case updatePasswordPage:
+        if (args is Map<String, dynamic>) {
+          String countryCode = args[ConfigFile.countryCodeKey];
+          String mobileNumber = args[ConfigFile.mobileNumberKey];
+          return MaterialPageRoute(
+              builder: (_) => UpdatePasswordPage(
                     countryCode: countryCode,
                     mobileNumber: mobileNumber,
                   ));

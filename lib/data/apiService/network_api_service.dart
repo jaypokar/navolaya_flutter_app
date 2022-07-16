@@ -63,6 +63,7 @@ class NetworkAPIService implements BaseAPIService {
               ));
         } else {
           response = await _dio.put(url,
+              queryParameters: queryParameters,
               data: FormData.fromMap(queryParameters),
               options: Options(
                 contentType: 'multipart/form-data',

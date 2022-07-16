@@ -10,7 +10,7 @@ import 'package:navolaya_flutter/resources/image_resources.dart';
 import '../../../injection_container.dart';
 import '../../../resources/string_resources.dart';
 import '../../uiNotifiers/ui_notifiers.dart';
-import '../dashBoard/widget/floating_action_button_widget.dart';
+import '../dashBoard/widget/floating_search_button_widget.dart';
 import '../home/home_widget.dart';
 import '../home/widget/dummy_widget.dart';
 import '../myConnections/my_connections_widget.dart';

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,6 +30,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void initState() {
     super.initState();
+    //_controller.jumpToPage(1);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Timer(const Duration(seconds: 2), () {
+      _controller.jumpToPage(1);
+    });
   }
 
   @override

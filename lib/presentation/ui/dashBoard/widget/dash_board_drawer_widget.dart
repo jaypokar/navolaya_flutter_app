@@ -5,6 +5,9 @@ import 'package:navolaya_flutter/presentation/ui/dashBoard/widget/drawer_list_it
 import 'package:navolaya_flutter/resources/image_resources.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
+import '../../../../core/route_generator.dart';
+import '../../../../data/sessionManager/session_manager.dart';
+import '../../../../injection_container.dart';
 import '../../../basicWidget/loading_widget.dart';
 import '../../../bloc/authBloc/auth_bloc.dart';
 
@@ -36,7 +39,7 @@ class _DashBoardDrawerWidgetState extends State<DashBoardDrawerWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width * 0.85,
       child: Drawer(
         child: Column(
           children: [
@@ -131,8 +134,13 @@ class _DashBoardDrawerWidgetState extends State<DashBoardDrawerWidget> {
                       height: 17,
                       width: 17,
                     ),
-                    onPressed: () {
-                      context.read<AuthBloc>().add(const InitiateLogout());
+                    onPressed: () async {
+                      await sl<SessionManager>().initiateLogout();
+                      if (mounted) {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            RouteGenerator.authenticationPage, (route) => false);
+                        //context.read<AuthBloc>().add(const InitiateLogout());
+                      }
                     },
                     label: Text(
                       StringResources.logout.toUpperCase(),
