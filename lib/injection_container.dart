@@ -9,9 +9,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/data/repositoryImpl/auth_repository_impl.dart';
 import 'package:navolaya_flutter/data/repositoryImpl/master_repository_impl.dart';
+import 'package:navolaya_flutter/data/repositoryImpl/profile_repository_impl.dart';
 import 'package:navolaya_flutter/domain/auth_repository.dart';
 import 'package:navolaya_flutter/domain/master_repository.dart';
+import 'package:navolaya_flutter/domain/profile_repository.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
+import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
 import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,35 +39,34 @@ Future<void> init() async {
 void _initBlocs() {
   //Add Auth Bloc
   sl.registerFactory(
-    () => AuthBloc(
-      sl(),
-    ),
+    () => AuthBloc(sl()),
+  );
+
+  //Add Profile Bloc
+  sl.registerFactory(
+    () => ProfileBloc(sl()),
   );
 }
 
 void _initRepositories() {
   //Api Service
   sl.registerLazySingleton<BaseAPIService>(
-    () => NetworkAPIService(
-      sl(),
-      sl(),
-      sl(),
-    ),
+    () => NetworkAPIService(sl(), sl(), sl()),
   );
 
   //Master  Repository
   sl.registerLazySingleton<MasterRepository>(
-    () => MasterRepositoryImpl(
-      sl(),
-    ),
+    () => MasterRepositoryImpl(sl()),
   );
 
   //Auth  Repository
   sl.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(
-      sl(),
-      sl(),
-    ),
+    () => AuthRepositoryImpl(sl(), sl()),
+  );
+
+  //Profile Repository
+  sl.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepositoryImpl(sl(), sl()),
   );
 }
 

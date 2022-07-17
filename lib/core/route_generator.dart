@@ -4,6 +4,8 @@ import 'package:navolaya_flutter/presentation/ui/auth/authentication_page.dart';
 import 'package:navolaya_flutter/presentation/ui/blockedUsers/blocked_users_page.dart';
 import 'package:navolaya_flutter/presentation/ui/connectionRequests/connection_requests_page.dart';
 import 'package:navolaya_flutter/presentation/ui/editProfile/edit_profile_page.dart';
+import 'package:navolaya_flutter/presentation/ui/editProfile/update_additional_info_page.dart';
+import 'package:navolaya_flutter/presentation/ui/editProfile/update_basic_info_page.dart';
 import 'package:navolaya_flutter/presentation/ui/helpAndInfo/help_and_info_page.dart';
 import 'package:navolaya_flutter/presentation/ui/introScreen/intro_page.dart';
 import 'package:navolaya_flutter/presentation/ui/registration/registration_page.dart';
@@ -29,6 +31,8 @@ class RouteGenerator {
   static const settingsPage = '/settingsPage';
   static const blockedUserPage = '/blockedUsersPage';
   static const helpAndInfoPage = '/helpAndInfoPage';
+  static const updateBasicInfoPage = '/updateBasicInfoPage';
+  static const updateAdditionalInfoPage = '/updateAdditionalInfoPage';
 
   const RouteGenerator();
 
@@ -77,6 +81,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const BlockedUsersPage());
       case helpAndInfoPage:
         return MaterialPageRoute(builder: (_) => const HelpAndInfoPage());
+      case updateBasicInfoPage:
+        return MaterialPageRoute(builder: (_) => const UpdateBasicInfoPage());
+      case updateAdditionalInfoPage:
+        return MaterialPageRoute(builder: (_) => const UpdateAdditionalInfoPage());
       case userDetailPage:
         if (args is String) {
           return MaterialPageRoute(builder: (_) => UserDetailPage(image: args));

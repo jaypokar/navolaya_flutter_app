@@ -27,11 +27,14 @@ class CommonFunctions {
     return MaterialColor(color.value, swatch);
   }
 
-  void showSnackBar({required BuildContext context,
-    required String message,
-    required Color bgColor,
-    required Color textColor}) {
+  void showSnackBar(
+      {required BuildContext context,
+      required String message,
+      required Color bgColor,
+      required Color textColor,
+      int duration = 2}) {
     final snackBar = SnackBar(
+      duration: Duration(seconds: duration),
       content: Text(
         message,
         textAlign: TextAlign.center,

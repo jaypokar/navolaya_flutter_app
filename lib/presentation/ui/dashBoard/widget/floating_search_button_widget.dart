@@ -45,7 +45,7 @@ class FloatingActionButtonWidget extends StatelessWidget {
   void callBottomSheet(BuildContext context) {
     showModalBottomSheet(
         constraints: BoxConstraints.loose(
-            Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.62)),
+            Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.65)),
         // <= this is set to 3/4 of screen size.
         isScrollControlled: true,
         shape: const RoundedRectangleBorder(

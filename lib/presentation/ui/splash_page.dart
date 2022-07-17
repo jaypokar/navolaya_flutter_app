@@ -46,7 +46,7 @@ class SplashScreenState extends State<SplashScreen> {
     await sl<MasterRepository>().fetchAllContentsData();
     await sl<MasterRepository>().fetchAllMasterData();
 
-    /* if (mounted) {
+    /*  if (mounted) {
       Navigator.pushReplacementNamed(context, RouteGenerator.registrationPage,
           arguments: {ConfigFile.countryCodeKey: '+91', ConfigFile.mobileNumberKey: '8160231082'});
     }*/

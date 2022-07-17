@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -7,8 +9,9 @@ import 'text_field_widget.dart';
 
 class DateInputWidget extends StatefulWidget {
   final Function onDateSelected;
+  String? initialDate;
 
-  const DateInputWidget({required this.onDateSelected, Key? key}) : super(key: key);
+  DateInputWidget({required this.onDateSelected, this.initialDate, Key? key}) : super(key: key);
 
   @override
   State<DateInputWidget> createState() => _DateInputWidgetState();
@@ -17,6 +20,14 @@ class DateInputWidget extends StatefulWidget {
 class _DateInputWidgetState extends State<DateInputWidget> {
   DateTime? selectedDate;
   final TextEditingController _birthdateController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialDate != null) {
+      _birthdateController.text = widget.initialDate!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

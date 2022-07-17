@@ -17,9 +17,9 @@ typedef _PickImageFromCameraOrGallery = Future<XFile?> Function();
 enum ImageSelectionType { gallery, camera, cancel }
 
 class ProfileImageWidget extends StatefulWidget {
-  final Function onImageSelected;
+  final Function? onImageSelected;
 
-  const ProfileImageWidget({required this.onImageSelected, Key? key}) : super(key: key);
+  const ProfileImageWidget({this.onImageSelected, Key? key}) : super(key: key);
 
   @override
   State<ProfileImageWidget> createState() => _ProfileImageWidgetState();
@@ -133,7 +133,9 @@ class _ProfileImageWidgetState extends State<ProfileImageWidget> {
       final bytes = await _croppedFile!.readAsBytes();
       logger
           .i('the image size is :${sl<CommonFunctions>().getFileSizeString(bytes: bytes.length)}');
-      widget.onImageSelected(_croppedFile);
+      if (widget.onImageSelected != null) {
+        widget.onImageSelected!(_croppedFile);
+      }
     }
 
     setState(() {});

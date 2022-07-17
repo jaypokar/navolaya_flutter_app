@@ -12,8 +12,14 @@ class FirstIntroWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(ImageResources.firstIntroImg)),
+          borderRadius: BorderRadius.circular(10),
+          child: Image.asset(
+            ImageResources.firstIntroImg,
+            height: MediaQuery.of(context).size.height * 0.30,
+            width: MediaQuery.of(context).size.width * 0.80,
+            fit: BoxFit.cover,
+          ),
+        ),
         const SizedBox(
           height: 20,
         ),
@@ -23,7 +29,7 @@ class FirstIntroWidget extends StatelessWidget {
             StringResources.introScreenTitleOne,
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 28, fontWeight: FontWeight.w800, color: ColorConstants.textColor1),
+                fontSize: 22, fontWeight: FontWeight.w800, color: ColorConstants.textColor1),
           ),
         ),
         const SizedBox(
@@ -38,7 +44,7 @@ class FirstIntroWidget extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: ColorConstants.textColor2,
-                height: 1.8),
+                height: 1.4),
           ),
         ),
       ],

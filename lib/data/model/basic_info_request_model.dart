@@ -6,8 +6,8 @@ class BasicInfoRequestModel {
   String relationWithJNV;
   String fromYear;
   String toYear;
-  Map<String, dynamic> qualification;
-  Map<String, dynamic> occupation;
+  String qualification;
+  String occupation;
   String gender;
   String password;
 

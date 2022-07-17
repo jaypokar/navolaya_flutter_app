@@ -30,6 +30,7 @@ class NetworkAPIService implements BaseAPIService {
       {required String url,
       required Map<String, dynamic> queryParameters,
       bool isTokenNeeded = true,
+      FormData? formData,
       required ApiType apiType}) async {
     final connectivityResult = await _connectivity.checkConnectivity();
     if (connectivityResult == ConnectivityResult.mobile ||
@@ -63,7 +64,6 @@ class NetworkAPIService implements BaseAPIService {
               ));
         } else {
           response = await _dio.put(url,
-              queryParameters: queryParameters,
               data: FormData.fromMap(queryParameters),
               options: Options(
                 contentType: 'multipart/form-data',
@@ -75,8 +75,6 @@ class NetworkAPIService implements BaseAPIService {
 
         return right(response.data);
       } on DioError catch (e) {
-        logger.e(e.message);
-
         if (e.response != null) {
           if (e.response!.statusCode == 400 ||
               e.response!.statusCode == 401 ||
@@ -87,6 +85,9 @@ class NetworkAPIService implements BaseAPIService {
             if (e.response!.statusCode == 401 || e.response!.statusCode == 403) {
               await initiateLogoutProcess();
             }
+            logger.e(e.response!.data['message'].toString());
+          } else {
+            logger.e(e.message);
           }
           return Left(
             Failure(

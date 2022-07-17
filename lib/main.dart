@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
+import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
 import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 
@@ -29,6 +30,7 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(create: (_) => di.sl<AuthBloc>()),
+        BlocProvider<ProfileBloc>(create: (_) => di.sl<ProfileBloc>()),
       ],
       child: MaterialApp(
         title: 'Navolaya',
@@ -64,5 +66,10 @@ class _MyAppState extends State<MyApp> {
   void dispose() {
     super.dispose();
     sl<UiNotifiers>().mobileVerificationTitleNotifier.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 }

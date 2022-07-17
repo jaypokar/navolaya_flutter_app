@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:navolaya_flutter/core/route_generator.dart';
+import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
 
 import '../../../core/color_constants.dart';
 import '../../../injection_container.dart';
@@ -43,15 +45,27 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (BuildContext blocContext, state) {
-        if (state is AuthErrorState) {
-          showMessage(true, state.message);
-        } else if (state is UpdateBasicInfoState) {
-          showMessage(false, state.loginAndBasicInfoData.message!);
-          _controller.jumpToPage(1);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ProfileBloc, ProfileState>(listener: (BuildContext blocContext, state) {
+          if (state is ProfileErrorState) {
+            showMessage(true, state.message);
+          } else if (state is UpdateAdditionalInfoState) {
+            showMessage(false, state.updateAdditionalInfo.message!);
+            Timer(const Duration(seconds: 2), () {
+              Navigator.of(context).pushReplacementNamed(RouteGenerator.dashBoardPage);
+            });
+          }
+        }),
+        BlocListener<AuthBloc, AuthState>(listener: (BuildContext blocContext, state) {
+          if (state is AuthErrorState) {
+            showMessage(true, state.message);
+          } else if (state is UpdateBasicInfoState) {
+            showMessage(false, state.loginAndBasicInfoData.message!);
+            _controller.jumpToPage(1);
+          }
+        }),
+      ],
       child: Scaffold(
         body: Column(
           children: [

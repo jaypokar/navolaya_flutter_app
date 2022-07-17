@@ -241,6 +241,18 @@ class Data {
 
   String? get phone => _phone;
 
+  set aboutMe(String? value) {
+    _aboutMe = value;
+  }
+
+  set birthDate(dynamic value) {
+    _birthDate = value;
+  }
+
+  set house(String? value) {
+    _house = value;
+  }
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['full_name'] = _fullName;

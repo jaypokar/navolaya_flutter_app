@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/data/model/basic_info_request_model.dart';
+import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
 import 'package:navolaya_flutter/domain/master_repository.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/drop_down_widget.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/text_field_widget.dart';
+import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
 import 'package:navolaya_flutter/presentation/ui/registration/widget/gender_radio_widget.dart';
 
 import '../../../../data/model/masters_model.dart';
@@ -19,10 +21,12 @@ import 'password_input_widget.dart';
 class BasicInfoWidget extends StatefulWidget {
   final String countryCode;
   final String mobileNumber;
+  final bool isEdit;
 
   const BasicInfoWidget({
     required this.countryCode,
     required this.mobileNumber,
+    this.isEdit = false,
     Key? key,
   }) : super(key: key);
 
@@ -33,7 +37,6 @@ class BasicInfoWidget extends StatefulWidget {
 class _BasicInfoWidgetState extends State<BasicInfoWidget> {
   late Schools _schoolValue;
   late JnvRelations _relationWithJNVValue;
-  late JnvHouses _jnvHousesValues;
   late OccupationAreas _occupationAreaValue;
   late Qualifications _qualificationValue;
   late Occupations _occupationsValue;
@@ -46,7 +49,6 @@ class _BasicInfoWidgetState extends State<BasicInfoWidget> {
   final List<String> _toYearsList = [];
   late final List<Schools> _schoolList;
   late final List<JnvRelations> _relationWithJNVList;
-  late final List<JnvHouses> _jnvHousesList;
   late final List<OccupationAreas> _occupationAreaList;
   late final List<Qualifications> _qualificationList;
   late final List<Occupations> _occupationList;
@@ -69,10 +71,6 @@ class _BasicInfoWidgetState extends State<BasicInfoWidget> {
     _relationWithJNVValue = _relationWithJNVList.first;
 
     ///
-    _jnvHousesList = masterRepository.jnvHousesList;
-    _jnvHousesValues = _jnvHousesList.first;
-
-    ///
     _occupationAreaList = masterRepository.occupationAreasList;
     _occupationAreaValue = _occupationAreaList.first;
 
@@ -86,6 +84,10 @@ class _BasicInfoWidgetState extends State<BasicInfoWidget> {
 
     ///
     createYears();
+
+    if (widget.isEdit) {
+      context.read<ProfileBloc>().add(const FetchPersonalDetails());
+    }
   }
 
   void createYears() {
@@ -101,134 +103,170 @@ class _BasicInfoWidgetState extends State<BasicInfoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFieldWidget(
-              controller: _nameController,
-              hint: StringResources.enterNameHint,
-              textInputType: TextInputType.name,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            DropDownWidget<Schools>(
-              list: _schoolList,
-              value: _schoolValue,
-              onValueSelect: (Schools value) {
-                _schoolValue = value;
-              },
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            DropDownWidget<JnvRelations>(
-              list: _relationWithJNVList,
-              value: _relationWithJNVValue,
-              onValueSelect: (JnvRelations value) {
-                _relationWithJNVValue = value;
-              },
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Row(
-              children: [
-                Expanded(
-                    child: DropDownWidget<String>(
-                      list: _formYearsList,
-                  value: _fromYearsValue,
-                  onValueSelect: (String value) {
-                    _fromYearsValue = value;
-                  },
-                )),
+    return BlocListener<ProfileBloc, ProfileState>(
+      listener: (_, state) {
+        if (state is LoadPersonalDetailsState) {
+          loadPersonalDetails(state.loginAndBasicInfoData);
+        } else if (state is ProfileErrorState) {
+          sl<CommonFunctions>().showSnackBar(
+            context: context,
+            message: state.message,
+            bgColor: Colors.red,
+            textColor: Colors.white,
+          );
+        } else if (state is LoadUpdateProfileBasicInfoState) {
+          sl<CommonFunctions>().showSnackBar(
+            context: context,
+            message: state.loginAndBasicInfoData.message!,
+            bgColor: Colors.green,
+            textColor: Colors.white,
+          );
+        }
+      },
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (widget.isEdit) ...[
                 const SizedBox(
-                  width: 10,
+                  height: 20,
                 ),
-                Expanded(
-                    child: DropDownWidget<String>(
-                      list: _toYearsList,
-                  value: _toYearsValue,
-                  onValueSelect: (String value) {
-                    _toYearsValue = value;
-                  },
-                )),
               ],
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            GroupDropDownWidget<Qualifications>(
-              list: _qualificationList,
-              value: _qualificationValue,
-              onValueSelect: (Qualifications value) {
-                _qualificationValue = value;
-              },
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            DropDownWidget<JnvHouses>(
-              list: _jnvHousesList,
-              value: _jnvHousesValues,
-              onValueSelect: (JnvHouses value) {
-                _jnvHousesValues = value;
-              },
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            DropDownWidget<OccupationAreas>(
-              list: _occupationAreaList,
-              value: _occupationAreaValue,
-              onValueSelect: (OccupationAreas value) {
-                _occupationAreaValue = value;
-              },
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            GroupDropDownWidget<Occupations>(
-              list: _occupationList,
-              value: _occupationsValue,
-              onValueSelect: (Occupations value) {
-                _occupationsValue = value;
-              },
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            GenderRadioWidget(
-              gender: _genderValue,
-              onValueSelect: (String value) {
-                _genderValue = value;
-              },
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            PasswordInputWidget(textEditingController: _passwordController),
-            const SizedBox(
-              height: 10,
-            ),
-            BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {
-              if (state is AuthLoadingState) {
-                return const LoadingWidget();
-              } else {
-                return ButtonWidget(
-                  buttonText: StringResources.next.toUpperCase(),
-                  padding: 0,
-                  onPressButton: () => initiateUpdateBasicInfo(),
-                );
-              }
-            }),
-          ],
+              TextFieldWidget(
+                controller: _nameController,
+                hint: StringResources.enterNameHint,
+                textInputType: TextInputType.name,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              DropDownWidget<Schools>(
+                list: _schoolList,
+                value: _schoolValue,
+                onValueSelect: (Schools value) {
+                  _schoolValue = value;
+                },
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              DropDownWidget<JnvRelations>(
+                list: _relationWithJNVList,
+                value: _relationWithJNVValue,
+                onValueSelect: (JnvRelations value) {
+                  _relationWithJNVValue = value;
+                },
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                      child: DropDownWidget<String>(
+                    list: _formYearsList,
+                    value: _fromYearsValue,
+                    onValueSelect: (String value) {
+                      _fromYearsValue = value;
+                    },
+                  )),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                      child: DropDownWidget<String>(
+                    list: _toYearsList,
+                    value: _toYearsValue,
+                    onValueSelect: (String value) {
+                      _toYearsValue = value;
+                    },
+                  )),
+                ],
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              GroupDropDownWidget<Qualifications>(
+                list: _qualificationList,
+                value: _qualificationValue,
+                onValueSelect: (Qualifications value) {
+                  _qualificationValue = value;
+                },
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              DropDownWidget<OccupationAreas>(
+                list: _occupationAreaList,
+                value: _occupationAreaValue,
+                onValueSelect: (OccupationAreas value) {
+                  _occupationAreaValue = value;
+                },
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              GroupDropDownWidget<Occupations>(
+                list: _occupationList,
+                value: _occupationsValue,
+                onValueSelect: (Occupations value) {
+                  _occupationsValue = value;
+                },
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              GenderRadioWidget(
+                gender: _genderValue,
+                onValueSelect: (String value) {
+                  _genderValue = value;
+                },
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              if (!widget.isEdit) ...[
+                PasswordInputWidget(textEditingController: _passwordController),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+              getButton()
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Widget getButton() {
+    if (widget.isEdit) {
+      return BlocBuilder<ProfileBloc, ProfileState>(builder: (_, state) {
+        if (state is ProfileLoadingState) {
+          return const LoadingWidget();
+        } else {
+          return ButtonWidget(
+            buttonText: StringResources.save.toUpperCase(),
+            padding: 0,
+            onPressButton: () => initiateUpdateBasicInfo(),
+          );
+        }
+      });
+    }
+
+    return BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {
+      if (state is AuthLoadingState) {
+        return const LoadingWidget();
+      } else {
+        return ButtonWidget(
+          buttonText: StringResources.next.toUpperCase(),
+          padding: 0,
+          onPressButton: () => initiateUpdateBasicInfo(),
+        );
+      }
+    });
   }
 
   void initiateUpdateBasicInfo() {
@@ -240,13 +278,11 @@ class _BasicInfoWidgetState extends State<BasicInfoWidget> {
       showValidationMessage(StringResources.pleaseSelectRelationWithJNV);
     } else if (_qualificationValue.id!.isEmpty) {
       showValidationMessage(StringResources.pleaseSelectGraduations);
-    } else if (_jnvHousesValues.id!.isEmpty) {
-      showValidationMessage(StringResources.pleaseSelectHouse);
     } else if (_occupationAreaValue.id!.isEmpty) {
       showValidationMessage(StringResources.pleaseSelectOccupationArea);
     } else if (_occupationsValue.id!.isEmpty) {
       showValidationMessage(StringResources.pleaseSelectProfession);
-    } else if (_passwordController.text.isEmpty) {
+    } else if (_passwordController.text.isEmpty && !widget.isEdit) {
       showValidationMessage(StringResources.pleaseEnterPassword);
     } else {
       final basicInfoRequestData = BasicInfoRequestModel(
@@ -261,18 +297,24 @@ class _BasicInfoWidgetState extends State<BasicInfoWidget> {
             'area': _qualificationValue.area!,
             'title': _qualificationValue.title!,
             'shortname': _qualificationValue.shortName!
-          },
+          }.toString(),
           {
             'area': _occupationAreaValue.title!,
             'type': _occupationsValue.area,
             'title': _occupationsValue.title,
-          },
+          }.toString(),
           _genderValue.toLowerCase(),
-          _passwordController.text);
+          widget.isEdit ? '' : _passwordController.text);
 
-      context
-          .read<AuthBloc>()
-          .add(InitiateUpdateBasicInfoEvent(basicInfoRequestData: basicInfoRequestData));
+      if (!widget.isEdit) {
+        context
+            .read<AuthBloc>()
+            .add(InitiateUpdateBasicInfoEvent(basicInfoRequestData: basicInfoRequestData));
+      } else {
+        context
+            .read<ProfileBloc>()
+            .add(UpdateProfileBasicInfoEvent(basicInfoRequestData: basicInfoRequestData));
+      }
     }
   }
 
@@ -286,6 +328,56 @@ class _BasicInfoWidgetState extends State<BasicInfoWidget> {
       );
     }
     return;
+  }
+
+  void loadPersonalDetails(LoginAndBasicInfoModel data) {
+    if (data.data != null) {
+      _nameController.text = data.data!.fullName!;
+
+      ///
+      _schoolValue = _schoolList.firstWhere((element) => data.data!.school!.state == element.state);
+
+      ///
+      _relationWithJNVValue =
+          _relationWithJNVList.firstWhere((element) => data.data!.relationWithJnv == element.title);
+
+      ///
+      if (data.data!.occupation != null) {
+        _occupationAreaValue = _occupationAreaList
+            .firstWhere((element) => data.data!.occupation?.area! == element.title);
+      }
+
+      ///
+      if (data.data!.qualification != null) {
+        _qualificationValue = _qualificationList
+            .firstWhere((element) => data.data!.qualification?.title == element.title);
+      }
+
+      ///
+      if (data.data!.occupation != null) {
+        _occupationsValue =
+            _occupationList.firstWhere((element) => data.data!.occupation?.title == element.title);
+      }
+
+      ///
+      _fromYearsValue = '${data.data!.fromYear}';
+
+      ///
+      _toYearsValue = '${data.data!.toYear}';
+
+      ///
+      if (data.data!.gender == 'male') {
+        _genderValue = 'Male';
+      } else if (data.data!.gender == 'female') {
+        _genderValue = 'Female';
+      } else {
+        _genderValue = 'Other';
+      }
+
+      ///
+
+      setState(() {});
+    }
   }
 
   @override

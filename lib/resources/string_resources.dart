@@ -106,4 +106,6 @@ class StringResources {
 
   static const String gallery = 'Gallery';
   static const String camera = 'Camera';
+  static const String personalDetails = 'Personal Details';
+  static const String additionalDetail = 'Additional Details';
 }

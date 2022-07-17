@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/update_additional_info_model.dart';
+
 class SessionManager {
   final SharedPreferences _preferences;
 
@@ -22,7 +24,7 @@ class SessionManager {
     _preferences.setBool(isLoggedInKey, true);
   }
 
-  LoginAndBasicInfoModel? _getUserDetails() {
+  LoginAndBasicInfoModel? getUserDetails() {
     if (_loginData == null) {
       final value = _preferences.getString(userDataKey) ?? '';
       final userDetails = json.decode(value) as Map<String, dynamic>;
@@ -31,8 +33,15 @@ class SessionManager {
     return _loginData;
   }
 
+  void updateAdditionalInfo(UpdateAdditionalInfoModel data) {
+    _loginData!.data!.aboutMe = data.data!.aboutMe!;
+    _loginData!.data!.birthDate = data.data!.birthDate!;
+    _loginData!.data!.house = data.data!.house!;
+    initiateUserLogin(_loginData!);
+  }
+
   String getToken() {
-    return _getUserDetails()?.data!.authToken ?? '';
+    return getUserDetails()!.data!.authToken ?? '';
   }
 
   bool isUserFirstTimeIn() {
