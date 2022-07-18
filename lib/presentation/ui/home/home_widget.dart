@@ -20,6 +20,7 @@ class _HomeWidgetState extends State<HomeWidget> with AutomaticKeepAliveClientMi
   @override
   void initState() {
     super.initState();
+
     _widgetOptions = <Widget>[
       const RecentUsersWidget(
         key: PageStorageKey('Recent'),

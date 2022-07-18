@@ -6,6 +6,7 @@ import 'package:navolaya_flutter/presentation/ui/connectionRequests/connection_r
 import 'package:navolaya_flutter/presentation/ui/editProfile/edit_profile_page.dart';
 import 'package:navolaya_flutter/presentation/ui/editProfile/update_additional_info_page.dart';
 import 'package:navolaya_flutter/presentation/ui/editProfile/update_basic_info_page.dart';
+import 'package:navolaya_flutter/presentation/ui/editProfile/update_social_profiles_page.dart';
 import 'package:navolaya_flutter/presentation/ui/helpAndInfo/help_and_info_page.dart';
 import 'package:navolaya_flutter/presentation/ui/introScreen/intro_page.dart';
 import 'package:navolaya_flutter/presentation/ui/registration/registration_page.dart';
@@ -33,6 +34,7 @@ class RouteGenerator {
   static const helpAndInfoPage = '/helpAndInfoPage';
   static const updateBasicInfoPage = '/updateBasicInfoPage';
   static const updateAdditionalInfoPage = '/updateAdditionalInfoPage';
+  static const updateSocialProfileLinksPage = '/updateSocialProfileLinksPage';
 
   const RouteGenerator();
 
@@ -85,6 +87,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const UpdateBasicInfoPage());
       case updateAdditionalInfoPage:
         return MaterialPageRoute(builder: (_) => const UpdateAdditionalInfoPage());
+      case updateSocialProfileLinksPage:
+        return MaterialPageRoute(builder: (_) => const UpdateSocialProfilesPage());
       case userDetailPage:
         if (args is String) {
           return MaterialPageRoute(builder: (_) => UserDetailPage(image: args));

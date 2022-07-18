@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
+import 'package:navolaya_flutter/data/model/social_media_profiles_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/update_additional_info_model.dart';
@@ -37,6 +38,17 @@ class SessionManager {
     _loginData!.data!.aboutMe = data.data!.aboutMe!;
     _loginData!.data!.birthDate = data.data!.birthDate!;
     _loginData!.data!.house = data.data!.house!;
+    initiateUserLogin(_loginData!);
+  }
+
+  void updateSocialMediaLinks(SocialMediaProfilesModel socialMediaProfiles) {
+    String fb = socialMediaProfiles.data!.socialProfileLinks!.facebook ?? '';
+    String insta = socialMediaProfiles.data!.socialProfileLinks!.instagram ?? '';
+    String twitter = socialMediaProfiles.data!.socialProfileLinks!.twitter ?? '';
+    String linkedIn = socialMediaProfiles.data!.socialProfileLinks!.linkedin ?? '';
+    String youtube = socialMediaProfiles.data!.socialProfileLinks!.youtube ?? '';
+    _loginData!.data!.socialProfileLinks = SocialProfileLinks(
+        facebook: fb, instagram: insta, linkedin: linkedIn, twitter: twitter, youtube: youtube);
     initiateUserLogin(_loginData!);
   }
 

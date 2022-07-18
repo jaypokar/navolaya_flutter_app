@@ -30,6 +30,12 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   String _mobileNumber = '';
 
   @override
+  void initState() {
+    super.initState();
+    sl<UiNotifiers>().createOTPResendTimerNotifier();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _screenHeight = MediaQuery.of(context).size.height * 0.10;
@@ -180,6 +186,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   @override
   void dispose() {
     _controller.dispose();
+    sl<UiNotifiers>().otpResendTimer.dispose();
     super.dispose();
   }
 }

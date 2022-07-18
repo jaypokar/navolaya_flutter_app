@@ -1,5 +1,5 @@
-/// message : "Profile information updated successfully"
-/// data : {"full_name":"Chandan Chhajer","user_code":"1656090012CJ","email":"","school":{"region":"Jaipur","state":"Rajasthan","district":"Barmer","city":"Pachpadra","pincode":"344032","latitude":25.9126614,"longitude":72.2547811},"relation_with_jnv":"alumni","from_year":2004,"to_year":2011,"qualification":{"_id":"62b5ed9c3d4fd3fb3adcd7af","area":"Engineering","title":"Bachelor of Engineering","shortname":"B.E / B.Tech"},"occupation":{"_id":"62b5ed9c3d4fd3fb3adcd7b0","area":"Private Company","type":"Accounting, Banking & Finance","title":"Banking Professional"},"gender":"male","house":"","birth_date":null,"about_me":"","current_address":null,"permanent_address":null,"user_image":null,"auth_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbl91c2VyX2lkIjoiNjJiNWVjOWRkZjJhNzdlZGUzNTkyYzExIiwibG9naW5fdXNlcl9yb2xlIjoidXNlciIsImxvZ2luX3VzZXJfbmFtZSI6IkNoYW5kYW4gQ2hoYWplciIsImlhdCI6MTY1NjA5MDAxMiwiZXhwIjoxNjU2Njk0ODEyfQ.9xKF9kSuwJ7YZWjgfEwdfZmKeTlXZS-RY4TENN7G7Lk","last_login_time":"2022-06-24T17:00:12.522Z","is_user_account_verified":1,"is_phone_verified":1,"is_basic_profile_updated":1,"jnv_verification_status":0,"allow_notifications":1,"social_profile_links":null,"display_settings":{"phone":"my_connections","email":"none","user_image":"all","birth_day_month":"all","birth_year":"none","current_address":"my_connections","permanent_address":"my_connections","social_profile_links":"all","current_location":"all"},"_id":"62b5ec9ddf2a77ede3592c11","country_code":"+91","phone":"9983730875"}
+/// message : "You have logged in successfully"
+/// data : {"full_name":"Jay Pokar","user_code":"1657916130UF","email":"","school":{"_id":"62879b983a3e730c64e33d7e","region":"Jaipur","state":"Rajasthan","district":"Barmer","city":"Pachpadra","pincode":"344032","latitude":25.9126614,"longitude":72.2547811},"relation_with_jnv":"Alumni","from_year":1970,"to_year":2022,"qualification":null,"occupation":null,"gender":"male","house":"Shivalik","birth_date":"1992-11-03T00:00:00.000Z","about_me":"Many careers—like becoming a doctor, a scientist, a teacher, and more—require a certain level of education and specific skills. If you are looking to pursue similar careers to these, then you almost always need to graduate from college—and often even obtain further education, like a Master’s or Doctoral Degree. Going to college is the only way to become qualified for these types of jobs and prepare you for a career in a certain specialized field.","current_address":null,"permanent_address":null,"user_image":null,"auth_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbl91c2VyX2lkIjoiNjJkMWJhYTBjYTA4OTZlYWQ3ZGY3NjRlIiwibG9naW5fdXNlcl9yb2xlIjoidXNlciIsImxvZ2luX3VzZXJfbmFtZSI6IkpheSBQb2thciIsImlhdCI6MTY1ODE2Njc1MCwiZXhwIjoxNjU4NzcxNTUwfQ.HZtkeYQS9vkayZ6MD2m_gDW_Prjh63CPHAxts-HVnJ0","last_login_time":"2022-07-18T17:52:30.378Z","is_user_account_verified":1,"is_phone_verified":1,"is_basic_profile_updated":1,"jnv_verification_status":0,"allow_notifications":1,"social_profile_links":{"facebook":"www.facebook.com","instagram":"www.instagram.com","linkedin":"www.linkedIn.com","twitter":"www.twitter.com","youtube":"www.youtube.com"},"display_settings":{"phone":"my_connections","email":"none","user_image":"all","birth_day_month":"all","birth_year":"none","current_address":"my_connections","permanent_address":"my_connections","social_profile_links":"all","find_me_nearby":"all"},"_id":"62d1baa0ca0896ead7df764e","country_code":"+91","phone":"8160231082"}
 
 class LoginAndBasicInfoModel {
   LoginAndBasicInfoModel({
@@ -14,12 +14,10 @@ class LoginAndBasicInfoModel {
     _message = json['message'];
     _data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
-
   String? _message;
   Data? _data;
 
   String? get message => _message;
-
   Data? get data => _data;
 
   Map<String, dynamic> toJson() {
@@ -32,34 +30,34 @@ class LoginAndBasicInfoModel {
   }
 }
 
-/// full_name : "Chandan Chhajer"
-/// user_code : "1656090012CJ"
+/// full_name : "Jay Pokar"
+/// user_code : "1657916130UF"
 /// email : ""
-/// school : {"region":"Jaipur","state":"Rajasthan","district":"Barmer","city":"Pachpadra","pincode":"344032","latitude":25.9126614,"longitude":72.2547811}
-/// relation_with_jnv : "alumni"
-/// from_year : 2004
-/// to_year : 2011
-/// qualification : {"_id":"62b5ed9c3d4fd3fb3adcd7af","area":"Engineering","title":"Bachelor of Engineering","shortname":"B.E / B.Tech"}
-/// occupation : {"_id":"62b5ed9c3d4fd3fb3adcd7b0","area":"Private Company","type":"Accounting, Banking & Finance","title":"Banking Professional"}
+/// school : {"_id":"62879b983a3e730c64e33d7e","region":"Jaipur","state":"Rajasthan","district":"Barmer","city":"Pachpadra","pincode":"344032","latitude":25.9126614,"longitude":72.2547811}
+/// relation_with_jnv : "Alumni"
+/// from_year : 1970
+/// to_year : 2022
+/// qualification : null
+/// occupation : null
 /// gender : "male"
-/// house : ""
-/// birth_date : null
-/// about_me : ""
+/// house : "Shivalik"
+/// birth_date : "1992-11-03T00:00:00.000Z"
+/// about_me : "Many careers—like becoming a doctor, a scientist, a teacher, and more—require a certain level of education and specific skills. If you are looking to pursue similar careers to these, then you almost always need to graduate from college—and often even obtain further education, like a Master’s or Doctoral Degree. Going to college is the only way to become qualified for these types of jobs and prepare you for a career in a certain specialized field."
 /// current_address : null
 /// permanent_address : null
 /// user_image : null
-/// auth_token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbl91c2VyX2lkIjoiNjJiNWVjOWRkZjJhNzdlZGUzNTkyYzExIiwibG9naW5fdXNlcl9yb2xlIjoidXNlciIsImxvZ2luX3VzZXJfbmFtZSI6IkNoYW5kYW4gQ2hoYWplciIsImlhdCI6MTY1NjA5MDAxMiwiZXhwIjoxNjU2Njk0ODEyfQ.9xKF9kSuwJ7YZWjgfEwdfZmKeTlXZS-RY4TENN7G7Lk"
-/// last_login_time : "2022-06-24T17:00:12.522Z"
+/// auth_token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbl91c2VyX2lkIjoiNjJkMWJhYTBjYTA4OTZlYWQ3ZGY3NjRlIiwibG9naW5fdXNlcl9yb2xlIjoidXNlciIsImxvZ2luX3VzZXJfbmFtZSI6IkpheSBQb2thciIsImlhdCI6MTY1ODE2Njc1MCwiZXhwIjoxNjU4NzcxNTUwfQ.HZtkeYQS9vkayZ6MD2m_gDW_Prjh63CPHAxts-HVnJ0"
+/// last_login_time : "2022-07-18T17:52:30.378Z"
 /// is_user_account_verified : 1
 /// is_phone_verified : 1
 /// is_basic_profile_updated : 1
 /// jnv_verification_status : 0
 /// allow_notifications : 1
-/// social_profile_links : null
-/// display_settings : {"phone":"my_connections","email":"none","user_image":"all","birth_day_month":"all","birth_year":"none","current_address":"my_connections","permanent_address":"my_connections","social_profile_links":"all","current_location":"all"}
-/// _id : "62b5ec9ddf2a77ede3592c11"
+/// social_profile_links : {"facebook":"www.facebook.com","instagram":"www.instagram.com","linkedin":"www.linkedIn.com","twitter":"www.twitter.com","youtube":"www.youtube.com"}
+/// display_settings : {"phone":"my_connections","email":"none","user_image":"all","birth_day_month":"all","birth_year":"none","current_address":"my_connections","permanent_address":"my_connections","social_profile_links":"all","find_me_nearby":"all"}
+/// _id : "62d1baa0ca0896ead7df764e"
 /// country_code : "+91"
-/// phone : "9983730875"
+/// phone : "8160231082"
 
 class Data {
   Data({
@@ -70,11 +68,11 @@ class Data {
     String? relationWithJnv,
     int? fromYear,
     int? toYear,
-    Qualification? qualification,
-    Occupation? occupation,
+    dynamic qualification,
+    dynamic occupation,
     String? gender,
     String? house,
-    dynamic birthDate,
+    String? birthDate,
     String? aboutMe,
     dynamic currentAddress,
     dynamic permanentAddress,
@@ -86,7 +84,7 @@ class Data {
     int? isBasicProfileUpdated,
     int? jnvVerificationStatus,
     int? allowNotifications,
-    dynamic socialProfileLinks,
+    SocialProfileLinks? socialProfileLinks,
     DisplaySettings? displaySettings,
     String? id,
     String? countryCode,
@@ -102,9 +100,9 @@ class Data {
     _qualification = qualification;
     _occupation = occupation;
     _gender = gender;
-    _house = house;
-    _birthDate = birthDate;
-    _aboutMe = aboutMe;
+    this.house = house;
+    this.birthDate = birthDate;
+    this.aboutMe = aboutMe;
     _currentAddress = currentAddress;
     _permanentAddress = permanentAddress;
     _userImage = userImage;
@@ -115,7 +113,7 @@ class Data {
     _isBasicProfileUpdated = isBasicProfileUpdated;
     _jnvVerificationStatus = jnvVerificationStatus;
     _allowNotifications = allowNotifications;
-    _socialProfileLinks = socialProfileLinks;
+    this.socialProfileLinks = socialProfileLinks;
     _displaySettings = displaySettings;
     _id = id;
     _countryCode = countryCode;
@@ -130,13 +128,12 @@ class Data {
     _relationWithJnv = json['relation_with_jnv'];
     _fromYear = json['from_year'];
     _toYear = json['to_year'];
-    _qualification =
-        json['qualification'] != null ? Qualification.fromJson(json['qualification']) : null;
-    _occupation = json['occupation'] != null ? Occupation.fromJson(json['occupation']) : null;
+    _qualification = json['qualification'];
+    _occupation = json['occupation'];
     _gender = json['gender'];
-    _house = json['house'];
-    _birthDate = json['birth_date'];
-    _aboutMe = json['about_me'];
+    house = json['house'];
+    birthDate = json['birth_date'];
+    aboutMe = json['about_me'];
     _currentAddress = json['current_address'];
     _permanentAddress = json['permanent_address'];
     _userImage = json['user_image'];
@@ -147,7 +144,9 @@ class Data {
     _isBasicProfileUpdated = json['is_basic_profile_updated'];
     _jnvVerificationStatus = json['jnv_verification_status'];
     _allowNotifications = json['allow_notifications'];
-    _socialProfileLinks = json['social_profile_links'];
+    socialProfileLinks = json['social_profile_links'] != null
+        ? SocialProfileLinks.fromJson(json['social_profile_links'])
+        : null;
     _displaySettings = json['display_settings'] != null
         ? DisplaySettings.fromJson(json['display_settings'])
         : null;
@@ -163,12 +162,12 @@ class Data {
   String? _relationWithJnv;
   int? _fromYear;
   int? _toYear;
-  Qualification? _qualification;
-  Occupation? _occupation;
+  dynamic _qualification;
+  dynamic _occupation;
   String? _gender;
-  String? _house;
-  dynamic _birthDate;
-  String? _aboutMe;
+  String? house;
+  String? birthDate;
+  String? aboutMe;
   dynamic _currentAddress;
   dynamic _permanentAddress;
   dynamic _userImage;
@@ -179,7 +178,7 @@ class Data {
   int? _isBasicProfileUpdated;
   int? _jnvVerificationStatus;
   int? _allowNotifications;
-  dynamic _socialProfileLinks;
+  SocialProfileLinks? socialProfileLinks;
   DisplaySettings? _displaySettings;
   String? _id;
   String? _countryCode;
@@ -199,17 +198,11 @@ class Data {
 
   int? get toYear => _toYear;
 
-  Qualification? get qualification => _qualification;
+  dynamic get qualification => _qualification;
 
-  Occupation? get occupation => _occupation;
+  dynamic get occupation => _occupation;
 
   String? get gender => _gender;
-
-  String? get house => _house;
-
-  dynamic get birthDate => _birthDate;
-
-  String? get aboutMe => _aboutMe;
 
   dynamic get currentAddress => _currentAddress;
 
@@ -222,36 +215,14 @@ class Data {
   String? get lastLoginTime => _lastLoginTime;
 
   int? get isUserAccountVerified => _isUserAccountVerified;
-
   int? get isPhoneVerified => _isPhoneVerified;
-
   int? get isBasicProfileUpdated => _isBasicProfileUpdated;
-
   int? get jnvVerificationStatus => _jnvVerificationStatus;
-
   int? get allowNotifications => _allowNotifications;
-
-  dynamic get socialProfileLinks => _socialProfileLinks;
-
   DisplaySettings? get displaySettings => _displaySettings;
-
   String? get id => _id;
-
   String? get countryCode => _countryCode;
-
   String? get phone => _phone;
-
-  set aboutMe(String? value) {
-    _aboutMe = value;
-  }
-
-  set birthDate(dynamic value) {
-    _birthDate = value;
-  }
-
-  set house(String? value) {
-    _house = value;
-  }
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -264,16 +235,12 @@ class Data {
     map['relation_with_jnv'] = _relationWithJnv;
     map['from_year'] = _fromYear;
     map['to_year'] = _toYear;
-    if (_qualification != null) {
-      map['qualification'] = _qualification?.toJson();
-    }
-    if (_occupation != null) {
-      map['occupation'] = _occupation?.toJson();
-    }
+    map['qualification'] = _qualification;
+    map['occupation'] = _occupation;
     map['gender'] = _gender;
-    map['house'] = _house;
-    map['birth_date'] = _birthDate;
-    map['about_me'] = _aboutMe;
+    map['house'] = house;
+    map['birth_date'] = birthDate;
+    map['about_me'] = aboutMe;
     map['current_address'] = _currentAddress;
     map['permanent_address'] = _permanentAddress;
     map['user_image'] = _userImage;
@@ -284,7 +251,9 @@ class Data {
     map['is_basic_profile_updated'] = _isBasicProfileUpdated;
     map['jnv_verification_status'] = _jnvVerificationStatus;
     map['allow_notifications'] = _allowNotifications;
-    map['social_profile_links'] = _socialProfileLinks;
+    if (socialProfileLinks != null) {
+      map['social_profile_links'] = socialProfileLinks?.toJson();
+    }
     if (_displaySettings != null) {
       map['display_settings'] = _displaySettings?.toJson();
     }
@@ -303,7 +272,7 @@ class Data {
 /// current_address : "my_connections"
 /// permanent_address : "my_connections"
 /// social_profile_links : "all"
-/// current_location : "all"
+/// find_me_nearby : "all"
 
 class DisplaySettings {
   DisplaySettings({
@@ -315,7 +284,7 @@ class DisplaySettings {
     String? currentAddress,
     String? permanentAddress,
     String? socialProfileLinks,
-    String? currentLocation,
+    String? findMeNearby,
   }) {
     _phone = phone;
     _email = email;
@@ -325,7 +294,7 @@ class DisplaySettings {
     _currentAddress = currentAddress;
     _permanentAddress = permanentAddress;
     _socialProfileLinks = socialProfileLinks;
-    _currentLocation = currentLocation;
+    _findMeNearby = findMeNearby;
   }
 
   DisplaySettings.fromJson(dynamic json) {
@@ -337,7 +306,7 @@ class DisplaySettings {
     _currentAddress = json['current_address'];
     _permanentAddress = json['permanent_address'];
     _socialProfileLinks = json['social_profile_links'];
-    _currentLocation = json['current_location'];
+    _findMeNearby = json['find_me_nearby'];
   }
 
   String? _phone;
@@ -348,7 +317,7 @@ class DisplaySettings {
   String? _currentAddress;
   String? _permanentAddress;
   String? _socialProfileLinks;
-  String? _currentLocation;
+  String? _findMeNearby;
 
   String? get phone => _phone;
 
@@ -366,7 +335,7 @@ class DisplaySettings {
 
   String? get socialProfileLinks => _socialProfileLinks;
 
-  String? get currentLocation => _currentLocation;
+  String? get findMeNearby => _findMeNearby;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -378,107 +347,68 @@ class DisplaySettings {
     map['current_address'] = _currentAddress;
     map['permanent_address'] = _permanentAddress;
     map['social_profile_links'] = _socialProfileLinks;
-    map['current_location'] = _currentLocation;
+    map['find_me_nearby'] = _findMeNearby;
     return map;
   }
 }
 
-/// _id : "62b5ed9c3d4fd3fb3adcd7b0"
-/// area : "Private Company"
-/// type : "Accounting, Banking & Finance"
-/// title : "Banking Professional"
+/// facebook : "www.facebook.com"
+/// instagram : "www.instagram.com"
+/// linkedin : "www.linkedIn.com"
+/// twitter : "www.twitter.com"
+/// youtube : "www.youtube.com"
 
-class Occupation {
-  Occupation({
-    String? id,
-    String? area,
-    String? type,
-    String? title,
+class SocialProfileLinks {
+  SocialProfileLinks({
+    String? facebook,
+    String? instagram,
+    String? linkedin,
+    String? twitter,
+    String? youtube,
   }) {
-    _id = id;
-    _area = area;
-    _type = type;
-    _title = title;
+    _facebook = facebook;
+    _instagram = instagram;
+    _linkedin = linkedin;
+    _twitter = twitter;
+    _youtube = youtube;
   }
 
-  Occupation.fromJson(dynamic json) {
-    _id = json['_id'];
-    _area = json['area'];
-    _type = json['type'];
-    _title = json['title'];
+  SocialProfileLinks.fromJson(dynamic json) {
+    _facebook = json['facebook'];
+    _instagram = json['instagram'];
+    _linkedin = json['linkedin'];
+    _twitter = json['twitter'];
+    _youtube = json['youtube'];
   }
 
-  String? _id;
-  String? _area;
-  String? _type;
-  String? _title;
+  String? _facebook;
+  String? _instagram;
+  String? _linkedin;
+  String? _twitter;
+  String? _youtube;
 
-  String? get id => _id;
+  String? get facebook => _facebook;
 
-  String? get area => _area;
+  String? get instagram => _instagram;
 
-  String? get type => _type;
+  String? get linkedin => _linkedin;
 
-  String? get title => _title;
+  String? get twitter => _twitter;
+
+  String? get youtube => _youtube;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['_id'] = _id;
-    map['area'] = _area;
-    map['type'] = _type;
-    map['title'] = _title;
+    map['facebook'] = _facebook;
+    map['instagram'] = _instagram;
+    map['linkedin'] = _linkedin;
+    map['twitter'] = _twitter;
+    map['youtube'] = _youtube;
     return map;
   }
 }
 
-/// _id : "62b5ed9c3d4fd3fb3adcd7af"
-/// area : "Engineering"
-/// title : "Bachelor of Engineering"
-/// shortname : "B.E / B.Tech"
-
-class Qualification {
-  Qualification({
-    String? id,
-    String? area,
-    String? title,
-    String? shortname,
-  }) {
-    _id = id;
-    _area = area;
-    _title = title;
-    _shortname = shortname;
-  }
-
-  Qualification.fromJson(dynamic json) {
-    _id = json['_id'];
-    _area = json['area'];
-    _title = json['title'];
-    _shortname = json['shortname'];
-  }
-
-  String? _id;
-  String? _area;
-  String? _title;
-  String? _shortname;
-
-  String? get id => _id;
-
-  String? get area => _area;
-
-  String? get title => _title;
-
-  String? get shortname => _shortname;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['_id'] = _id;
-    map['area'] = _area;
-    map['title'] = _title;
-    map['shortname'] = _shortname;
-    return map;
-  }
-}
-
+/// _id : "62879b983a3e730c64e33d7e"
 /// region : "Jaipur"
 /// state : "Rajasthan"
 /// district : "Barmer"
@@ -489,6 +419,7 @@ class Qualification {
 
 class School {
   School({
+    String? id,
     String? region,
     String? state,
     String? district,
@@ -497,6 +428,7 @@ class School {
     double? latitude,
     double? longitude,
   }) {
+    _id = id;
     _region = region;
     _state = state;
     _district = district;
@@ -507,6 +439,7 @@ class School {
   }
 
   School.fromJson(dynamic json) {
+    _id = json['_id'];
     _region = json['region'];
     _state = json['state'];
     _district = json['district'];
@@ -516,6 +449,7 @@ class School {
     _longitude = json['longitude'];
   }
 
+  String? _id;
   String? _region;
   String? _state;
   String? _district;
@@ -524,22 +458,19 @@ class School {
   double? _latitude;
   double? _longitude;
 
+  String? get id => _id;
+
   String? get region => _region;
-
   String? get state => _state;
-
   String? get district => _district;
-
   String? get city => _city;
-
   String? get pincode => _pincode;
-
   double? get latitude => _latitude;
-
   double? get longitude => _longitude;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
+    map['_id'] = _id;
     map['region'] = _region;
     map['state'] = _state;
     map['district'] = _district;
@@ -549,4 +480,5 @@ class School {
     map['longitude'] = _longitude;
     return map;
   }
+
 }

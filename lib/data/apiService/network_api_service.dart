@@ -115,8 +115,12 @@ class NetworkAPIService implements BaseAPIService {
   @override
   Future<void> initiateLogoutProcess() async {
     await _sessionManager.initiateLogout();
-    Navigator.of(GlobalNavKey.navState.currentState!.context)
-        .popUntil(ModalRoute.withName(RouteGenerator.authenticationPage));
+
+    Navigator.pushNamedAndRemoveUntil(
+      GlobalNavKey.navState.currentState!.context,
+      RouteGenerator.authenticationPage,
+      (route) => false,
+    );
   }
 }
 

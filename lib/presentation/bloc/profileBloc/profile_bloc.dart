@@ -2,6 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:navolaya_flutter/data/model/basic_info_request_model.dart';
 import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
+import 'package:navolaya_flutter/data/model/social_media_links_request_model.dart';
+import 'package:navolaya_flutter/data/model/social_media_profiles_model.dart';
 
 import '../../../core/logger.dart';
 import '../../../data/model/update_additional_info_model.dart';
@@ -25,6 +27,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           data = await _fetchPersonalDetails(event, emit);
         } else if (event is UpdateProfileBasicInfoEvent) {
           data = await _updateProfileBasicInfo(event, emit);
+        } else if (event is UpdateSocialMediaProfileLinksEvent) {
+          data = await _updateSocialMediaLinks(event, emit);
         }
         emit(data);
       } catch (e) {
@@ -66,6 +70,17 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     return possibleData.fold(
       (l) => ProfileErrorState(message: l.error),
       (r) => LoadUpdateProfileBasicInfoState(loginAndBasicInfoData: r),
+    );
+  }
+
+  Future<ProfileState> _updateSocialMediaLinks(
+      UpdateSocialMediaProfileLinksEvent event, Emitter emit) async {
+    final possibleData = await _repository.updateSocialMediaLinksAPI(
+      socialMediaLinksRequestData: event.socialMediaLinksRequestData,
+    );
+    return possibleData.fold(
+      (l) => ProfileErrorState(message: l.error),
+      (r) => LoadUpdateSocialMediaLinksState(socialMediaProfiles: r),
     );
   }
 }

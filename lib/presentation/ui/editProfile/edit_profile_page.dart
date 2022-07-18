@@ -59,7 +59,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     Navigator.of(context).pushNamed(RouteGenerator.updateAdditionalInfoPage),
                 child: const EditProfileOptionsItemWidget(
                     title: StringResources.updateAdditionalDetails)),
-            const EditProfileOptionsItemWidget(title: StringResources.updateSocialProfiles),
+            InkWell(
+                onTap: () =>
+                    Navigator.of(context).pushNamed(RouteGenerator.updateSocialProfileLinksPage),
+                child: const EditProfileOptionsItemWidget(
+                    title: StringResources.updateSocialProfiles)),
             const EditProfileOptionsItemWidget(title: StringResources.updatePhone),
             const EditProfileOptionsItemWidget(title: StringResources.updateEmail),
             //const SizedBox(height: 10),

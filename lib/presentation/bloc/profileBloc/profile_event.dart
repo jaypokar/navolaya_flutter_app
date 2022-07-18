@@ -28,6 +28,15 @@ class UpdateProfileBasicInfoEvent extends ProfileEvent {
   List<Object?> get props => [basicInfoRequestData];
 }
 
+class UpdateSocialMediaProfileLinksEvent extends ProfileEvent {
+  final SocialMediaLinksRequestModel socialMediaLinksRequestData;
+
+  const UpdateSocialMediaProfileLinksEvent({required this.socialMediaLinksRequestData});
+
+  @override
+  List<Object?> get props => [socialMediaLinksRequestData];
+}
+
 class FetchPersonalDetails extends ProfileEvent {
   const FetchPersonalDetails();
 

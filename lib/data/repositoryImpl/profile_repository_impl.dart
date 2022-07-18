@@ -3,6 +3,8 @@ import 'package:navolaya_flutter/core/either_extension_function.dart';
 import 'package:navolaya_flutter/core/failure.dart';
 import 'package:navolaya_flutter/data/model/basic_info_request_model.dart';
 import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
+import 'package:navolaya_flutter/data/model/social_media_links_request_model.dart';
+import 'package:navolaya_flutter/data/model/social_media_profiles_model.dart';
 import 'package:navolaya_flutter/data/model/update_additional_info_model.dart';
 import 'package:navolaya_flutter/data/sessionManager/session_manager.dart';
 import 'package:navolaya_flutter/domain/profile_repository.dart';
@@ -69,7 +71,33 @@ class ProfileRepositoryImpl implements ProfileRepository {
     if (_sessionManager.getUserDetails() == null) {
       return left(const Failure('No Personal Details available'));
     }
+
     final data = _sessionManager.getUserDetails();
+    //logger.i('the loginDetails is ${json.decode(data.toString())}');
     return right(data!);
+  }
+
+  @override
+  Future<Either<Failure, SocialMediaProfilesModel>> updateSocialMediaLinksAPI({
+    required SocialMediaLinksRequestModel socialMediaLinksRequestData,
+  }) async {
+    //--->
+    //--->
+    //--->
+    final possibleData = await _baseAPIService.executeAPI(
+        url: ConfigFile.updateSocialMediaLinksAPIUrl,
+        queryParameters: socialMediaLinksRequestData.toJson(),
+        isTokenNeeded: true,
+        apiType: ApiType.put);
+
+    if (possibleData.isLeft()) {
+      return left(Failure(possibleData.getLeft()!.error));
+    }
+
+    final response = possibleData.getRight();
+    SocialMediaProfilesModel data = SocialMediaProfilesModel.fromJson(response);
+    _sessionManager.updateSocialMediaLinks(data);
+
+    return right(data);
   }
 }

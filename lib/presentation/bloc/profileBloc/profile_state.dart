@@ -38,6 +38,15 @@ class LoadUpdateProfileBasicInfoState extends ProfileState {
   List<Object?> get props => [loginAndBasicInfoData];
 }
 
+class LoadUpdateSocialMediaLinksState extends ProfileState {
+  final SocialMediaProfilesModel socialMediaProfiles;
+
+  const LoadUpdateSocialMediaLinksState({required this.socialMediaProfiles});
+
+  @override
+  List<Object?> get props => [socialMediaProfiles];
+}
+
 class ProfileLoadingState extends ProfileState {
   const ProfileLoadingState();
 

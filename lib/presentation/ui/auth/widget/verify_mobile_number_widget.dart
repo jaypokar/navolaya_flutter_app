@@ -158,6 +158,9 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
   @override
   void dispose() {
     _textController1.dispose();
+    _textController2.dispose();
+    _textController3.dispose();
+    _textController4.dispose();
     super.dispose();
   }
 }

@@ -20,6 +20,7 @@ class ConfigFile {
   static const String updateForgotPasswordAPIUrl = '${apiBaseURL}auth/update-forgot-password';
   static const String updateAdditionalInfoAPIUrl = '${apiBaseURL}profile/additional-info';
   static const String updateProfileBasicInfoAPIUrl = '${apiBaseURL}profile/basic-info';
+  static const String updateSocialMediaLinksAPIUrl = '${apiBaseURL}profile/social-links';
 
   //Router data keys
   static const String countryCodeKey = 'countryCode';

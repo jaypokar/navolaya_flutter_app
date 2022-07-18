@@ -47,6 +47,9 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
       ),
     ];
 
+    sl<UiNotifiers>().createDashBoardTitleNotifier();
+    sl<UiNotifiers>().createRecentNearByPopularUserTabNotifier();
+
     _tabController = TabController(
       initialIndex: 0,
       length: 5,
@@ -94,11 +97,11 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
                   ),
                 ));
           }),
-          title: ValueListenableBuilder<String>(
+          title: ValueListenableBuilder<String?>(
             valueListenable: sl<UiNotifiers>().dashBoardTitleNotifier,
             builder: (_, title, __) {
               return Text(
-                title,
+                title!,
                 style: const TextStyle(color: Colors.white),
               );
             },

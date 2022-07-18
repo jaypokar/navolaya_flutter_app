@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/auth_rich_text_widget.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/otp_widget.dart';
+import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
 
 import '../../../core/color_constants.dart';
 import '../../../injection_container.dart';
@@ -34,12 +37,19 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
   final TextEditingController _newPassController = TextEditingController();
 
   late final String _updatePasswordSubTitleHint;
+  final int timerMaxSeconds = 120;
+  int currentSeconds = 0;
+  late final Timer _timer;
   double _screenHeight = 0.0;
+
+  String get timerText =>
+      '${((timerMaxSeconds - currentSeconds) ~/ 60).toString().padLeft(2, '0')}: ${((timerMaxSeconds - currentSeconds) % 60).toString().padLeft(2, '0')}';
 
   @override
   void initState() {
     super.initState();
 
+    sl<UiNotifiers>().createOTPResendTimerNotifier();
     _updatePasswordSubTitleHint = StringResources.updatePasswordSubTitle
         .replaceAll("{number}", '${widget.countryCode}-${widget.mobileNumber}');
   }
@@ -144,10 +154,28 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                 SizedBox(
                   height: _screenHeight * 0.95,
                 ),
-                AuthRichTextWidget(
-                  onClickEvent: () => reSendOTP(),
-                  textOne: StringResources.receivedOTP,
-                  textTwo: StringResources.resendOTP,
+                ValueListenableBuilder<int>(
+                  valueListenable: sl<UiNotifiers>().otpResendTimer,
+                  builder: (_, value, __) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AuthRichTextWidget(
+                          onClickEvent: () => value >= timerMaxSeconds ? reSendOTP() : null,
+                          textOne: StringResources.receivedOTP,
+                          textTwo: StringResources.resendOTP,
+                          color: value >= timerMaxSeconds
+                              ? ColorConstants.appColor
+                              : ColorConstants.greyColor,
+                        ),
+                        const SizedBox(width: 5),
+                        if (value < timerMaxSeconds) ...[
+                          Text(
+                              '(${((timerMaxSeconds - value) ~/ 60).toString().padLeft(2, '0')}: ${((timerMaxSeconds - value) % 60).toString().padLeft(2, '0')})')
+                        ]
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 10,
@@ -193,7 +221,18 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
     });
   }
 
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      currentSeconds = timer.tick;
+      sl<UiNotifiers>().otpResendTimer.value = timer.tick;
+      if (timer.tick >= timerMaxSeconds) {
+        timer.cancel();
+      }
+    });
+  }
+
   void reSendOTP() {
+    _startTimer();
     context.read<AuthBloc>().add(
           InitiateSendOtpEvent(
             countryCode: widget.countryCode,
@@ -234,5 +273,12 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
             ),
           );
     }
+  }
+
+  @override
+  void dispose() {
+    sl<UiNotifiers>().otpResendTimer.dispose();
+    _timer.cancel();
+    super.dispose();
   }
 }

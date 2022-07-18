@@ -23,15 +23,27 @@ class UiNotifiers {
 
   ///
   //home page user tabs changes notifier
-  final _recentNearByPopularUserTabNotifier = ValueNotifier<int>(0);
 
-  ValueNotifier<int> get recentNearByPopularUserTabNotifier => _recentNearByPopularUserTabNotifier;
+  ValueNotifier<int>? _recentNearByPopularUserTabNotifier;
+
+  ValueNotifier<int>? createRecentNearByPopularUserTabNotifier() {
+    _recentNearByPopularUserTabNotifier = ValueNotifier<int>(0);
+    return _recentNearByPopularUserTabNotifier;
+  }
+
+  ValueNotifier<int> get recentNearByPopularUserTabNotifier => _recentNearByPopularUserTabNotifier!;
 
   ///
   //dashBoard main tabs changes notifier
-  final _dashBoardTitleNotifier = ValueNotifier<String>('Discover');
 
-  ValueNotifier<String> get dashBoardTitleNotifier => _dashBoardTitleNotifier;
+  ValueNotifier<String>? _dashBoardTitleNotifier;
+
+  ValueNotifier<String>? createDashBoardTitleNotifier() {
+    _dashBoardTitleNotifier = ValueNotifier<String>('Discover');
+    return _dashBoardTitleNotifier;
+  }
+
+  ValueNotifier<String?> get dashBoardTitleNotifier => _dashBoardTitleNotifier!;
 
   ///
   //Connections - requests tabs changes notifier [the method below is used because while exiting the screen
@@ -45,4 +57,15 @@ class UiNotifiers {
   }
 
   ValueNotifier<int> get connectionRequestTabNotifier => _connectionRequestTabNotifier!;
+
+  ///
+  //Ui notifier for showing timer when otp is sent and timer is sent to reset
+  ValueNotifier<int>? _otpResendTimer;
+
+  ValueNotifier<int>? createOTPResendTimerNotifier() {
+    _otpResendTimer = ValueNotifier<int>(0);
+    return _otpResendTimer;
+  }
+
+  ValueNotifier<int> get otpResendTimer => _otpResendTimer!;
 }

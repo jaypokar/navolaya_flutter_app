@@ -108,4 +108,10 @@ class StringResources {
   static const String camera = 'Camera';
   static const String personalDetails = 'Personal Details';
   static const String additionalDetail = 'Additional Details';
+
+  static const String facebook = 'Facebook';
+  static const String instagram = 'Instagram';
+  static const String linkedIn = 'LinkedIn';
+  static const String youTube = 'Youtube';
+  static const String twitter = 'Twitter';
 }
