@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:navolaya_flutter/core/config_file.dart';
 import 'package:navolaya_flutter/presentation/ui/auth/authentication_page.dart';
 import 'package:navolaya_flutter/presentation/ui/blockedUsers/blocked_users_page.dart';
+import 'package:navolaya_flutter/presentation/ui/changePassword/change_password_page.dart';
 import 'package:navolaya_flutter/presentation/ui/connectionRequests/connection_requests_page.dart';
 import 'package:navolaya_flutter/presentation/ui/editProfile/edit_profile_page.dart';
 import 'package:navolaya_flutter/presentation/ui/editProfile/update_additional_info_page.dart';
 import 'package:navolaya_flutter/presentation/ui/editProfile/update_basic_info_page.dart';
+import 'package:navolaya_flutter/presentation/ui/editProfile/update_phone_or_email_page.dart';
 import 'package:navolaya_flutter/presentation/ui/editProfile/update_social_profiles_page.dart';
 import 'package:navolaya_flutter/presentation/ui/helpAndInfo/help_and_info_page.dart';
 import 'package:navolaya_flutter/presentation/ui/introScreen/intro_page.dart';
@@ -35,6 +37,8 @@ class RouteGenerator {
   static const updateBasicInfoPage = '/updateBasicInfoPage';
   static const updateAdditionalInfoPage = '/updateAdditionalInfoPage';
   static const updateSocialProfileLinksPage = '/updateSocialProfileLinksPage';
+  static const updatePhoneOrEmailPage = '/updatePhoneOrEmailPage';
+  static const changePasswordPage = '/changePasswordPage';
 
   const RouteGenerator();
 
@@ -89,6 +93,13 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const UpdateAdditionalInfoPage());
       case updateSocialProfileLinksPage:
         return MaterialPageRoute(builder: (_) => const UpdateSocialProfilesPage());
+      case changePasswordPage:
+        return MaterialPageRoute(builder: (_) => const ChangePasswordPage());
+      case updatePhoneOrEmailPage:
+        if (args is bool) {
+          return MaterialPageRoute(builder: (_) => UpdatePhoneOrEmailPage(isEmail: args));
+        }
+        return _errorRoute();
       case userDetailPage:
         if (args is String) {
           return MaterialPageRoute(builder: (_) => UserDetailPage(image: args));

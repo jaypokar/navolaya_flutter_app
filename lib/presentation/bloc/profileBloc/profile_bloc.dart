@@ -1,9 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:navolaya_flutter/data/model/basic_info_request_model.dart';
+import 'package:navolaya_flutter/data/model/change_password_model.dart';
 import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
 import 'package:navolaya_flutter/data/model/social_media_links_request_model.dart';
 import 'package:navolaya_flutter/data/model/social_media_profiles_model.dart';
+import 'package:navolaya_flutter/data/model/update_email_model.dart';
+import 'package:navolaya_flutter/data/model/update_phone_model.dart';
+import 'package:navolaya_flutter/data/model/update_send_otp_model.dart';
 
 import '../../../core/logger.dart';
 import '../../../data/model/update_additional_info_model.dart';
@@ -29,6 +33,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           data = await _updateProfileBasicInfo(event, emit);
         } else if (event is UpdateSocialMediaProfileLinksEvent) {
           data = await _updateSocialMediaLinks(event, emit);
+        } else if (event is UpdatePhoneEvent) {
+          data = await _updatePhone(event, emit);
+        } else if (event is SendOTPEvent) {
+          data = await _sendOTP(event, emit);
+        } else if (event is UpdateEmailEvent) {
+          data = await _updateEmail(event, emit);
+        } else if (event is ChangePasswordEvent) {
+          data = await _changePassword(event, emit);
         }
         emit(data);
       } catch (e) {
@@ -81,6 +93,52 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     return possibleData.fold(
       (l) => ProfileErrorState(message: l.error),
       (r) => LoadUpdateSocialMediaLinksState(socialMediaProfiles: r),
+    );
+  }
+
+  Future<ProfileState> _updatePhone(UpdatePhoneEvent event, Emitter emit) async {
+    final possibleData = await _repository.updatePhoneAPI(
+      code: event.countryCode,
+      number: event.mobileNumber,
+      otpNumber: event.otpNumber,
+    );
+    return possibleData.fold(
+      (l) => ProfileErrorState(message: l.error),
+      (r) => LoadUpdatePhoneState(updatePhoneResponse: r),
+    );
+  }
+
+  Future<ProfileState> _sendOTP(SendOTPEvent event, Emitter emit) async {
+    final possibleData = await _repository.sendOtpAPI(
+      code: event.countryCode,
+      phoneNumber: event.mobileNumber,
+      email: event.email,
+    );
+    return possibleData.fold(
+      (l) => ProfileErrorState(message: l.error),
+      (r) => LoadUpdateOTPState(updateSendOtpResponse: r),
+    );
+  }
+
+  Future<ProfileState> _updateEmail(UpdateEmailEvent event, Emitter emit) async {
+    final possibleData = await _repository.updateEmailAPI(
+      otpNumber: event.otpNumber,
+      email: event.email,
+    );
+    return possibleData.fold(
+      (l) => ProfileErrorState(message: l.error),
+      (r) => LoadUpdateEmailState(updateEmailResponse: r),
+    );
+  }
+
+  Future<ProfileState> _changePassword(ChangePasswordEvent event, Emitter emit) async {
+    final possibleData = await _repository.changePasswordAPI(
+      oldPassword: event.oldPassword,
+      newPassword: event.newPassword,
+    );
+    return possibleData.fold(
+      (l) => ProfileErrorState(message: l.error),
+      (r) => ChangePasswordState(changePasswordResponse: r),
     );
   }
 }

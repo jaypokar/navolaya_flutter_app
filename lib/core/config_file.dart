@@ -17,10 +17,16 @@ class ConfigFile {
   static const String loginAPIUrl = '${apiBaseURL}auth/login';
   static const String logoutAPIUrl = '${apiBaseURL}auth/logout';
   static const String updateBasicInfoAPIUrl = '${apiBaseURL}auth/basic-info';
+
   static const String updateForgotPasswordAPIUrl = '${apiBaseURL}auth/update-forgot-password';
   static const String updateAdditionalInfoAPIUrl = '${apiBaseURL}profile/additional-info';
   static const String updateProfileBasicInfoAPIUrl = '${apiBaseURL}profile/basic-info';
   static const String updateSocialMediaLinksAPIUrl = '${apiBaseURL}profile/social-links';
+  static const String updateSendOTPAPIUrl = '${apiBaseURL}profile/send-otp';
+  static const String updateMobileNumberAPIUrl = '${apiBaseURL}profile/update-phone';
+  static const String updateEmailAPIUrl = '${apiBaseURL}profile/update-email';
+  static const String updateJNVVerificationAPIUrl = '${apiBaseURL}profile/jnv-verification';
+  static const String changePasswordAPIUrl = '${apiBaseURL}profile/password';
 
   //Router data keys
   static const String countryCodeKey = 'countryCode';

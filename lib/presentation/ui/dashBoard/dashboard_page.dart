@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:navolaya_flutter/data/sessionManager/session_manager.dart';
 import 'package:navolaya_flutter/presentation/ui/dashBoard/widget/dash_board_drawer_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/messages/messages_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/notifications/notifications_widget.dart';
@@ -9,6 +10,7 @@ import 'package:navolaya_flutter/resources/image_resources.dart';
 
 import '../../../injection_container.dart';
 import '../../../resources/string_resources.dart';
+import '../../basicWidget/custom_button.dart';
 import '../../uiNotifiers/ui_notifiers.dart';
 import '../dashBoard/widget/floating_search_button_widget.dart';
 import '../home/home_widget.dart';
@@ -74,6 +76,12 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
     });
 
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    showJNVVerificationDialog();
   }
 
   @override
@@ -151,6 +159,72 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
         floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterDocked,
       ),
     );
+  }
+
+  void showJNVVerificationDialog() async {
+    if (sl<SessionManager>().getUserDetails()!.data!.jnvVerificationStatus == 0) {
+      await Future.delayed(const Duration(seconds: 2));
+
+      showDialog(
+        context: context,
+        barrierLabel: "Barrier",
+        barrierDismissible: true,
+        barrierColor: Colors.black.withOpacity(0.5),
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.35,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      StringResources.jnvVerificationTitle,
+                      style:
+                          TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text(
+                      StringResources.jnvVerificationSubTitle,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text(
+                      StringResources.jnvVerificationNote,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ButtonWidget(
+                        buttonText: StringResources.continueText.toUpperCase(),
+                        padding: 0,
+                        onPressButton: () {
+                          Navigator.of(context).pop();
+                        })
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
   }
 
   @override

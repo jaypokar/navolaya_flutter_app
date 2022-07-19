@@ -2,38 +2,41 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:navolaya_flutter/presentation/basicWidget/auth_rich_text_widget.dart';
-import 'package:navolaya_flutter/presentation/basicWidget/otp_widget.dart';
-import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
-import 'package:navolaya_flutter/resources/string_resources.dart';
+import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
 
 import '../../../../core/color_constants.dart';
 import '../../../../injection_container.dart';
+import '../../../../resources/string_resources.dart';
 import '../../../../util/common_functions.dart';
+import '../../../basicWidget/auth_rich_text_widget.dart';
 import '../../../basicWidget/custom_button.dart';
 import '../../../basicWidget/loading_widget.dart';
-import '../../../bloc/authBloc/auth_bloc.dart';
+import '../../../basicWidget/otp_widget.dart';
+import '../../../uiNotifiers/ui_notifiers.dart';
 
-class VerifyMobileNumberWidget extends StatefulWidget {
+class VerifyOTPWidget extends StatefulWidget {
+  final bool isEmail;
   final PageController pageController;
-  final double screenHeight;
-  final Function verifyOTP;
+  final ValueNotifier<String> titleChangeNotifier;
+  final Function updatePhoneOrEmail;
   final Function reSendOTP;
-  final String mobileNumber;
 
-  const VerifyMobileNumberWidget({required this.pageController,
-    required this.screenHeight,
-    required this.verifyOTP,
+  const VerifyOTPWidget({
+    required this.isEmail,
     required this.reSendOTP,
-    required this.mobileNumber,
-    Key? key})
-      : super(key: key);
+    required this.pageController,
+    required this.titleChangeNotifier,
+    required this.updatePhoneOrEmail,
+    Key? key,
+  }) : super(
+          key: key,
+        );
 
   @override
-  State<VerifyMobileNumberWidget> createState() => _VerifyMobileNumberWidgetState();
+  State<VerifyOTPWidget> createState() => _VerifyOTPWidgetState();
 }
 
-class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
+class _VerifyOTPWidgetState extends State<VerifyOTPWidget> {
   final TextEditingController _textController1 = TextEditingController();
   final TextEditingController _textController2 = TextEditingController();
   final TextEditingController _textController3 = TextEditingController();
@@ -41,7 +44,7 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
 
   final int timerMaxSeconds = 120;
   int currentSeconds = 0;
-  late final Timer _timer;
+  Timer? _timer;
 
   String get timerText =>
       '${((timerMaxSeconds - currentSeconds) ~/ 60).toString().padLeft(2, '0')}: ${((timerMaxSeconds - currentSeconds) % 60).toString().padLeft(2, '0')}';
@@ -58,9 +61,10 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
       padding: const EdgeInsets.all(10),
       child: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: widget.screenHeight,
+              height: MediaQuery.of(context).size.height * 0.2,
             ),
             const Text(
               StringResources.verificationPageTitle,
@@ -88,7 +92,7 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
                   valueListenable: sl<UiNotifiers>().mobileVerificationTitleNotifier,
                   builder: (_, number, __) {
                     final verificationSubTitleHint =
-                    StringResources.verificationPageSubTitle.replaceAll("{number}", number);
+                        StringResources.verificationPageSubTitle.replaceAll("{number}", number);
                     return Text(
                       verificationSubTitleHint,
                       textAlign: TextAlign.center,
@@ -115,8 +119,8 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
             const SizedBox(
               height: 10,
             ),
-            BlocBuilder<AuthBloc, AuthState>(builder: (_, state) {
-              if (state is AuthLoadingState) {
+            BlocBuilder<ProfileBloc, ProfileState>(builder: (_, state) {
+              if (state is ProfileLoadingState) {
                 return const LoadingWidget();
               } else {
                 return ButtonWidget(
@@ -133,8 +137,7 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
                           textColor: Colors.white);
                       return;
                     }
-
-                    widget.verifyOTP(_textController1.text +
+                    widget.updatePhoneOrEmail(_textController1.text +
                         _textController2.text +
                         _textController3.text +
                         _textController4.text);
@@ -143,7 +146,7 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
               }
             }),
             SizedBox(
-              height: widget.screenHeight + 20,
+              height: MediaQuery.of(context).size.height * 0.15,
             ),
             Column(
               children: [
@@ -177,7 +180,14 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
                 ),
                 const SizedBox(height: 10),
                 AuthRichTextWidget(
-                  onClickEvent: () => widget.pageController.jumpToPage(0),
+                  onClickEvent: () {
+                    if (widget.isEmail) {
+                      widget.titleChangeNotifier.value = StringResources.updateEmail;
+                    } else {
+                      widget.titleChangeNotifier.value = StringResources.updatePhone;
+                    }
+                    widget.pageController.jumpToPage(0);
+                  },
                   textOne: StringResources.changePhoneNumber,
                   textTwo: StringResources.goBack,
                 )
@@ -209,7 +219,9 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
     _textController3.dispose();
     _textController4.dispose();
     sl<UiNotifiers>().otpResendTimer.dispose();
-    _timer.cancel();
+    if (_timer != null) {
+      _timer!.cancel();
+    }
     super.dispose();
   }
 }

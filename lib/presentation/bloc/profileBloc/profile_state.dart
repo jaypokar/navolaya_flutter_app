@@ -47,6 +47,42 @@ class LoadUpdateSocialMediaLinksState extends ProfileState {
   List<Object?> get props => [socialMediaProfiles];
 }
 
+class LoadUpdatePhoneState extends ProfileState {
+  final UpdatePhoneModel updatePhoneResponse;
+
+  const LoadUpdatePhoneState({required this.updatePhoneResponse});
+
+  @override
+  List<Object?> get props => [updatePhoneResponse];
+}
+
+class LoadUpdateOTPState extends ProfileState {
+  final UpdateSendOtpModel updateSendOtpResponse;
+
+  const LoadUpdateOTPState({required this.updateSendOtpResponse});
+
+  @override
+  List<Object?> get props => [updateSendOtpResponse];
+}
+
+class LoadUpdateEmailState extends ProfileState {
+  final UpdateEmailModel updateEmailResponse;
+
+  const LoadUpdateEmailState({required this.updateEmailResponse});
+
+  @override
+  List<Object?> get props => [updateEmailResponse];
+}
+
+class ChangePasswordState extends ProfileState {
+  final ChangePasswordModel changePasswordResponse;
+
+  const ChangePasswordState({required this.changePasswordResponse});
+
+  @override
+  List<Object?> get props => [changePasswordResponse];
+}
+
 class ProfileLoadingState extends ProfileState {
   const ProfileLoadingState();
 

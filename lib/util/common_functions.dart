@@ -38,7 +38,7 @@ class CommonFunctions {
       content: Text(
         message,
         textAlign: TextAlign.center,
-        style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: textColor, fontSize: 16, fontFamily: 'Montserrat'),
       ),
       backgroundColor: bgColor,
     );

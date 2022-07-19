@@ -38,9 +38,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Timer(const Duration(seconds: 2), () {
-      _controller.jumpToPage(1);
-    });
   }
 
   @override

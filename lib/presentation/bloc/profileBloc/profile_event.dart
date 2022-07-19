@@ -37,6 +37,49 @@ class UpdateSocialMediaProfileLinksEvent extends ProfileEvent {
   List<Object?> get props => [socialMediaLinksRequestData];
 }
 
+class UpdatePhoneEvent extends ProfileEvent {
+  final String countryCode;
+  final String mobileNumber;
+  final String otpNumber;
+
+  const UpdatePhoneEvent(
+      {required this.countryCode, required this.mobileNumber, required this.otpNumber});
+
+  @override
+  List<Object?> get props => [countryCode, mobileNumber, otpNumber];
+}
+
+class UpdateEmailEvent extends ProfileEvent {
+  final String email;
+  final String otpNumber;
+
+  const UpdateEmailEvent({required this.email, required this.otpNumber});
+
+  @override
+  List<Object?> get props => [email, otpNumber];
+}
+
+class SendOTPEvent extends ProfileEvent {
+  final String countryCode;
+  final String mobileNumber;
+  final String email;
+
+  const SendOTPEvent({required this.countryCode, required this.mobileNumber, required this.email});
+
+  @override
+  List<Object?> get props => [countryCode, mobileNumber, email];
+}
+
+class ChangePasswordEvent extends ProfileEvent {
+  final String oldPassword;
+  final String newPassword;
+
+  const ChangePasswordEvent({required this.oldPassword, required this.newPassword});
+
+  @override
+  List<Object?> get props => [oldPassword, newPassword];
+}
+
 class FetchPersonalDetails extends ProfileEvent {
   const FetchPersonalDetails();
 

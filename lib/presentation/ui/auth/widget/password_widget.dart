@@ -68,7 +68,10 @@ class _SetNewPasswordWidgetState extends State<SetNewPasswordWidget> {
             const SizedBox(
               height: 10,
             ),
-            PasswordInputWidget(textEditingController: _newPassController),
+            PasswordInputWidget(
+              textEditingController: _newPassController,
+              showOrHidePassword: true,
+            ),
             const SizedBox(
               height: 10,
             ),

@@ -87,7 +87,9 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             const DividerAndSpaceWidget(),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushNamed(RouteGenerator.changePasswordPage);
+              },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,

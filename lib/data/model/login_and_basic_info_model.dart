@@ -92,7 +92,7 @@ class Data {
   }) {
     _fullName = fullName;
     _userCode = userCode;
-    _email = email;
+    this.email = email;
     _school = school;
     _relationWithJnv = relationWithJnv;
     _fromYear = fromYear;
@@ -117,13 +117,13 @@ class Data {
     _displaySettings = displaySettings;
     _id = id;
     _countryCode = countryCode;
-    _phone = phone;
+    this.phone = phone;
   }
 
   Data.fromJson(dynamic json) {
     _fullName = json['full_name'];
     _userCode = json['user_code'];
-    _email = json['email'];
+    email = json['email'];
     _school = json['school'] != null ? School.fromJson(json['school']) : null;
     _relationWithJnv = json['relation_with_jnv'];
     _fromYear = json['from_year'];
@@ -152,12 +152,12 @@ class Data {
         : null;
     _id = json['_id'];
     _countryCode = json['country_code'];
-    _phone = json['phone'];
+    phone = json['phone'];
   }
 
   String? _fullName;
   String? _userCode;
-  String? _email;
+  String? email;
   School? _school;
   String? _relationWithJnv;
   int? _fromYear;
@@ -182,13 +182,11 @@ class Data {
   DisplaySettings? _displaySettings;
   String? _id;
   String? _countryCode;
-  String? _phone;
+  String? phone;
 
   String? get fullName => _fullName;
 
   String? get userCode => _userCode;
-
-  String? get email => _email;
 
   School? get school => _school;
 
@@ -222,13 +220,12 @@ class Data {
   DisplaySettings? get displaySettings => _displaySettings;
   String? get id => _id;
   String? get countryCode => _countryCode;
-  String? get phone => _phone;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['full_name'] = _fullName;
     map['user_code'] = _userCode;
-    map['email'] = _email;
+    map['email'] = email;
     if (_school != null) {
       map['school'] = _school?.toJson();
     }
@@ -259,7 +256,7 @@ class Data {
     }
     map['_id'] = _id;
     map['country_code'] = _countryCode;
-    map['phone'] = _phone;
+    map['phone'] = phone;
     return map;
   }
 }

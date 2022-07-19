@@ -41,6 +41,16 @@ class SessionManager {
     initiateUserLogin(_loginData!);
   }
 
+  void updateMobileNumber(String number) {
+    _loginData!.data!.phone = number;
+    initiateUserLogin(_loginData!);
+  }
+
+  void updateEmail(String email) {
+    _loginData!.data!.email = email;
+    initiateUserLogin(_loginData!);
+  }
+
   void updateSocialMediaLinks(SocialMediaProfilesModel socialMediaProfiles) {
     String fb = socialMediaProfiles.data!.socialProfileLinks!.facebook ?? '';
     String insta = socialMediaProfiles.data!.socialProfileLinks!.instagram ?? '';

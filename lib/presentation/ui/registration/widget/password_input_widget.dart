@@ -4,15 +4,22 @@ import '../../../../resources/string_resources.dart';
 
 class PasswordInputWidget extends StatefulWidget {
   final TextEditingController textEditingController;
+  final bool showOrHidePassword;
+  final String hint;
 
-  const PasswordInputWidget({required this.textEditingController, Key? key}) : super(key: key);
+  const PasswordInputWidget({
+    required this.textEditingController,
+    required this.showOrHidePassword,
+    this.hint = StringResources.passwordHint,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<PasswordInputWidget> createState() => _PasswordInputWidgetState();
 }
 
 class _PasswordInputWidgetState extends State<PasswordInputWidget> {
-  bool _isObscure = false;
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +35,20 @@ class _PasswordInputWidgetState extends State<PasswordInputWidget> {
         ),
         decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-            labelText: StringResources.passwordHint,
+            labelText: widget.hint,
             counterText: "",
             suffixIcon: IconButton(
-                onPressed: () {
-                  setState(() {
-                    _isObscure = !_isObscure;
-                  });
-                },
-                icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility))),
+              onPressed: () {
+                setState(() {
+                  _isObscure = !_isObscure;
+                });
+              },
+              icon: widget.showOrHidePassword
+                  ? Icon(
+                      _isObscure ? Icons.visibility_off : Icons.visibility,
+                    )
+                  : const SizedBox.shrink(),
+            )),
       ),
     );
   }

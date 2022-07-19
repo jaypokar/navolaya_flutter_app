@@ -10,8 +10,11 @@ class StringResources {
   static const String welcomeBack = 'Welcome Back!';
   static const String mobileNumberPageSubtitle =
       'Weather you are creating an account or, signIn back in let’s start with your phone number';
+  static const String emailPageSubtitle =
+      'Weather you are creating an account or,  signing back in let’s enter your new email address';
   static const String phoneNumberHint = 'Enter Phone Number';
   static const String pleaseEnterOTP = 'Please Enter OTP';
+  static const String pleaseEnterValidNumber = 'Please Enter Valid Mobile Number';
   static const String continueText = 'continue';
 
   static const String updatePassword = 'Update Password';
@@ -33,6 +36,9 @@ class StringResources {
   static const String passwordPageSubTitle =
       'Let’s enter your secure password to access the app. Many more features you are allowed to access after the successful signIn';
   static const String passwordHint = 'Enter Password';
+  static const String passwordOldHint = 'Enter Old Password';
+  static const String passwordNewHint = 'Enter New Password';
+  static const String passwordCFMHint = 'Confirm New Password';
   static const String forgotPassword = 'Forgot Password? ';
   static const String resetNow = 'Reset Now';
   static const String update = 'Update';
@@ -114,4 +120,16 @@ class StringResources {
   static const String linkedIn = 'LinkedIn';
   static const String youTube = 'Youtube';
   static const String twitter = 'Twitter';
+
+  static const String pleaseEnterOldPassword = 'Please enter old password';
+  static const String pleaseEnterNewPassword = 'Please enter new password';
+  static const String pleaseEnterCFMPassword = 'Please enter confirm password';
+  static const String passwordDidNotMatched = "Password didn't matched";
+
+  //JNV verification dialog
+  static const String jnvVerificationTitle = 'Verify your identity';
+  static const String jnvVerificationSubTitle =
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry has been the industry's standard";
+  static const String jnvVerificationNote =
+      "Note: We will send a verification request to all your schoolmates or, batchmates. If anyone confirmed your identity and verified successfully, only then you will be able to use the application’s features.";
 }

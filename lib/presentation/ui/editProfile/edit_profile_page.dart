@@ -64,8 +64,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     Navigator.of(context).pushNamed(RouteGenerator.updateSocialProfileLinksPage),
                 child: const EditProfileOptionsItemWidget(
                     title: StringResources.updateSocialProfiles)),
-            const EditProfileOptionsItemWidget(title: StringResources.updatePhone),
-            const EditProfileOptionsItemWidget(title: StringResources.updateEmail),
+            InkWell(
+                onTap: () => Navigator.of(context)
+                    .pushNamed(RouteGenerator.updatePhoneOrEmailPage, arguments: false),
+                child: const EditProfileOptionsItemWidget(title: StringResources.updatePhone)),
+            InkWell(
+                onTap: () => Navigator.of(context)
+                    .pushNamed(RouteGenerator.updatePhoneOrEmailPage, arguments: true),
+                child: const EditProfileOptionsItemWidget(title: StringResources.updateEmail)),
             //const SizedBox(height: 10),
             //ButtonWidget(buttonText: StringResources.save.toUpperCase(), onPressButton: () {})
           ],

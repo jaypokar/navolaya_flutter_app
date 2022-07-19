@@ -228,7 +228,10 @@ class _BasicInfoWidgetState extends State<BasicInfoWidget> {
                 height: 10,
               ),
               if (!widget.isEdit) ...[
-                PasswordInputWidget(textEditingController: _passwordController),
+                PasswordInputWidget(
+                  textEditingController: _passwordController,
+                  showOrHidePassword: true,
+                ),
                 const SizedBox(
                   height: 10,
                 ),
