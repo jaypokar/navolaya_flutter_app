@@ -8,7 +8,7 @@ import 'package:navolaya_flutter/presentation/ui/editProfile/widget/verify_otp_w
 import 'package:navolaya_flutter/util/common_functions.dart';
 
 import '../../../resources/string_resources.dart';
-import '../../uiNotifiers/ui_notifiers.dart';
+import '../../cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
 
 class UpdatePhoneOrEmailPage extends StatefulWidget {
   final bool isEmail;
@@ -48,7 +48,7 @@ class _UpdatePhoneOrEmailPageState extends State<UpdatePhoneOrEmailPage> {
           _controller.jumpToPage(1);
           _titleChangeNotifier.value = StringResources.verificationPageTitle;
           if (!widget.isEmail) {
-            sl<UiNotifiers>().mobileVerificationTitleNotifier.value = _countryCode + _number;
+            context.read<MobileVerificationCubit>().changeNumber(_countryCode + _number);
           }
         }
       },

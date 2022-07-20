@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/core/config_file.dart';
+import 'package:navolaya_flutter/presentation/cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/pageIndicatorCubit/page_indicator_page_cubit.dart';
 import 'package:navolaya_flutter/presentation/ui/auth/authentication_page.dart';
 import 'package:navolaya_flutter/presentation/ui/blockedUsers/blocked_users_page.dart';
 import 'package:navolaya_flutter/presentation/ui/changePassword/change_password_page.dart';
@@ -16,6 +19,8 @@ import 'package:navolaya_flutter/presentation/ui/settings/settings_page.dart';
 import 'package:navolaya_flutter/presentation/ui/updatePassword/update_password_page.dart';
 import 'package:navolaya_flutter/presentation/ui/user/user_detail_page.dart';
 
+import '../injection_container.dart';
+import '../presentation/cubit/otpTimerCubit/otptimer_cubit.dart';
 import '../presentation/ui/dashBoard/dashboard_page.dart';
 import '../presentation/ui/splash_page.dart';
 
@@ -50,17 +55,32 @@ class RouteGenerator {
       case splashScreen:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
       case introPage:
-        return MaterialPageRoute(builder: (_) => const IntroPage());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<PageIndicatorPageCubit>(
+            create: (_) => sl<PageIndicatorPageCubit>(),
+            child: const IntroPage(),
+          ),
+        );
       case authenticationPage:
-        return MaterialPageRoute(builder: (_) => const AuthenticationPage());
+        return MaterialPageRoute(
+            builder: (_) => MultiBlocProvider(providers: [
+                  BlocProvider(create: (_) => sl<MobileVerificationCubit>()),
+                  BlocProvider(create: (_) => sl<OTPTimerCubit>()),
+                ], child: const AuthenticationPage()));
       case registrationPage:
         if (args is Map<String, dynamic>) {
           String countryCode = args[ConfigFile.countryCodeKey];
           String mobileNumber = args[ConfigFile.mobileNumberKey];
           return MaterialPageRoute(
-              builder: (_) => RegistrationPage(
-                    countryCode: countryCode,
-                    mobileNumber: mobileNumber,
+              builder: (_) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider<PageIndicatorPageCubit>(
+                          create: (_) => sl<PageIndicatorPageCubit>()),
+                    ],
+                    child: RegistrationPage(
+                      countryCode: countryCode,
+                      mobileNumber: mobileNumber,
+                    ),
                   ));
         }
         return _errorRoute();
@@ -69,9 +89,12 @@ class RouteGenerator {
           String countryCode = args[ConfigFile.countryCodeKey];
           String mobileNumber = args[ConfigFile.mobileNumberKey];
           return MaterialPageRoute(
-              builder: (_) => UpdatePasswordPage(
-                    countryCode: countryCode,
-                    mobileNumber: mobileNumber,
+              builder: (_) => BlocProvider<OTPTimerCubit>(
+                    create: (_) => sl<OTPTimerCubit>(),
+                    child: UpdatePasswordPage(
+                      countryCode: countryCode,
+                      mobileNumber: mobileNumber,
+                    ),
                   ));
         }
         return _errorRoute();

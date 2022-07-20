@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:navolaya_flutter/presentation/cubit/pageIndicatorCubit/page_indicator_page_cubit.dart';
 
 import '../../../../core/color_constants.dart';
-import '../../../../injection_container.dart';
-import '../../../uiNotifiers/ui_notifiers.dart';
 
 class IndicatorWidget extends StatelessWidget {
   const IndicatorWidget({Key? key}) : super(key: key);
@@ -17,9 +17,8 @@ class IndicatorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<int>(
-      valueListenable: sl<UiNotifiers>().indicatorNotifier,
-      builder: (_, pos, __) {
+    return BlocBuilder<PageIndicatorPageCubit, int>(
+      builder: (_, pos) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: _buildPageIndicator(pos),

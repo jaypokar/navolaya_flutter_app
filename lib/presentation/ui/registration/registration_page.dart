@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
+import 'package:navolaya_flutter/presentation/cubit/pageIndicatorCubit/page_indicator_page_cubit.dart';
 
 import '../../../core/color_constants.dart';
 import '../../../injection_container.dart';
 import '../../../resources/image_resources.dart';
 import '../../../util/common_functions.dart';
 import '../../bloc/authBloc/auth_bloc.dart';
-import '../../uiNotifiers/ui_notifiers.dart';
 import 'widget/additional_info_widget.dart';
 import 'widget/basic_info_widget.dart';
 import 'widget/step_indicator_widget.dart';
@@ -110,10 +110,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
             Expanded(
               flex: 7,
               child: PageView(
-                physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (int page) {
-                  sl<UiNotifiers>().stepsIndicatorNotifier.value = page;
-                },
+                /*physics: const NeverScrollableScrollPhysics(),*/
+                onPageChanged: (int page) =>
+                    context.read<PageIndicatorPageCubit>().changePage(page),
                 controller: _controller,
                 children: [
                   BasicInfoWidget(
@@ -139,11 +138,5 @@ class _RegistrationPageState extends State<RegistrationPage> {
         textColor: Colors.white,
       );
     }
-  }
-
-  @override
-  void dispose() {
-    sl<UiNotifiers>().stepsIndicatorNotifier.dispose();
-    super.dispose();
   }
 }

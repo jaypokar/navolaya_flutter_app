@@ -15,6 +15,8 @@ import 'package:navolaya_flutter/domain/master_repository.dart';
 import 'package:navolaya_flutter/domain/profile_repository.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
+import 'package:navolaya_flutter/presentation/cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/otpTimerCubit/otptimer_cubit.dart';
 import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'data/apiService/base_api_service.dart';
 import 'data/apiService/network_api_service.dart';
 import 'data/sessionManager/session_manager.dart';
+import 'presentation/cubit/pageIndicatorCubit/page_indicator_page_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -34,6 +37,9 @@ Future<void> init() async {
 
   // Bloc /* All the bloc injection are embedded here */
   _initBlocs();
+
+  //cubit inject for small and effective ui updates
+  _initCubits();
 }
 
 void _initBlocs() {
@@ -45,6 +51,18 @@ void _initBlocs() {
   //Add Profile Bloc
   sl.registerFactory(
     () => ProfileBloc(sl()),
+  );
+}
+
+void _initCubits() {
+  sl.registerFactory(
+    () => PageIndicatorPageCubit(),
+  );
+  sl.registerFactory(
+    () => MobileVerificationCubit(),
+  );
+  sl.registerFactory(
+    () => OTPTimerCubit(),
   );
 }
 

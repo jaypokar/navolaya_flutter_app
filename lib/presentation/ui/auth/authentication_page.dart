@@ -6,7 +6,7 @@ import 'package:navolaya_flutter/core/color_constants.dart';
 import 'package:navolaya_flutter/core/config_file.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
-import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
+import 'package:navolaya_flutter/presentation/cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
 
 import '../../../injection_container.dart';
 import '../../../resources/image_resources.dart';
@@ -30,12 +30,6 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   String _mobileNumber = '';
 
   @override
-  void initState() {
-    super.initState();
-    sl<UiNotifiers>().createOTPResendTimerNotifier();
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _screenHeight = MediaQuery.of(context).size.height * 0.10;
@@ -50,7 +44,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         } else if (state is ValidatePhoneState) {
           showMessage(false, state.validatePhoneData.message!);
           _isUserRegistered = state.validatePhoneData.data!.isUserAccountVerified == 1;
-          sl<UiNotifiers>().mobileVerificationTitleNotifier.value = _mobileNumber;
+          context.read<MobileVerificationCubit>().changeNumber(_mobileNumber);
           _controller.jumpToPage(_isUserRegistered ? 2 : 1);
         } else if (state is VerifyOtpState) {
           showMessage(false, state.verifyOtpData.message!);
@@ -186,7 +180,6 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   @override
   void dispose() {
     _controller.dispose();
-    sl<UiNotifiers>().otpResendTimer.dispose();
     super.dispose();
   }
 }

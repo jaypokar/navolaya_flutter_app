@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/auth_rich_text_widget.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/otp_widget.dart';
-import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
+import 'package:navolaya_flutter/presentation/cubit/otpTimerCubit/otptimer_cubit.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
 import '../../../../core/color_constants.dart';
@@ -13,6 +13,7 @@ import '../../../../util/common_functions.dart';
 import '../../../basicWidget/custom_button.dart';
 import '../../../basicWidget/loading_widget.dart';
 import '../../../bloc/authBloc/auth_bloc.dart';
+import '../../../cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
 
 class VerifyMobileNumberWidget extends StatefulWidget {
   final PageController pageController;
@@ -21,12 +22,13 @@ class VerifyMobileNumberWidget extends StatefulWidget {
   final Function reSendOTP;
   final String mobileNumber;
 
-  const VerifyMobileNumberWidget({required this.pageController,
-    required this.screenHeight,
-    required this.verifyOTP,
-    required this.reSendOTP,
-    required this.mobileNumber,
-    Key? key})
+  const VerifyMobileNumberWidget(
+      {required this.pageController,
+      required this.screenHeight,
+      required this.verifyOTP,
+      required this.reSendOTP,
+      required this.mobileNumber,
+      Key? key})
       : super(key: key);
 
   @override
@@ -41,15 +43,15 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
 
   final int timerMaxSeconds = 120;
   int currentSeconds = 0;
-  late final Timer _timer;
+  Timer? _timer;
 
   String get timerText =>
       '${((timerMaxSeconds - currentSeconds) ~/ 60).toString().padLeft(2, '0')}: ${((timerMaxSeconds - currentSeconds) % 60).toString().padLeft(2, '0')}';
 
   @override
   void initState() {
+    _startTimer();
     super.initState();
-    sl<UiNotifiers>().createOTPResendTimerNotifier();
   }
 
   @override
@@ -84,21 +86,19 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-              child: ValueListenableBuilder<String>(
-                  valueListenable: sl<UiNotifiers>().mobileVerificationTitleNotifier,
-                  builder: (_, number, __) {
-                    final verificationSubTitleHint =
+              child: BlocBuilder<MobileVerificationCubit, String>(builder: (_, number) {
+                final verificationSubTitleHint =
                     StringResources.verificationPageSubTitle.replaceAll("{number}", number);
-                    return Text(
-                      verificationSubTitleHint,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          height: 1.8,
-                          color: ColorConstants.textColor1,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14),
-                    );
-                  }),
+                return Text(
+                  verificationSubTitleHint,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      height: 1.8,
+                      color: ColorConstants.textColor1,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14),
+                );
+              }),
             ),
             const SizedBox(
               height: 10,
@@ -147,34 +147,28 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
             ),
             Column(
               children: [
-                ValueListenableBuilder<int>(
-                  valueListenable: sl<UiNotifiers>().otpResendTimer,
-                  builder: (_, value, __) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AuthRichTextWidget(
-                          onClickEvent: value >= timerMaxSeconds
-                              ? () {
-                                  _startTimer();
-                                  widget.reSendOTP();
-                                }
-                              : null,
-                          textOne: StringResources.receivedOTP,
-                          textTwo: StringResources.resendOTP,
-                          color: value >= timerMaxSeconds
-                              ? ColorConstants.appColor
-                              : ColorConstants.greyColor,
-                        ),
-                        const SizedBox(width: 5),
-                        if (value < timerMaxSeconds) ...[
-                          Text(
-                              '(${((timerMaxSeconds - value) ~/ 60).toString().padLeft(2, '0')}: ${((timerMaxSeconds - value) % 60).toString().padLeft(2, '0')})')
-                        ]
-                      ],
-                    );
-                  },
-                ),
+                BlocBuilder<OTPTimerCubit, int>(builder: (_, value) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AuthRichTextWidget(
+                        onClickEvent: value >= timerMaxSeconds
+                            ? () {
+                                _startTimer();
+                                widget.reSendOTP();
+                              }
+                            : null,
+                        textOne: StringResources.receivedOTP,
+                        textTwo: StringResources.resendOTP,
+                        color: value >= timerMaxSeconds
+                            ? ColorConstants.appColor
+                            : ColorConstants.greyColor,
+                      ),
+                      const SizedBox(width: 5),
+                      if (value < timerMaxSeconds) ...[Text(timerText)]
+                    ],
+                  );
+                }),
                 const SizedBox(height: 10),
                 AuthRichTextWidget(
                   onClickEvent: () => widget.pageController.jumpToPage(0),
@@ -195,7 +189,7 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       currentSeconds = timer.tick;
-      sl<UiNotifiers>().otpResendTimer.value = timer.tick;
+      context.read<OTPTimerCubit>().timerTick(timer.tick);
       if (timer.tick >= timerMaxSeconds) {
         timer.cancel();
       }
@@ -208,8 +202,9 @@ class _VerifyMobileNumberWidgetState extends State<VerifyMobileNumberWidget> {
     _textController2.dispose();
     _textController3.dispose();
     _textController4.dispose();
-    sl<UiNotifiers>().otpResendTimer.dispose();
-    _timer.cancel();
+    if (_timer != null) {
+      _timer!.cancel();
+    }
     super.dispose();
   }
 }

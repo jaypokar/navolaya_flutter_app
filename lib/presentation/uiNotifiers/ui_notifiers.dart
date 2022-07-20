@@ -2,24 +2,6 @@ import 'package:flutter/material.dart';
 
 class UiNotifiers {
   // this are few ui notifiers for maintaining ui state and helps in improving app performance by avoiding unnecessary builds.
-  ///
-  ///
-  //Step and intro screen pager indicator notifier
-  final _indicatorNotifier = ValueNotifier<int>(0);
-
-  ValueNotifier<int> get indicatorNotifier => _indicatorNotifier;
-
-  ///
-  //Step pager in registration screen indicator notifier
-  final _stepsIndicatorNotifier = ValueNotifier<int>(0);
-
-  ValueNotifier<int> get stepsIndicatorNotifier => _stepsIndicatorNotifier;
-
-  ///
-  //Step pager in registration screen indicator notifier
-  final _mobileVerificationTitleNotifier = ValueNotifier<String>('');
-
-  ValueNotifier<String> get mobileVerificationTitleNotifier => _mobileVerificationTitleNotifier;
 
   ///
   //home page user tabs changes notifier
@@ -58,14 +40,4 @@ class UiNotifiers {
 
   ValueNotifier<int> get connectionRequestTabNotifier => _connectionRequestTabNotifier!;
 
-  ///
-  //Ui notifier for showing timer when otp is sent and timer is sent to reset
-  ValueNotifier<int>? _otpResendTimer;
-
-  ValueNotifier<int>? createOTPResendTimerNotifier() {
-    _otpResendTimer = ValueNotifier<int>(0);
-    return _otpResendTimer;
-  }
-
-  ValueNotifier<int> get otpResendTimer => _otpResendTimer!;
 }

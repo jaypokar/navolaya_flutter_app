@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
-import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 
 import 'core/color_constants.dart';
@@ -17,14 +16,9 @@ Future<void> main() async {
   di.init().then((value) => runApp(const MyApp()));
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -60,16 +54,5 @@ class _MyAppState extends State<MyApp> {
         onGenerateRoute: sl<RouteGenerator>().generateRoute,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    sl<UiNotifiers>().mobileVerificationTitleNotifier.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 }
