@@ -121,10 +121,23 @@ class StringResources {
   static const String youTube = 'Youtube';
   static const String twitter = 'Twitter';
 
+  static const String connect = 'Connect';
+  static const String pending = 'Pending';
+  static const String respond = 'Response';
+  static const String message = 'Message';
+
   static const String pleaseEnterOldPassword = 'Please enter old password';
   static const String pleaseEnterNewPassword = 'Please enter new password';
   static const String pleaseEnterCFMPassword = 'Please enter confirm password';
   static const String passwordDidNotMatched = "Password didn't matched";
+
+  static const String errorTitle = "Sorry!! Something went wrong we are checking...";
+  static const String locationErrorTitle = "Location Service..";
+
+  static const String locationServiceNotEnabled =
+      'Location service is not enabled please enabled the location service from the settings menu.';
+  static const String nearByLocationFetchTitle =
+      'To fetch nearby users we need to access your current location so you have to enable location service from the your device settings menu.';
 
   //JNV verification dialog
   static const String jnvVerificationTitle = 'Verify your identity';

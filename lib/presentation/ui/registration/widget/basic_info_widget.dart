@@ -300,13 +300,13 @@ class _BasicInfoWidgetState extends State<BasicInfoWidget> {
             'area': _qualificationValue.area!,
             'title': _qualificationValue.title!,
             'shortname': _qualificationValue.shortName!
-          }.toString(),
+          },
           {
             'area': _occupationAreaValue.title!,
             'type': _occupationsValue.area,
             'title': _occupationsValue.title,
-          }.toString(),
-          _genderValue.toLowerCase(),
+          },
+          _genderValue,
           widget.isEdit ? '' : _passwordController.text);
 
       if (!widget.isEdit) {

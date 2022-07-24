@@ -1,8 +1,12 @@
 import 'dart:math';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CommonFunctions {
+  static final DateFormat _formatter = DateFormat('dd MMM,yyyy');
+
   const CommonFunctions();
 
   MaterialColor createMaterialColor(Color color) {
@@ -27,12 +31,11 @@ class CommonFunctions {
     return MaterialColor(color.value, swatch);
   }
 
-  void showSnackBar(
-      {required BuildContext context,
-      required String message,
-      required Color bgColor,
-      required Color textColor,
-      int duration = 2}) {
+  void showSnackBar({required BuildContext context,
+    required String message,
+    required Color bgColor,
+    required Color textColor,
+    int duration = 2}) {
     final snackBar = SnackBar(
       duration: Duration(seconds: duration),
       content: Text(
@@ -45,9 +48,38 @@ class CommonFunctions {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  void showFlushBar(
+      {required BuildContext context,
+      required String message,
+      required Color bgColor,
+      required Color textColor,
+      int duration = 4}) {
+    Flushbar(
+      flushbarPosition: FlushbarPosition.TOP,
+      flushbarStyle: FlushbarStyle.FLOATING,
+      reverseAnimationCurve: Curves.decelerate,
+      forwardAnimationCurve: Curves.elasticOut,
+      backgroundColor: bgColor,
+      isDismissible: true,
+      duration: Duration(seconds: duration),
+      messageText: Text(
+        message,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontWeight: FontWeight.bold, fontSize: 14, color: textColor, fontFamily: "Montserrat"),
+      ),
+    ).show(context);
+  }
+
   String getFileSizeString({required int bytes, int decimals = 0}) {
     const suffixes = ["b", "kb", "mb", "gb", "tb"];
     var i = (log(bytes) / log(1024)).floor();
     return ((bytes / pow(1024, i)).toStringAsFixed(decimals)) + suffixes[i];
+  }
+
+  String convertedDate(String dateTime) {
+    final DateTime dt1 = DateTime.parse(dateTime.substring(0, 10));
+    final String expDateNew = _formatter.format(dt1);
+    return expDateNew;
   }
 }

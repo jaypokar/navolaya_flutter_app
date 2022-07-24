@@ -40,13 +40,6 @@ class DropDownWidget<T> extends StatefulWidget {
 }
 
 class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
-/*  late T value;
-
-  @override
-  void initState() {
-    super.initState();
-    value = widget.value as T;
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +108,8 @@ class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
       title = value.title!;
     } else if (value is Schools) {
       title = value.city!;
+    } else if (value is StateCities) {
+      title = value.name!;
     }
 
     return Text(title,

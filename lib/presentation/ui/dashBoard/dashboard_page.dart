@@ -1,20 +1,20 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/data/sessionManager/session_manager.dart';
 import 'package:navolaya_flutter/presentation/ui/dashBoard/widget/dash_board_drawer_widget.dart';
+import 'package:navolaya_flutter/presentation/ui/dashBoard/widget/tab_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/messages/messages_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/notifications/notifications_widget.dart';
-import 'package:navolaya_flutter/presentation/ui/user/widget/tab_widget.dart';
 import 'package:navolaya_flutter/resources/image_resources.dart';
 
 import '../../../injection_container.dart';
 import '../../../resources/string_resources.dart';
 import '../../basicWidget/custom_button.dart';
-import '../../uiNotifiers/ui_notifiers.dart';
+import '../../cubit/dashBoardTitleNotifierCubit/dash_board_title_notifier_cubit.dart';
 import '../dashBoard/widget/floating_search_button_widget.dart';
 import '../home/home_widget.dart';
-import '../home/widget/dummy_widget.dart';
 import '../myConnections/my_connections_widget.dart';
 
 class DashBoardPage extends StatefulWidget {
@@ -38,7 +38,7 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
       const MyConnectionsWidget(
         key: PageStorageKey('myConnections'),
       ),
-      const DummyWidget(
+      const SizedBox(
         key: PageStorageKey('search'),
       ),
       const MessagesWidget(
@@ -49,33 +49,32 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
       ),
     ];
 
-    sl<UiNotifiers>().createDashBoardTitleNotifier();
-    sl<UiNotifiers>().createRecentNearByPopularUserTabNotifier();
-
     _tabController = TabController(
       initialIndex: 0,
       length: 5,
       vsync: this,
     );
 
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging == false) {
-        if (_tabController.index == 1) {
-          //Trigger your request
-        }
-      }
-      if (_tabController.index == 0) {
-        sl<UiNotifiers>().dashBoardTitleNotifier.value = StringResources.discover;
-      } else if (_tabController.index == 1) {
-        sl<UiNotifiers>().dashBoardTitleNotifier.value = StringResources.myConnections;
-      } else if (_tabController.index == 3) {
-        sl<UiNotifiers>().dashBoardTitleNotifier.value = StringResources.messages;
-      } else if (_tabController.index == 4) {
-        sl<UiNotifiers>().dashBoardTitleNotifier.value = StringResources.notifications;
-      }
-    });
+    _tabController.addListener(_tabChangeListener);
 
     super.initState();
+  }
+
+  void _tabChangeListener() {
+    if (_tabController.indexIsChanging == false) {
+      if (_tabController.index == 1) {
+        //Trigger your request
+      }
+    }
+    if (_tabController.index == 0) {
+      context.read<DashBoardTitleNotifierCubit>().changeTitle(StringResources.discover);
+    } else if (_tabController.index == 1) {
+      context.read<DashBoardTitleNotifierCubit>().changeTitle(StringResources.myConnections);
+    } else if (_tabController.index == 3) {
+      context.read<DashBoardTitleNotifierCubit>().changeTitle(StringResources.messages);
+    } else if (_tabController.index == 4) {
+      context.read<DashBoardTitleNotifierCubit>().changeTitle(StringResources.notifications);
+    }
   }
 
   @override
@@ -105,11 +104,10 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
                   ),
                 ));
           }),
-          title: ValueListenableBuilder<String?>(
-            valueListenable: sl<UiNotifiers>().dashBoardTitleNotifier,
-            builder: (_, title, __) {
+          title: BlocBuilder<DashBoardTitleNotifierCubit, String>(
+            builder: (_, title) {
               return Text(
-                title!,
+                title,
                 style: const TextStyle(color: Colors.white),
               );
             },
@@ -127,31 +125,35 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
             ),
           ],
         ),
-        body: TabBarView(
-            physics: const NeverScrollableScrollPhysics(),
-            controller: _tabController,
-            children: [
-              PageStorage(
-                bucket: _bucket,
-                child: _widgetOptions[0],
-              ),
-              PageStorage(
-                bucket: _bucket,
-                child: _widgetOptions[1],
-              ),
-              PageStorage(
-                bucket: _bucket,
-                child: _widgetOptions[2],
-              ),
-              PageStorage(
-                bucket: _bucket,
-                child: _widgetOptions[3],
-              ),
-              PageStorage(
-                bucket: _bucket,
-                child: _widgetOptions[4],
-              ),
-            ]),
+        body: Stack(
+          children: [
+            TabBarView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: _tabController,
+                children: [
+                  PageStorage(
+                    bucket: _bucket,
+                    child: _widgetOptions[0],
+                  ),
+                  PageStorage(
+                    bucket: _bucket,
+                    child: _widgetOptions[1],
+                  ),
+                  PageStorage(
+                    bucket: _bucket,
+                    child: _widgetOptions[2],
+                  ),
+                  PageStorage(
+                    bucket: _bucket,
+                    child: _widgetOptions[3],
+                  ),
+                  PageStorage(
+                    bucket: _bucket,
+                    child: _widgetOptions[4],
+                  ),
+                ])
+          ],
+        ),
         floatingActionButton: const FloatingActionButtonWidget(),
         bottomNavigationBar: TabWidget(
           controller: _tabController,
@@ -165,6 +167,7 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
     if (sl<SessionManager>().getUserDetails()!.data!.jnvVerificationStatus == 0) {
       await Future.delayed(const Duration(seconds: 2));
 
+      if (!mounted) return;
       showDialog(
         context: context,
         barrierLabel: "Barrier",
@@ -229,9 +232,8 @@ class _DashBoardPageState extends State<DashBoardPage> with TickerProviderStateM
 
   @override
   void dispose() {
+    _tabController.removeListener(_tabChangeListener);
     _tabController.dispose();
-    sl<UiNotifiers>().dashBoardTitleNotifier.dispose();
-    sl<UiNotifiers>().recentNearByPopularUserTabNotifier.dispose();
     super.dispose();
   }
 }

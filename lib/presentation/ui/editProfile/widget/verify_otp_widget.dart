@@ -50,7 +50,6 @@ class _VerifyOTPWidgetState extends State<VerifyOTPWidget> {
   String get timerText =>
       '${((timerMaxSeconds - currentSeconds) ~/ 60).toString().padLeft(2, '0')}: ${((timerMaxSeconds - currentSeconds) % 60).toString().padLeft(2, '0')}';
 
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -85,6 +84,7 @@ class _VerifyOTPWidgetState extends State<VerifyOTPWidget> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: BlocBuilder<MobileVerificationCubit, String>(builder: (_, number) {
+                _startTimer();
                 final verificationSubTitleHint =
                     StringResources.verificationPageSubTitle.replaceAll("{number}", number);
                 return Text(

@@ -77,8 +77,10 @@ class _AdditionalProfileInfoWidgetState extends State<AdditionalProfileInfoWidge
             buildWhen: (_, state) => state is LoadPersonalDetailsState,
             builder: (_, state) {
               if (state is LoadPersonalDetailsState) {
-                _selectedDate =
-                    state.loginAndBasicInfoData.data!.birthDate!.toString().substring(0, 10);
+                if (state.loginAndBasicInfoData.data!.birthDate != null) {
+                  _selectedDate =
+                      state.loginAndBasicInfoData.data!.birthDate!.toString().substring(0, 10);
+                }
               }
               return DateInputWidget(
                 onDateSelected: (String birthDate) {
@@ -111,12 +113,20 @@ class _AdditionalProfileInfoWidgetState extends State<AdditionalProfileInfoWidge
                       : StringResources.submit.toUpperCase(),
                   padding: 0,
                   onPressButton: () {
-                    context.read<ProfileBloc>().add(
-                          InitiateUpdateAdditionalInfo(
-                              house: _jnvHousesValues.id!.isEmpty ? '' : _jnvHousesValues.title!,
-                              birthDate: _selectedDate,
-                              aboutMe: _aboutController.text),
-                        );
+                    if (_jnvHousesValues.id!.isNotEmpty) {
+                      context.read<ProfileBloc>().add(
+                            InitiateUpdateAdditionalInfo(
+                                house: _jnvHousesValues.id!.isEmpty ? '' : _jnvHousesValues.title!,
+                                birthDate: _selectedDate,
+                                aboutMe: _aboutController.text),
+                          );
+                    } else {
+                      sl<CommonFunctions>().showSnackBar(
+                          context: context,
+                          message: StringResources.pleaseSelectHouse,
+                          bgColor: Colors.orange,
+                          textColor: Colors.white);
+                    }
                   });
             }
           }),
@@ -126,10 +136,14 @@ class _AdditionalProfileInfoWidgetState extends State<AdditionalProfileInfoWidge
   }
 
   void _loadPersonalDetails(LoginAndBasicInfoModel loginAndBasicInfo) {
-    _jnvHousesValues =
-        _jnvHousesList.firstWhere((element) => loginAndBasicInfo.data!.house == element.title);
-    _aboutController.text = loginAndBasicInfo.data!.aboutMe!;
-    setState(() {});
+    if (loginAndBasicInfo.data!.house != null) {
+      if (loginAndBasicInfo.data!.house!.isNotEmpty) {
+        _jnvHousesValues =
+            _jnvHousesList.firstWhere((element) => loginAndBasicInfo.data!.house == element.title);
+        _aboutController.text = loginAndBasicInfo.data!.aboutMe!;
+        setState(() {});
+      }
+    }
   }
 
   void showMessage(bool isError, String message) {

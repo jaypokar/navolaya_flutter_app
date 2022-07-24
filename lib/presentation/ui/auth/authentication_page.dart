@@ -3,10 +3,10 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/core/color_constants.dart';
-import 'package:navolaya_flutter/core/config_file.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
 import 'package:navolaya_flutter/presentation/cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
+import 'package:navolaya_flutter/resources/value_key_resources.dart';
 
 import '../../../injection_container.dart';
 import '../../../resources/image_resources.dart';
@@ -52,8 +52,8 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
               ? _controller.jumpToPage(2)
               : Navigator.of(context).pushReplacementNamed(RouteGenerator.registrationPage,
                   arguments: {
-                      ConfigFile.mobileNumberKey: _mobileNumber,
-                      ConfigFile.countryCodeKey: _countryCode
+                      ValueKeyResources.mobileNumberKey: _mobileNumber,
+                      ValueKeyResources.countryCodeKey: _countryCode
                     });
         } else if (state is SendOtpState) {
           showMessage(false, state.sendOtpData.message!);
@@ -162,8 +162,8 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     Navigator.of(context).pushNamed(
       RouteGenerator.updatePasswordPage,
       arguments: {
-        ConfigFile.countryCodeKey: _countryCode,
-        ConfigFile.mobileNumberKey: _mobileNumber,
+        ValueKeyResources.countryCodeKey: _countryCode,
+        ValueKeyResources.mobileNumberKey: _mobileNumber,
       },
     );
   }

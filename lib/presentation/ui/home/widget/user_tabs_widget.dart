@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:navolaya_flutter/injection_container.dart';
-import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:navolaya_flutter/presentation/cubit/homeTabsNotifierCubit/home_tabs_notifier_cubit.dart';
 
 import '../../../../core/color_constants.dart';
 
@@ -41,7 +41,7 @@ class _UserTabsWidgetState extends State<UserTabsWidget> with SingleTickerProvid
         unselectedLabelColor: ColorConstants.textColor2,
         indicator: BoxDecoration(color: Colors.black12.withOpacity(0.1)),
         onTap: (index) {
-          sl<UiNotifiers>().recentNearByPopularUserTabNotifier.value = index;
+          context.read<HomeTabsNotifierCubit>().changeHomeTabs(index);
         },
         tabs: ['Recent', 'Near By', 'Popular']
             .map((e) => Tab(

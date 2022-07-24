@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:navolaya_flutter/core/config_file.dart';
 import 'package:navolaya_flutter/core/either_extension_function.dart';
 import 'package:navolaya_flutter/core/failure.dart';
 import 'package:navolaya_flutter/data/apiService/network_api_service.dart';
 import 'package:navolaya_flutter/data/model/app_contents_model.dart';
 import 'package:navolaya_flutter/data/model/masters_model.dart';
 import 'package:navolaya_flutter/domain/master_repository.dart';
+import 'package:navolaya_flutter/resources/config_file.dart';
 
 import '../apiService/base_api_service.dart';
 

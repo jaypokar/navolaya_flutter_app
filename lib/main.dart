@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
+import 'package:navolaya_flutter/presentation/cubit/nearByUsersCubit/near_by_users_cubit.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 
 import 'core/color_constants.dart';
@@ -10,6 +11,8 @@ import 'core/global_nav_key.dart';
 import 'core/route_generator.dart';
 import 'injection_container.dart';
 import 'injection_container.dart' as di;
+import 'presentation/cubit/popularUsersCubit/popular_users_cubit.dart';
+import 'presentation/cubit/recentUsersCubit/recent_users_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +28,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<AuthBloc>(create: (_) => di.sl<AuthBloc>()),
         BlocProvider<ProfileBloc>(create: (_) => di.sl<ProfileBloc>()),
+        BlocProvider<RecentUsersCubit>(create: (_) => sl<RecentUsersCubit>()),
+        BlocProvider<NearByUsersCubit>(create: (_) => sl<NearByUsersCubit>()),
+        BlocProvider<PopularUsersCubit>(create: (_) => sl<PopularUsersCubit>()),
       ],
       child: MaterialApp(
         title: 'Navolaya',

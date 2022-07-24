@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:navolaya_flutter/core/config_file.dart';
+import 'package:navolaya_flutter/data/model/users_model.dart';
+import 'package:navolaya_flutter/presentation/cubit/dashBoardTitleNotifierCubit/dash_board_title_notifier_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/pageIndicatorCubit/page_indicator_page_cubit.dart';
 import 'package:navolaya_flutter/presentation/ui/auth/authentication_page.dart';
@@ -18,8 +19,10 @@ import 'package:navolaya_flutter/presentation/ui/registration/registration_page.
 import 'package:navolaya_flutter/presentation/ui/settings/settings_page.dart';
 import 'package:navolaya_flutter/presentation/ui/updatePassword/update_password_page.dart';
 import 'package:navolaya_flutter/presentation/ui/user/user_detail_page.dart';
+import 'package:navolaya_flutter/resources/value_key_resources.dart';
 
 import '../injection_container.dart';
+import '../presentation/cubit/homeTabsNotifierCubit/home_tabs_notifier_cubit.dart';
 import '../presentation/cubit/otpTimerCubit/otptimer_cubit.dart';
 import '../presentation/ui/dashBoard/dashboard_page.dart';
 import '../presentation/ui/splash_page.dart';
@@ -52,25 +55,25 @@ class RouteGenerator {
     final args = settings.arguments;
 
     switch (settings.name) {
-      case splashScreen:
+      /***-->***/ case splashScreen:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
-      case introPage:
+      /***-->***/ case introPage:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<PageIndicatorPageCubit>(
             create: (_) => sl<PageIndicatorPageCubit>(),
             child: const IntroPage(),
           ),
         );
-      case authenticationPage:
+      /***-->***/ case authenticationPage:
         return MaterialPageRoute(
             builder: (_) => MultiBlocProvider(providers: [
                   BlocProvider(create: (_) => sl<MobileVerificationCubit>()),
                   BlocProvider(create: (_) => sl<OTPTimerCubit>()),
                 ], child: const AuthenticationPage()));
-      case registrationPage:
+      /***-->***/ case registrationPage:
         if (args is Map<String, dynamic>) {
-          String countryCode = args[ConfigFile.countryCodeKey];
-          String mobileNumber = args[ConfigFile.mobileNumberKey];
+          String countryCode = args[ValueKeyResources.countryCodeKey];
+          String mobileNumber = args[ValueKeyResources.mobileNumberKey];
           return MaterialPageRoute(
               builder: (_) => MultiBlocProvider(
                     providers: [
@@ -84,10 +87,10 @@ class RouteGenerator {
                   ));
         }
         return _errorRoute();
-      case updatePasswordPage:
+      /***-->***/ case updatePasswordPage:
         if (args is Map<String, dynamic>) {
-          String countryCode = args[ConfigFile.countryCodeKey];
-          String mobileNumber = args[ConfigFile.mobileNumberKey];
+          String countryCode = args[ValueKeyResources.countryCodeKey];
+          String mobileNumber = args[ValueKeyResources.mobileNumberKey];
           return MaterialPageRoute(
               builder: (_) => BlocProvider<OTPTimerCubit>(
                     create: (_) => sl<OTPTimerCubit>(),
@@ -98,8 +101,12 @@ class RouteGenerator {
                   ));
         }
         return _errorRoute();
-      case dashBoardPage:
-        return MaterialPageRoute(builder: (_) => const DashBoardPage());
+      /***-->***/ case dashBoardPage:
+        return MaterialPageRoute(
+            builder: (_) => MultiBlocProvider(providers: [
+                  BlocProvider(create: (_) => sl<HomeTabsNotifierCubit>()),
+                  BlocProvider(create: (_) => sl<DashBoardTitleNotifierCubit>()),
+                ], child: const DashBoardPage()));
       case connectionRequestPage:
         return MaterialPageRoute(builder: (_) => const ConnectionRequestsPage());
       case editProfilePage:
@@ -120,28 +127,32 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const ChangePasswordPage());
       case updatePhoneOrEmailPage:
         if (args is bool) {
-          return MaterialPageRoute(builder: (_) => UpdatePhoneOrEmailPage(isEmail: args));
+          return MaterialPageRoute(
+              builder: (_) => MultiBlocProvider(providers: [
+                    BlocProvider(create: (_) => sl<MobileVerificationCubit>()),
+                    BlocProvider(create: (_) => sl<OTPTimerCubit>()),
+                  ], child: UpdatePhoneOrEmailPage(isEmail: args)));
         }
         return _errorRoute();
       case userDetailPage:
-        if (args is String) {
-          return MaterialPageRoute(builder: (_) => UserDetailPage(image: args));
+        if (args is UserDataModel) {
+          return MaterialPageRoute(builder: (_) => UserDetailPage(user: args));
         }
         return _errorRoute();
       default:
-        // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute();
     }
   }
 
-  static Route<dynamic> _errorRoute() {
+  Route<dynamic> _errorRoute() {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Error'),
+          title: const Text('Wrong Route'),
         ),
         body: const Center(
-          child: Text('ERROR'),
+          child: Text(
+              'Sorry you have been redirected to wrong page or have been passed by wrong data!!'),
         ),
       );
     });

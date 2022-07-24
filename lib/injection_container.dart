@@ -10,13 +10,21 @@ import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/data/repositoryImpl/auth_repository_impl.dart';
 import 'package:navolaya_flutter/data/repositoryImpl/master_repository_impl.dart';
 import 'package:navolaya_flutter/data/repositoryImpl/profile_repository_impl.dart';
+import 'package:navolaya_flutter/data/repositoryImpl/users_repository_impl.dart';
 import 'package:navolaya_flutter/domain/auth_repository.dart';
 import 'package:navolaya_flutter/domain/master_repository.dart';
 import 'package:navolaya_flutter/domain/profile_repository.dart';
+import 'package:navolaya_flutter/domain/users_repository.dart';
+import 'package:navolaya_flutter/features/location_manager.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
+import 'package:navolaya_flutter/presentation/cubit/dashBoardTitleNotifierCubit/dash_board_title_notifier_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/homeTabsNotifierCubit/home_tabs_notifier_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/nearByUsersCubit/near_by_users_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/otpTimerCubit/otptimer_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/popularUsersCubit/popular_users_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/recentUsersCubit/recent_users_cubit.dart';
 import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -64,6 +72,25 @@ void _initCubits() {
   sl.registerFactory(
     () => OTPTimerCubit(),
   );
+
+  sl.registerFactory(
+    () => HomeTabsNotifierCubit(),
+  );
+
+  sl.registerFactory(
+    () => RecentUsersCubit(sl()),
+  );
+
+  sl.registerFactory(
+    () => NearByUsersCubit(sl(), sl()),
+  );
+
+  sl.registerFactory(
+    () => PopularUsersCubit(sl()),
+  );
+  sl.registerFactory(
+    () => DashBoardTitleNotifierCubit(),
+  );
 }
 
 void _initRepositories() {
@@ -86,6 +113,11 @@ void _initRepositories() {
   sl.registerLazySingleton<ProfileRepository>(
     () => ProfileRepositoryImpl(sl(), sl()),
   );
+
+  //Users Repository
+  sl.registerLazySingleton<UsersRepository>(
+    () => UsersRepositoryImpl(sl()),
+  );
 }
 
 Future<void> _initExternalDependencies() async {
@@ -98,6 +130,7 @@ Future<void> _initExternalDependencies() async {
   sl.registerLazySingleton(() => UiNotifiers());
   sl.registerLazySingleton(() => ImagePicker());
   sl.registerLazySingleton(() => ImageCropper());
+  sl.registerLazySingleton(() => LocationManager());
 
   final dio = Dio();
   (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {

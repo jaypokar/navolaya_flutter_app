@@ -14,10 +14,12 @@ class LoginAndBasicInfoModel {
     _message = json['message'];
     _data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
+
   String? _message;
   Data? _data;
 
   String? get message => _message;
+
   Data? get data => _data;
 
   Map<String, dynamic> toJson() {
@@ -68,8 +70,8 @@ class Data {
     String? relationWithJnv,
     int? fromYear,
     int? toYear,
-    dynamic qualification,
-    dynamic occupation,
+    Qualification? qualification,
+    Occupation? occupation,
     String? gender,
     String? house,
     String? birthDate,
@@ -90,19 +92,20 @@ class Data {
     String? countryCode,
     String? phone,
   }) {
-    _fullName = fullName;
+    this.fullName;
     _userCode = userCode;
-    this.email = email;
-    _school = school;
-    _relationWithJnv = relationWithJnv;
-    _fromYear = fromYear;
-    _toYear = toYear;
-    _qualification = qualification;
-    _occupation = occupation;
-    _gender = gender;
-    this.house = house;
-    this.birthDate = birthDate;
-    this.aboutMe = aboutMe;
+    this.email;
+    this.school;
+    this.relationWithJnv;
+    this.fromYear;
+    this.toYear;
+    this.qualification;
+    this.occupation;
+    this.gender;
+    this.house;
+
+    this.birthDate;
+    this.aboutMe;
     _currentAddress = currentAddress;
     _permanentAddress = permanentAddress;
     _userImage = userImage;
@@ -113,24 +116,27 @@ class Data {
     _isBasicProfileUpdated = isBasicProfileUpdated;
     _jnvVerificationStatus = jnvVerificationStatus;
     _allowNotifications = allowNotifications;
-    this.socialProfileLinks = socialProfileLinks;
+    this.socialProfileLinks;
     _displaySettings = displaySettings;
     _id = id;
     _countryCode = countryCode;
-    this.phone = phone;
+    this.phone;
   }
 
   Data.fromJson(dynamic json) {
-    _fullName = json['full_name'];
+    fullName = json['full_name'];
     _userCode = json['user_code'];
     email = json['email'];
-    _school = json['school'] != null ? School.fromJson(json['school']) : null;
-    _relationWithJnv = json['relation_with_jnv'];
-    _fromYear = json['from_year'];
-    _toYear = json['to_year'];
-    _qualification = json['qualification'];
-    _occupation = json['occupation'];
-    _gender = json['gender'];
+    school = json['school'] != null ? School.fromJson(json['school']) : null;
+    relationWithJnv = json['relation_with_jnv'];
+    fromYear = json['from_year'];
+    toYear = json['to_year'];
+
+    qualification =
+        json['qualification'] != null ? Qualification.fromJson(json['qualification']) : null;
+    occupation = json['occupation'] != null ? Occupation.fromJson(json['occupation']) : null;
+
+    gender = json['gender'];
     house = json['house'];
     birthDate = json['birth_date'];
     aboutMe = json['about_me'];
@@ -155,16 +161,16 @@ class Data {
     phone = json['phone'];
   }
 
-  String? _fullName;
+  String? fullName;
   String? _userCode;
   String? email;
-  School? _school;
-  String? _relationWithJnv;
-  int? _fromYear;
-  int? _toYear;
-  dynamic _qualification;
-  dynamic _occupation;
-  String? _gender;
+  School? school;
+  String? relationWithJnv;
+  int? fromYear;
+  int? toYear;
+  Qualification? qualification;
+  Occupation? occupation;
+  String? gender;
   String? house;
   String? birthDate;
   String? aboutMe;
@@ -184,23 +190,7 @@ class Data {
   String? _countryCode;
   String? phone;
 
-  String? get fullName => _fullName;
-
   String? get userCode => _userCode;
-
-  School? get school => _school;
-
-  String? get relationWithJnv => _relationWithJnv;
-
-  int? get fromYear => _fromYear;
-
-  int? get toYear => _toYear;
-
-  dynamic get qualification => _qualification;
-
-  dynamic get occupation => _occupation;
-
-  String? get gender => _gender;
 
   dynamic get currentAddress => _currentAddress;
 
@@ -213,28 +203,36 @@ class Data {
   String? get lastLoginTime => _lastLoginTime;
 
   int? get isUserAccountVerified => _isUserAccountVerified;
+
   int? get isPhoneVerified => _isPhoneVerified;
+
   int? get isBasicProfileUpdated => _isBasicProfileUpdated;
+
   int? get jnvVerificationStatus => _jnvVerificationStatus;
+
   int? get allowNotifications => _allowNotifications;
+
   DisplaySettings? get displaySettings => _displaySettings;
+
   String? get id => _id;
+
   String? get countryCode => _countryCode;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['full_name'] = _fullName;
+    map['full_name'] = fullName;
     map['user_code'] = _userCode;
     map['email'] = email;
-    if (_school != null) {
-      map['school'] = _school?.toJson();
+
+    if (school != null) {
+      map['school'] = school?.toJson();
     }
-    map['relation_with_jnv'] = _relationWithJnv;
-    map['from_year'] = _fromYear;
-    map['to_year'] = _toYear;
-    map['qualification'] = _qualification;
-    map['occupation'] = _occupation;
-    map['gender'] = _gender;
+    map['relation_with_jnv'] = relationWithJnv;
+    map['from_year'] = fromYear;
+    map['qualification'] = qualification;
+    map['occupation'] = occupation;
+    map['to_year'] = toYear;
+    map['gender'] = gender;
     map['house'] = house;
     map['birth_date'] = birthDate;
     map['about_me'] = aboutMe;
@@ -349,6 +347,102 @@ class DisplaySettings {
   }
 }
 
+/// _id : "62b5ed9c3d4fd3fb3adcd7b0"
+/// area : "Private Company"
+/// type : "Accounting, Banking & Finance"
+/// title : "Banking Professional"
+
+class Occupation {
+  Occupation({
+    String? id,
+    String? area,
+    String? type,
+    String? title,
+  }) {
+    _id = id;
+    _area = area;
+    _type = type;
+    _title = title;
+  }
+
+  Occupation.fromJson(dynamic json) {
+    _id = json['_id'];
+    _area = json['area'];
+    _type = json['type'];
+    _title = json['title'];
+  }
+
+  String? _id;
+  String? _area;
+  String? _type;
+  String? _title;
+
+  String? get id => _id;
+
+  String? get area => _area;
+
+  String? get type => _type;
+
+  String? get title => _title;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['_id'] = _id;
+    map['area'] = _area;
+    map['type'] = _type;
+    map['title'] = _title;
+    return map;
+  }
+}
+
+/// _id : "62b5ed9c3d4fd3fb3adcd7af"
+/// area : "Engineering"
+/// title : "Bachelor of Engineering"
+/// shortname : "B.E / B.Tech"
+
+class Qualification {
+  Qualification({
+    String? id,
+    String? area,
+    String? title,
+    String? shortname,
+  }) {
+    _id = id;
+    _area = area;
+    _title = title;
+    _shortname = shortname;
+  }
+
+  Qualification.fromJson(dynamic json) {
+    _id = json['_id'];
+    _area = json['area'];
+    _title = json['title'];
+    _shortname = json['shortname'];
+  }
+
+  String? _id;
+  String? _area;
+  String? _title;
+  String? _shortname;
+
+  String? get id => _id;
+
+  String? get area => _area;
+
+  String? get title => _title;
+
+  String? get shortname => _shortname;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['_id'] = _id;
+    map['area'] = _area;
+    map['title'] = _title;
+    map['shortname'] = _shortname;
+    return map;
+  }
+}
+
 /// facebook : "www.facebook.com"
 /// instagram : "www.instagram.com"
 /// linkedin : "www.linkedIn.com"
@@ -458,11 +552,17 @@ class School {
   String? get id => _id;
 
   String? get region => _region;
+
   String? get state => _state;
+
   String? get district => _district;
+
   String? get city => _city;
+
   String? get pincode => _pincode;
+
   double? get latitude => _latitude;
+
   double? get longitude => _longitude;
 
   Map<String, dynamic> toJson() {
@@ -477,5 +577,4 @@ class School {
     map['longitude'] = _longitude;
     return map;
   }
-
 }

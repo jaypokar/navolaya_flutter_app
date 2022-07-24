@@ -43,7 +43,7 @@ dependencies:
   file_picker: ^4.6.1
   # Encode and decode json files
   json_annotation: ^4.0.1
-  # Encode and decode json files
+  # Serialize and Deserialize json files
   json_serializable: 4.1.4
   # Service locator (Dependency Injection)
   get_it: ^7.2.0
@@ -69,6 +69,12 @@ dependencies:
   image_picker: ^0.8.5+3
   # Image cropper for setting aspect ratio and cropping image to set into the view properly
   image_cropper: ^2.0.3
+  # Image loading functionality with loading load and error callbacks and handling methods built in
+  cached_network_image: ^3.2.1
+  # To show error , info or success messages with custom view and position another Flush bar is used.
+  another_flushbar: ^1.10.29
+  # To retrieve users who are near by the location provided.
+  location: ^4.4.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -19,8 +19,8 @@ class SessionManager {
   SessionManager(this._preferences);
 
   Future<void> initiateUserLogin(LoginAndBasicInfoModel loginDetails) async {
-    _loginData = null;
     final userDetails = json.encode(loginDetails.toJson());
+    _loginData = null;
     _preferences.setString(userDataKey, userDetails);
     _preferences.setBool(isLoggedInKey, true);
   }
@@ -32,6 +32,31 @@ class SessionManager {
       _loginData = LoginAndBasicInfoModel.fromJson(userDetails);
     }
     return _loginData;
+  }
+
+  void updateBasicInfo(LoginAndBasicInfoModel basicInfoData) {
+    if (basicInfoData.data!.school != null) {
+      _loginData?.data!.school = basicInfoData.data!.school!;
+    }
+    if (basicInfoData.data!.gender != null) {
+      _loginData?.data!.gender = basicInfoData.data!.gender!;
+    }
+    if (basicInfoData.data!.relationWithJnv != null) {
+      _loginData?.data!.relationWithJnv = basicInfoData.data!.relationWithJnv!;
+    }
+    if (basicInfoData.data!.fromYear != null) {
+      _loginData?.data!.fromYear = basicInfoData.data!.fromYear!;
+    }
+    if (basicInfoData.data!.toYear != null) {
+      _loginData?.data!.toYear = basicInfoData.data!.toYear!;
+    }
+    if (basicInfoData.data!.qualification != null) {
+      _loginData?.data!.qualification = basicInfoData.data!.qualification!;
+    }
+    if (basicInfoData.data!.occupation != null) {
+      _loginData?.data!.occupation = basicInfoData.data!.occupation!;
+    }
+    initiateUserLogin(_loginData!);
   }
 
   void updateAdditionalInfo(UpdateAdditionalInfoModel data) {

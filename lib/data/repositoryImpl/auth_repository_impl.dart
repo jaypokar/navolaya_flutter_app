@@ -11,7 +11,7 @@ import 'package:navolaya_flutter/data/model/verify_otp_model.dart';
 import 'package:navolaya_flutter/data/sessionManager/session_manager.dart';
 import 'package:navolaya_flutter/domain/auth_repository.dart';
 
-import '../../core/config_file.dart';
+import '../../resources/config_file.dart';
 import '../apiService/network_api_service.dart';
 
 class AuthRepositoryImpl implements AuthRepository {

@@ -5,20 +5,24 @@ class ConfigFile {
 
   static const String clientSecret = 'Z1WE08cIoI66s4pHArle5H8awfUSszumw1UxU70V';
 
-  static const String apiBaseURL = 'http://13.126.76.74:3000/api/user/';
-  static const String imgBaseURL = 'http://13.126.76.74:3000/api/user/';
+  static const String apiBaseURL = 'http://dev-webservice.navolaya.com/api/user/';
+  static const String imgBaseURL = 'http://dev-webservice.navolaya.com/api/user/';
+  static const String googleMapAPIKey = 'AIzaSyAL8Jkp9o4YKnHo0rGvnRqRZwoNVXaSSTU';
 
   static const String allContentsAPIUrl = '${apiBaseURL}all/contents';
   static const String allMastersAPIUrl = '${apiBaseURL}all/masters';
 
+  /*Auth URLS*/
   static const String validatePhoneAPIUrl = '${apiBaseURL}auth/validate-phone';
   static const String verifyOTPAPIUrl = '${apiBaseURL}auth/verify-otp';
   static const String sendOTPAPIUrl = '${apiBaseURL}auth/send-otp';
   static const String loginAPIUrl = '${apiBaseURL}auth/login';
   static const String logoutAPIUrl = '${apiBaseURL}auth/logout';
   static const String updateBasicInfoAPIUrl = '${apiBaseURL}auth/basic-info';
-
   static const String updateForgotPasswordAPIUrl = '${apiBaseURL}auth/update-forgot-password';
+
+  /*Update Profile URLS*/
+
   static const String updateAdditionalInfoAPIUrl = '${apiBaseURL}profile/additional-info';
   static const String updateProfileBasicInfoAPIUrl = '${apiBaseURL}profile/basic-info';
   static const String updateSocialMediaLinksAPIUrl = '${apiBaseURL}profile/social-links';
@@ -28,7 +32,6 @@ class ConfigFile {
   static const String updateJNVVerificationAPIUrl = '${apiBaseURL}profile/jnv-verification';
   static const String changePasswordAPIUrl = '${apiBaseURL}profile/password';
 
-  //Router data keys
-  static const String countryCodeKey = 'countryCode';
-  static const String mobileNumberKey = 'mobileNumber';
+  /*Users URL*/
+  static const String getUsersAPIUrl = '${apiBaseURL}users';
 }

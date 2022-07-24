@@ -1,19 +1,23 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
+import 'package:navolaya_flutter/data/model/users_model.dart';
+import 'package:navolaya_flutter/presentation/basicWidget/loading_widget.dart';
 
 import '../../../../core/color_constants.dart';
 
 class UserItemWidget extends StatelessWidget {
-  final String image;
+  final UserDataModel user;
 
-  const UserItemWidget({required this.image, Key? key}) : super(key: key);
+  const UserItemWidget({required this.user, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final image = user.userImage != null ? user.userImage!.filepath! : 'assets/1.jpg';
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(RouteGenerator.userDetailPage, arguments: image);
+        Navigator.of(context).pushNamed(RouteGenerator.userDetailPage, arguments: user);
       },
       child: Container(
         margin: const EdgeInsets.all(5),
@@ -22,10 +26,21 @@ class UserItemWidget extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Image.asset(
-                image,
-                fit: BoxFit.cover,
-              ),
+              image.contains('http')
+                  ? CachedNetworkImage(
+                      imageUrl: image,
+                      fit: BoxFit.cover,
+                      errorWidget: (_, __, ___) {
+                        return const LoadingWidget();
+                      },
+                      progressIndicatorBuilder: (_, __, ___) {
+                        return const LoadingWidget();
+                      },
+                    )
+                  : Image.asset(
+                      image,
+                      fit: BoxFit.cover,
+                    ),
               Positioned(
                 bottom: 0,
                 right: 0,
@@ -36,15 +51,14 @@ class UserItemWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Jordan Poole',
-                        style: TextStyle(
+                      Text(
+                        user.fullName!,
+                        style: const TextStyle(
                             color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-
-                      const Text(
-                        'ADR University',
-                        style: TextStyle(
+                      Text(
+                        '${user.school!.city} ${user.school!.state}',
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 10,
                         ),
@@ -53,74 +67,50 @@ class UserItemWidget extends StatelessWidget {
                         height: 5,
                       ),
                       Row(
-                        children: const [
-                          Icon(
-                            FontAwesomeIcons.shirt,
-                            color: ColorConstants.appColor,
-                            size: 10,
-                          ),
-                          SizedBox(width: 4,),
+                        children: [
+                          const Icon(FontAwesomeIcons.shirt,
+                              color: ColorConstants.appColor, size: 8),
+                          const SizedBox(width: 4),
                           Text(
-                            'Navolaya',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                            ),
+                            user.relationWithJnv!,
+                            style: const TextStyle(color: Colors.white, fontSize: 8),
                           ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Icon(
-                            Icons.person,
-                            color: Colors.white,
-                            size: 10,
-                          ),
-                          SizedBox(width: 2,),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.person, color: Colors.white, size: 8),
+                          const SizedBox(width: 2),
                           Text(
-                            'Male',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                            ),
+                            user.gender!,
+                            style: const TextStyle(color: Colors.white, fontSize: 8),
                           ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Icon(
-                            Icons.share,
-                            color: Colors.white,
-                            size: 10,
-
-                          ),
-                          SizedBox(width: 2,),
-                          Text(
-                            'Yes',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
+                          const SizedBox(width: 4),
+                          const Icon(Icons.calendar_month_rounded, color: Colors.white, size: 8),
+                          const SizedBox(width: 2),
+                          Expanded(
+                            child: Text(
+                              '${user.fromYear}-${user.toYear}',
+                              style: const TextStyle(color: Colors.white, fontSize: 8),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 5,
-                      ),
+                      const SizedBox(height: 5),
+                      /*
                       OutlinedButton(
                         onPressed: null,
                         style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.zero,
                           minimumSize: const Size.fromHeight(30),
                           shape: RoundedRectangleBorder(
-
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           side: const BorderSide(width: 1.0, color: Colors.white),
                         ),
                         child: const Text(
                           "Connect",
-                          style: TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
                         ),
-                      )
+                      )*/
                     ],
                   ),
                 ),

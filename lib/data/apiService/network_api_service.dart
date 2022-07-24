@@ -19,7 +19,7 @@ class NetworkAPIService implements BaseAPIService {
   final Dio _dio;
   final Connectivity _connectivity;
   final SessionManager _sessionManager;
-  late final String _token;
+  String _token = '';
 
   NetworkAPIService(this._dio, this._connectivity, this._sessionManager) {
     _token = _sessionManager.isUserLoggedIn() ? _sessionManager.getToken() : '';
@@ -35,6 +35,10 @@ class NetworkAPIService implements BaseAPIService {
     final connectivityResult = await _connectivity.checkConnectivity();
     if (connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi) {
+      if (_sessionManager.isUserLoggedIn()) {
+        _token = _sessionManager.getToken();
+      }
+      logger.i('Token : $_token');
       logger.i('URL : $url \n Request:  $queryParameters');
 
       try {
@@ -46,15 +50,15 @@ class NetworkAPIService implements BaseAPIService {
                   url,
                   options: Options(
                     contentType: 'multipart/form-data',
-                    headers: isTokenNeeded ? {"Authorization": 'Bearer $_token'} : {},
-                  ),
-                )
+              headers: isTokenNeeded ? {"Authorization": 'Bearer $_token'} : {},
+            ),
+          )
               : await _dio.get(url,
-                  queryParameters: queryParameters,
-                  options: Options(
-                    contentType: 'multipart/form-data',
-                    headers: isTokenNeeded ? {"Authorization": 'Bearer $_token'} : {},
-                  ));
+              queryParameters: queryParameters,
+              options: Options(
+                contentType: 'multipart/form-data',
+                headers: isTokenNeeded ? {"Authorization": 'Bearer $_token'} : {},
+              ));
         } else if (apiType == ApiType.post) {
           response = await _dio.post(url,
               data: FormData.fromMap(queryParameters),
@@ -83,11 +87,11 @@ class NetworkAPIService implements BaseAPIService {
               e.response!.statusCode == 402 ||
               e.response!.statusCode == 500) {
             if (e.response!.statusCode == 401 || e.response!.statusCode == 403) {
-              await initiateLogoutProcess();
+              //await initiateLogoutProcess();
             }
             logger.e(e.response!.data['message'].toString());
           } else {
-            logger.e(e.message);
+            logger.e('${e.response!.statusCode!}  ${e.message}');
           }
           return Left(
             Failure(

@@ -11,7 +11,7 @@ import 'package:navolaya_flutter/data/model/update_phone_model.dart';
 import 'package:navolaya_flutter/data/sessionManager/session_manager.dart';
 import 'package:navolaya_flutter/domain/profile_repository.dart';
 
-import '../../core/config_file.dart';
+import '../../resources/config_file.dart';
 import '../apiService/base_api_service.dart';
 import '../apiService/network_api_service.dart';
 import '../model/change_password_model.dart';
@@ -65,7 +65,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
     final response = possibleData.getRight();
     LoginAndBasicInfoModel data = LoginAndBasicInfoModel.fromJson(response);
-    await _sessionManager.initiateUserLogin(data);
+    _sessionManager.updateBasicInfo(data);
 
     return right(data);
   }

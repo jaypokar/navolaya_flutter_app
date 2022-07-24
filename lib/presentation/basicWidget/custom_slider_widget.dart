@@ -4,8 +4,10 @@ import 'package:navolaya_flutter/core/color_constants.dart';
 // ignore: must_be_immutable
 class CustomSliderWidget extends StatefulWidget {
   double sliderValue;
+  final Function onValueChange;
 
-  CustomSliderWidget({required this.sliderValue, Key? key}) : super(key: key);
+  CustomSliderWidget({required this.sliderValue, required this.onValueChange, Key? key})
+      : super(key: key);
 
   @override
   State<CustomSliderWidget> createState() => _CustomSliderWidgetState();
@@ -52,6 +54,7 @@ class _CustomSliderWidgetState extends State<CustomSliderWidget> {
               value: widget.sliderValue,
               label: '${widget.sliderValue.round()} Km',
               onChanged: (value) {
+                widget.onValueChange(value);
                 setState(() {
                   widget.sliderValue = value;
                 });

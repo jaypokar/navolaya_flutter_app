@@ -3,29 +3,6 @@ import 'package:flutter/material.dart';
 class UiNotifiers {
   // this are few ui notifiers for maintaining ui state and helps in improving app performance by avoiding unnecessary builds.
 
-  ///
-  //home page user tabs changes notifier
-
-  ValueNotifier<int>? _recentNearByPopularUserTabNotifier;
-
-  ValueNotifier<int>? createRecentNearByPopularUserTabNotifier() {
-    _recentNearByPopularUserTabNotifier = ValueNotifier<int>(0);
-    return _recentNearByPopularUserTabNotifier;
-  }
-
-  ValueNotifier<int> get recentNearByPopularUserTabNotifier => _recentNearByPopularUserTabNotifier!;
-
-  ///
-  //dashBoard main tabs changes notifier
-
-  ValueNotifier<String>? _dashBoardTitleNotifier;
-
-  ValueNotifier<String>? createDashBoardTitleNotifier() {
-    _dashBoardTitleNotifier = ValueNotifier<String>('Discover');
-    return _dashBoardTitleNotifier;
-  }
-
-  ValueNotifier<String?> get dashBoardTitleNotifier => _dashBoardTitleNotifier!;
 
   ///
   //Connections - requests tabs changes notifier [the method below is used because while exiting the screen

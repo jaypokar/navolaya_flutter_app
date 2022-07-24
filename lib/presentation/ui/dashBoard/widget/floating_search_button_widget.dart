@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/ui/dashBoard/widget/bottom_sheet_filter_widget.dart';
+
+import '../../../cubit/nearByUsersCubit/near_by_users_cubit.dart';
 
 class FloatingActionButtonWidget extends StatelessWidget {
   const FloatingActionButtonWidget({Key? key}) : super(key: key);
@@ -43,6 +46,7 @@ class FloatingActionButtonWidget extends StatelessWidget {
   }
 
   void callBottomSheet(BuildContext context) {
+    final filterData = context.read<NearByUsersCubit>().fetchCachedFilterData();
     showModalBottomSheet(
         constraints: BoxConstraints.loose(
             Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.65)),
@@ -56,7 +60,9 @@ class FloatingActionButtonWidget extends StatelessWidget {
         ),
         context: context,
         builder: (_) {
-          return const BottomSheetFilterWidget();
+          return BottomSheetFilterWidget(
+            filterData: filterData,
+          );
         });
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:navolaya_flutter/presentation/cubit/dashBoardTitleNotifierCubit/dash_board_title_notifier_cubit.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
 import '../../../../core/color_constants.dart';
-import '../../../../injection_container.dart';
 import '../../../../resources/image_resources.dart';
 
 class TabWidget extends StatelessWidget {
@@ -44,9 +44,8 @@ class TabWidget extends StatelessWidget {
           //setState((){widget.controller.index = index;});
         },
         tabs: [
-          ValueListenableBuilder(
-            valueListenable: sl<UiNotifiers>().dashBoardTitleNotifier,
-            builder: (_, title, __) {
+          BlocBuilder<DashBoardTitleNotifierCubit, String>(
+            builder: (_, title) {
               return Tab(
                 text: null,
                 icon: Image.asset(
@@ -59,9 +58,8 @@ class TabWidget extends StatelessWidget {
               );
             },
           ),
-          ValueListenableBuilder(
-            valueListenable: sl<UiNotifiers>().dashBoardTitleNotifier,
-            builder: (_, title, __) {
+          BlocBuilder<DashBoardTitleNotifierCubit, String>(
+            builder: (_, title) {
               return Tab(
                 text: null,
                 icon: Image.asset(
@@ -80,9 +78,8 @@ class TabWidget extends StatelessWidget {
               icon: null,
             ),
           ),
-          ValueListenableBuilder(
-            valueListenable: sl<UiNotifiers>().dashBoardTitleNotifier,
-            builder: (_, title, __) {
+          BlocBuilder<DashBoardTitleNotifierCubit, String>(
+            builder: (_, title) {
               return Tab(
                 text: null,
                 icon: Image.asset(
@@ -95,9 +92,8 @@ class TabWidget extends StatelessWidget {
               );
             },
           ),
-          ValueListenableBuilder(
-            valueListenable: sl<UiNotifiers>().dashBoardTitleNotifier,
-            builder: (_, title, __) {
+          BlocBuilder<DashBoardTitleNotifierCubit, String>(
+            builder: (_, title) {
               return Tab(
                 text: null,
                 icon: Image.asset(
