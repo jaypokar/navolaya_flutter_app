@@ -76,4 +76,7 @@ class MasterRepositoryImpl implements MasterRepository {
 
   @override
   List<JnvRelations> get relationWithJNVList => _mastersData.data!.jnvRelations!;
+
+  @override
+  AppContentsModel get appContents => _appContentsData;
 }

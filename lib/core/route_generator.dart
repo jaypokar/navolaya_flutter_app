@@ -22,6 +22,7 @@ import 'package:navolaya_flutter/presentation/ui/user/user_detail_page.dart';
 import 'package:navolaya_flutter/resources/value_key_resources.dart';
 
 import '../injection_container.dart';
+import '../presentation/cubit/helpAndInfoCubit/help_and_info_cubit.dart';
 import '../presentation/cubit/homeTabsNotifierCubit/home_tabs_notifier_cubit.dart';
 import '../presentation/cubit/otpTimerCubit/otptimer_cubit.dart';
 import '../presentation/ui/dashBoard/dashboard_page.dart';
@@ -116,7 +117,9 @@ class RouteGenerator {
       case blockedUserPage:
         return MaterialPageRoute(builder: (_) => const BlockedUsersPage());
       case helpAndInfoPage:
-        return MaterialPageRoute(builder: (_) => const HelpAndInfoPage());
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                create: (_) => sl<HelpAndInfoCubit>(), child: const HelpAndInfoPage()));
       case updateBasicInfoPage:
         return MaterialPageRoute(builder: (_) => const UpdateBasicInfoPage());
       case updateAdditionalInfoPage:

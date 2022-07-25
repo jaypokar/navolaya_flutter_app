@@ -11,7 +11,8 @@ import '../../../features/location_manager.dart';
 part 'near_by_users_state.dart';
 
 class NearByUsersCubit extends Cubit<NearByUsersState> {
-  int page = 1;
+  int _page = 1;
+  bool _isListFetchingComplete = false;
   final UsersRepository _repository;
   final LocationManager _locationManager;
 
@@ -27,21 +28,28 @@ class NearByUsersCubit extends Cubit<NearByUsersState> {
       oldPosts = currentState.usersData;
     }
 
-    emit(LoadingNearByUsersState(oldPosts, isFirstFetch: page == 1));
+    emit(LoadingNearByUsersState(oldPosts, isFirstFetch: _page == 1));
 
     final possibleData = await _repository.fetchNearByUsersAPI(
-        filterDataRequestData: FilterDataRequestModel(page: page));
+        filterDataRequestData: FilterDataRequestModel(page: _page));
 
     if (possibleData.isLeft()) {
       emit(ErrorLoadingNearByUsersState(
           title: StringResources.errorTitle, message: possibleData.getLeft()!.error));
       return;
     }
-    page++;
+
+    if (possibleData.getRight()!.data != null) {
+      _isListFetchingComplete = !possibleData.getRight()!.data!.hasNextPage!;
+    }
+
+    _page++;
     final users = (state as LoadingNearByUsersState).oldUsers;
     users.addAll(possibleData.getRight()!.data!.docs!);
     emit(LoadNearByUsersState(usersData: users));
   }
+
+  bool get isListFetchingComplete => _isListFetchingComplete;
 
   Future<bool> handleUserLocation() async {
     final possibleData = await _locationManager.fetchLocationData();
@@ -60,7 +68,7 @@ class NearByUsersCubit extends Cubit<NearByUsersState> {
   Map<String, dynamic> fetchCachedFilterData() => _repository.fetchCachedFilterData();
 
   void filterList({required FilterDataRequestModel filterData}) async {
-    emit(LoadingNearByUsersState(const [], isFirstFetch: page == 1));
+    emit(LoadingNearByUsersState(const [], isFirstFetch: _page == 1));
 
     final possibleData = await _repository.fetchNearByUsersAPI(filterDataRequestData: filterData);
 
@@ -71,7 +79,7 @@ class NearByUsersCubit extends Cubit<NearByUsersState> {
       ));
       return;
     }
-    page++;
+    _page++;
     final List<UserDataModel> users = [];
     users.addAll(possibleData.getRight()!.data!.docs!);
     emit(LoadNearByUsersState(usersData: users));

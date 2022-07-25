@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
+import 'package:navolaya_flutter/presentation/bloc/userConnectionsBloc/user_connections_bloc.dart';
 import 'package:navolaya_flutter/presentation/cubit/nearByUsersCubit/near_by_users_cubit.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<RecentUsersCubit>(create: (_) => sl<RecentUsersCubit>()),
         BlocProvider<NearByUsersCubit>(create: (_) => sl<NearByUsersCubit>()),
         BlocProvider<PopularUsersCubit>(create: (_) => sl<PopularUsersCubit>()),
+        BlocProvider<UserConnectionsBloc>(create: (_) => sl<UserConnectionsBloc>()),
       ],
       child: MaterialApp(
         title: 'Navolaya',

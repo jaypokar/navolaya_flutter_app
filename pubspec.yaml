@@ -29,8 +29,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # Load Vector images library for API's
-  flutter_svg: 0.21.0
   # Dio is http client library for API's
   dio: ^4.0.6
   # Flutter blocs is state management library
@@ -75,6 +73,10 @@ dependencies:
   another_flushbar: ^1.10.29
   # To retrieve users who are near by the location provided.
   location: ^4.4.0
+  # To Load html text in About us , Privacy Policy and Terms and Condition.
+  flutter_html: ^2.2.1
+  # Accordion view to show FAQ's.
+  accordion: ^2.5.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

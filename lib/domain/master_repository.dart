@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:navolaya_flutter/data/model/app_contents_model.dart';
 
 import '../core/failure.dart';
 import '../data/model/masters_model.dart';
@@ -23,4 +24,6 @@ abstract class MasterRepository {
   List<Schools> get schoolsList;
 
   List<StateCities> get stateCitiesList;
+
+  AppContentsModel get appContents;
 }

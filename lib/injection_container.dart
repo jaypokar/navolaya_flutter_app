@@ -8,17 +8,22 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/data/repositoryImpl/auth_repository_impl.dart';
+import 'package:navolaya_flutter/data/repositoryImpl/help_and_info_repository_impl.dart';
 import 'package:navolaya_flutter/data/repositoryImpl/master_repository_impl.dart';
 import 'package:navolaya_flutter/data/repositoryImpl/profile_repository_impl.dart';
 import 'package:navolaya_flutter/data/repositoryImpl/users_repository_impl.dart';
 import 'package:navolaya_flutter/domain/auth_repository.dart';
+import 'package:navolaya_flutter/domain/help_and_info_repository.dart';
 import 'package:navolaya_flutter/domain/master_repository.dart';
 import 'package:navolaya_flutter/domain/profile_repository.dart';
+import 'package:navolaya_flutter/domain/user_connections_repository.dart';
 import 'package:navolaya_flutter/domain/users_repository.dart';
 import 'package:navolaya_flutter/features/location_manager.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
+import 'package:navolaya_flutter/presentation/bloc/userConnectionsBloc/user_connections_bloc.dart';
 import 'package:navolaya_flutter/presentation/cubit/dashBoardTitleNotifierCubit/dash_board_title_notifier_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/helpAndInfoCubit/help_and_info_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/homeTabsNotifierCubit/home_tabs_notifier_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/nearByUsersCubit/near_by_users_cubit.dart';
@@ -31,6 +36,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/apiService/base_api_service.dart';
 import 'data/apiService/network_api_service.dart';
+import 'data/repositoryImpl/user_connections_repository_impl.dart';
 import 'data/sessionManager/session_manager.dart';
 import 'presentation/cubit/pageIndicatorCubit/page_indicator_page_cubit.dart';
 
@@ -59,6 +65,11 @@ void _initBlocs() {
   //Add Profile Bloc
   sl.registerFactory(
     () => ProfileBloc(sl()),
+  );
+
+  //User Connections Bloc
+  sl.registerFactory(
+    () => UserConnectionsBloc(sl()),
   );
 }
 
@@ -91,6 +102,9 @@ void _initCubits() {
   sl.registerFactory(
     () => DashBoardTitleNotifierCubit(),
   );
+  sl.registerFactory(
+    () => HelpAndInfoCubit(sl()),
+  );
 }
 
 void _initRepositories() {
@@ -117,6 +131,15 @@ void _initRepositories() {
   //Users Repository
   sl.registerLazySingleton<UsersRepository>(
     () => UsersRepositoryImpl(sl()),
+  );
+
+  //User Connection Repository
+  sl.registerLazySingleton<UserConnectionsRepository>(
+    () => UserConnectionsRepositoryImpl(sl()),
+  );
+  //Help and info Repository
+  sl.registerLazySingleton<HelpAndInfoRepository>(
+    () => HelpAndInfoRepositoryImpl(sl()),
   );
 }
 

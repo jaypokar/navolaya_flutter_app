@@ -38,7 +38,8 @@ class _NearByUsersWidgetState extends State<NearByUsersWidget> {
   void setupScrollController() {
     _scrollController.addListener(() {
       if (_scrollController.position.atEdge) {
-        if (_scrollController.position.pixels != 0) {
+        if (_scrollController.position.pixels != 0 &&
+            !sl<NearByUsersCubit>().isListFetchingComplete) {
           loadUsers();
         }
       }

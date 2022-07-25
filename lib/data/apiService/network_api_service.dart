@@ -13,7 +13,7 @@ import '../../core/failure.dart';
 import '../../core/logger.dart';
 import 'base_api_service.dart';
 
-enum ApiType { get, post, put }
+enum ApiType { get, post, put, delete }
 
 class NetworkAPIService implements BaseAPIService {
   final Dio _dio;
@@ -50,15 +50,15 @@ class NetworkAPIService implements BaseAPIService {
                   url,
                   options: Options(
                     contentType: 'multipart/form-data',
-              headers: isTokenNeeded ? {"Authorization": 'Bearer $_token'} : {},
-            ),
-          )
+                    headers: isTokenNeeded ? {"Authorization": 'Bearer $_token'} : {},
+                  ),
+                )
               : await _dio.get(url,
-              queryParameters: queryParameters,
-              options: Options(
-                contentType: 'multipart/form-data',
-                headers: isTokenNeeded ? {"Authorization": 'Bearer $_token'} : {},
-              ));
+                  queryParameters: queryParameters,
+                  options: Options(
+                    contentType: 'multipart/form-data',
+                    headers: isTokenNeeded ? {"Authorization": 'Bearer $_token'} : {},
+                  ));
         } else if (apiType == ApiType.post) {
           response = await _dio.post(url,
               data: FormData.fromMap(queryParameters),
@@ -66,8 +66,15 @@ class NetworkAPIService implements BaseAPIService {
                 contentType: 'multipart/form-data',
                 headers: isTokenNeeded ? {"Authorization": 'Bearer $_token'} : {},
               ));
-        } else {
+        } else if (apiType == ApiType.put) {
           response = await _dio.put(url,
+              data: FormData.fromMap(queryParameters),
+              options: Options(
+                contentType: 'multipart/form-data',
+                headers: isTokenNeeded ? {"Authorization": 'Bearer $_token'} : {},
+              ));
+        } else {
+          response = await _dio.delete(url,
               data: FormData.fromMap(queryParameters),
               options: Options(
                 contentType: 'multipart/form-data',
@@ -85,9 +92,10 @@ class NetworkAPIService implements BaseAPIService {
               e.response!.statusCode == 403 ||
               e.response!.statusCode == 404 ||
               e.response!.statusCode == 402 ||
+              e.response!.statusCode == 408 ||
               e.response!.statusCode == 500) {
-            if (e.response!.statusCode == 401 || e.response!.statusCode == 403) {
-              //await initiateLogoutProcess();
+            if (e.response!.statusCode == 401 || e.response!.statusCode == 408) {
+              await initiateLogoutProcess();
             }
             logger.e(e.response!.data['message'].toString());
           } else {
@@ -144,7 +152,7 @@ class NetworkAPIService implements BaseAPIService {
 // Not Found
 //
 // 408
-// Request Timeout
+// Login session expired
 //
 // 500
 // Internal Server Error

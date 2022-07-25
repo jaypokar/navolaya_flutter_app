@@ -34,4 +34,10 @@ class ConfigFile {
 
   /*Users URL*/
   static const String getUsersAPIUrl = '${apiBaseURL}users';
+
+  /*User Connections URL*/
+  static const String createConnectionRequestAPIUrl = '${apiBaseURL}connections/requests';
+  static const String getConnectionRequestAPIUrl = '${apiBaseURL}connections/requests';
+  static const String removeConnectionAPIUrl = '${apiBaseURL}connections';
+  static const String updateConnectionRequestAPIUrl = '${apiBaseURL}connections/requests';
 }

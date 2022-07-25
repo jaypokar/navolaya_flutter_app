@@ -30,7 +30,8 @@ class _PopularUsersWidgetState extends State<PopularUsersWidget> {
   void setupScrollController() {
     _scrollController.addListener(() {
       if (_scrollController.position.atEdge) {
-        if (_scrollController.position.pixels != 0) {
+        if (_scrollController.position.pixels != 0 &&
+            !sl<PopularUsersCubit>().isListFetchingComplete) {
           loadUsers();
         }
       }

@@ -1,9 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:navolaya_flutter/core/logger.dart';
 import 'package:navolaya_flutter/data/model/users_model.dart';
+import 'package:navolaya_flutter/presentation/basicWidget/loading_widget.dart';
+import 'package:navolaya_flutter/presentation/bloc/userConnectionsBloc/user_connections_bloc.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
 import '../../../../core/color_constants.dart';
+import '../../../basicWidget/custom_button.dart';
+
+enum ConnectionType { connect, pending, respond }
+
+enum ConnectionRespondType { accept, cancel, none }
+
+enum UserMoreOptionType { block, unFriend, cancel }
 
 class UserConnectMessageAndOptionWidget extends StatefulWidget {
   final UserDataModel user;
@@ -17,10 +27,15 @@ class UserConnectMessageAndOptionWidget extends StatefulWidget {
 
 class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAndOptionWidget> {
   String connectOrPending = '';
+  bool requestAccepted = true;
 
   @override
   void initState() {
     super.initState();
+    checkRequestStatus();
+  }
+
+  void checkRequestStatus() {
     if (widget.user.isConnected != null) {
       if (!widget.user.isConnected!) {
         connectOrPending = StringResources.connect;
@@ -42,24 +57,30 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
   Widget build(BuildContext context) {
     return Row(
       children: [
-        connectOrPending.isEmpty
-            ? const SizedBox.shrink()
-            : Expanded(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    side: const BorderSide(width: 1.0, color: ColorConstants.appColor),
-                  ),
-                  child: Text(
-                    connectOrPending,
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
-                  ),
-                ),
-              ),
+        BlocBuilder<UserConnectionsBloc, UserConnectionsState>(
+          buildWhen: (_, state) {
+            if (state is GetConnectionsState) {
+              return false;
+            }
+            return true;
+          },
+          builder: (_, state) {
+            if (state is UserConnectionLoadingState) {
+              return const LoadingWidget();
+            }
+
+            if (state is CreateConnectionsState) {
+              connectOrPending = StringResources.pending;
+            } else if ((state is UpdateConnectionsState && !requestAccepted) ||
+                state is RemoveConnectionsState) {
+              connectOrPending = StringResources.connect;
+            } else if (state is UpdateConnectionsState && requestAccepted) {
+              connectOrPending = '';
+            }
+
+            return manageConnectButton();
+          },
+        ),
         const SizedBox(width: 10),
         Expanded(
           child: OutlinedButton(
@@ -76,18 +97,233 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
             child: const Text(
               StringResources.message,
               style: TextStyle(
-                  color: ColorConstants.appColor, fontWeight: FontWeight.bold, fontSize: 14),
+                  color: ColorConstants.appColor, fontWeight: FontWeight.bold, fontSize: 12),
             ),
           ),
         ),
         const SizedBox(width: 10),
-        Container(
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.3),
-              shape: BoxShape.circle,
+        InkWell(
+          onTap: () => showMoreOptionsBottomSheet(),
+          child: Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.3),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.more_horiz)),
+        ),
+      ],
+    );
+  }
+
+  Widget manageConnectButton() {
+    /*if (connectionStatus.isNotEmpty) {
+      connectOrPending = connectionStatus;
+    }*/
+    logger.i('the connection status is :$connectOrPending');
+    if (connectOrPending == StringResources.connect ||
+        connectOrPending == StringResources.respond) {
+      return Expanded(
+        child: ElevatedButton(
+          onPressed: () {
+            if (connectOrPending == StringResources.connect) {
+              context
+                  .read<UserConnectionsBloc>()
+                  .add(CreateConnectionsEvent(userID: widget.user.id!));
+            } else if (connectOrPending == StringResources.respond) {
+              showAcceptOrRejectBottomSheet();
+            }
+          },
+          style: OutlinedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0),
             ),
-            child: const Icon(Icons.more_horiz)),
+            side: const BorderSide(width: 1.0, color: ColorConstants.appColor),
+          ),
+          child: Text(
+            connectOrPending,
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+          ),
+        ),
+      );
+    } else if (connectOrPending == StringResources.pending) {
+      return Expanded(
+        child: OutlinedButton(
+          onPressed: () {
+            //showAcceptOrRejectBottomSheet();
+          },
+          style: OutlinedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            side: const BorderSide(
+              width: 1.0,
+              color: ColorConstants.greyColor,
+            ),
+          ),
+          child: Text(
+            connectOrPending,
+            style: const TextStyle(
+                color: ColorConstants.greyColor, fontWeight: FontWeight.bold, fontSize: 12),
+          ),
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  void showAcceptOrRejectBottomSheet() async {
+    ConnectionRespondType respondType = await showModalBottomSheet(
+        constraints: BoxConstraints.loose(
+          Size(
+            MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height * 0.23,
+          ),
+        ),
+        isScrollControlled: false,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+        ),
+        context: context,
+        builder: (_) {
+          return const ConnectionResponseWidget();
+        });
+
+    if (!mounted) return;
+    if (respondType != ConnectionRespondType.none) {
+      requestAccepted = respondType == ConnectionRespondType.accept;
+      context.read<UserConnectionsBloc>().add(UpdateConnectionRequestEvent(
+          userID: widget.user.id!,
+          acceptOrCancel: respondType != ConnectionRespondType.accept ? 'accept' : 'cancel'));
+    }
+  }
+
+  void showMoreOptionsBottomSheet() async {
+    UserMoreOptionType respondType = await showModalBottomSheet(
+        constraints: BoxConstraints.loose(
+          Size(
+            MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height * 0.33,
+          ),
+        ),
+        isScrollControlled: false,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+        ),
+        context: context,
+        builder: (_) {
+          return const UserMoreOptionsWidget();
+        });
+
+    if (!mounted) return;
+    if (respondType == UserMoreOptionType.block) {}
+  }
+}
+
+class ConnectionResponseWidget extends StatelessWidget {
+  const ConnectionResponseWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        ListTile(
+          horizontalTitleGap: 20,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+          leading: const Icon(
+            Icons.person_add_rounded,
+            size: 34,
+            color: ColorConstants.appColor,
+          ),
+          title: const Text(
+            StringResources.accept,
+            style: TextStyle(color: Colors.black, fontSize: 16),
+          ),
+          onTap: () {
+            Navigator.of(context).pop(ConnectionRespondType.accept);
+          },
+        ),
+        const Divider(),
+        ListTile(
+          horizontalTitleGap: 20,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+          leading: const Icon(
+            Icons.person_remove,
+            size: 34,
+            color: Colors.orange,
+          ),
+          title: const Text(
+            StringResources.cancel,
+            style: TextStyle(color: Colors.black, fontSize: 16),
+          ),
+          onTap: () {
+            Navigator.of(context).pop(ConnectionRespondType.cancel);
+          },
+        ),
+        const SizedBox(height: 10),
+      ],
+    );
+  }
+}
+
+class UserMoreOptionsWidget extends StatelessWidget {
+  const UserMoreOptionsWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        ListTile(
+          horizontalTitleGap: 20,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+          leading: const Icon(
+            Icons.person_off,
+            size: 34,
+            color: ColorConstants.red,
+          ),
+          title: const Text(
+            StringResources.blockUser,
+            style: TextStyle(color: Colors.black, fontSize: 16),
+          ),
+          onTap: () {
+            Navigator.of(context).pop(UserMoreOptionType.block);
+          },
+        ),
+        const Divider(),
+        ListTile(
+          horizontalTitleGap: 20,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+          leading: const Icon(
+            Icons.person_remove,
+            size: 34,
+            color: Colors.orange,
+          ),
+          title: const Text(
+            StringResources.unFriend,
+            style: TextStyle(color: Colors.black, fontSize: 16),
+          ),
+          onTap: () {
+            Navigator.of(context).pop(UserMoreOptionType.unFriend);
+          },
+        ),
+        const SizedBox(height: 10),
+        ButtonWidget(
+            buttonText: StringResources.cancel,
+            padding: 20,
+            onPressButton: () => Navigator.of(context).pop(UserMoreOptionType.cancel))
       ],
     );
   }

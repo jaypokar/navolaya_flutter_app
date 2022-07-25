@@ -14,10 +14,6 @@ class UserPersonalAndEducationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> q1 = ['ABC School', 'Student', '2010 - 2014'];
-    final List<String> q2 = ['Shivalik', 'Engineering', 'Software Engineer'];
-    final List<String> q3 = ['03 Nov 1992', 'Male', '8160231082'];
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
@@ -47,7 +43,7 @@ class UserPersonalAndEducationWidget extends StatelessWidget {
                 }
                 return UserQualificationItemWidget(title: title, iconData: iconData);
               },
-              itemCount: q1.length,
+              itemCount: 3,
               physics: const ClampingScrollPhysics(),
               scrollDirection: Axis.horizontal,
             ),
@@ -71,7 +67,7 @@ class UserPersonalAndEducationWidget extends StatelessWidget {
                 }
                 return UserQualificationItemWidget(title: title, iconData: iconData);
               },
-              itemCount: q1.length,
+              itemCount: 3,
               physics: const ClampingScrollPhysics(),
               scrollDirection: Axis.horizontal,
             ),
@@ -96,7 +92,7 @@ class UserPersonalAndEducationWidget extends StatelessWidget {
                 }
                 return UserQualificationItemWidget(title: title, iconData: iconData);
               },
-              itemCount: q1.length,
+              itemCount: 3,
               physics: const ClampingScrollPhysics(),
               scrollDirection: Axis.horizontal,
             ),

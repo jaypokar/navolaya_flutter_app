@@ -122,14 +122,18 @@ class StringResources {
   static const String twitter = 'Twitter';
 
   static const String connect = 'Connect';
+  static const String accept = 'Accept';
+  static const String blockUser = 'Block User';
   static const String pending = 'Pending';
   static const String respond = 'Response';
   static const String message = 'Message';
+  static const String unFriend = 'Unfriend';
 
   static const String pleaseEnterOldPassword = 'Please enter old password';
   static const String pleaseEnterNewPassword = 'Please enter new password';
   static const String pleaseEnterCFMPassword = 'Please enter confirm password';
   static const String passwordDidNotMatched = "Password didn't matched";
+  static const String noDataAvailable = "Sorry! no data available at the moment";
 
   static const String errorTitle = "Sorry!! Something went wrong we are checking...";
   static const String locationErrorTitle = "Location Service..";

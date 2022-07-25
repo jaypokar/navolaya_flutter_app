@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/core/either_extension_function.dart';
@@ -8,7 +10,8 @@ import 'package:navolaya_flutter/domain/users_repository.dart';
 part 'recent_users_state.dart';
 
 class RecentUsersCubit extends Cubit<RecentUsersState> {
-  int page = 1;
+  int _page = 1;
+  bool _isListFetchingComplete = false;
   final UsersRepository _repository;
 
   RecentUsersCubit(this._repository) : super(UsersInitial());
@@ -23,23 +26,30 @@ class RecentUsersCubit extends Cubit<RecentUsersState> {
       oldPosts = currentState.usersData;
     }
 
-    emit(LoadingUsersState(oldPosts, isFirstFetch: page == 1));
+    emit(LoadingUsersState(oldPosts, isFirstFetch: _page == 1));
 
     final possibleData = await _repository.fetchRecentUsersAPI(
-        filterDataRequestData: FilterDataRequestModel(page: page));
+        filterDataRequestData: FilterDataRequestModel(page: _page));
 
     if (possibleData.isLeft()) {
       emit(ErrorLoadingUsersState(message: possibleData.getLeft()!.error));
       return;
     }
-    page++;
+
+    if (possibleData.getRight()!.data != null) {
+      _isListFetchingComplete = !possibleData.getRight()!.data!.hasNextPage!;
+    }
+
+    _page++;
     final users = (state as LoadingUsersState).oldUsers;
     users.addAll(possibleData.getRight()!.data!.docs!);
     emit(LoadUsersState(usersData: users));
   }
 
+  bool get isListFetchingComplete => _isListFetchingComplete;
+
   void filterList({required FilterDataRequestModel filterData}) async {
-    emit(LoadingUsersState(const [], isFirstFetch: page == 1));
+    emit(LoadingUsersState(const [], isFirstFetch: _page == 1));
 
     final possibleData = await _repository.fetchRecentUsersAPI(filterDataRequestData: filterData);
 
@@ -47,7 +57,7 @@ class RecentUsersCubit extends Cubit<RecentUsersState> {
       emit(ErrorLoadingUsersState(message: possibleData.getLeft()!.error));
       return;
     }
-    page++;
+    _page++;
     final List<UserDataModel> users = [];
     users.addAll(possibleData.getRight()!.data!.docs!);
     emit(LoadUsersState(usersData: users));
