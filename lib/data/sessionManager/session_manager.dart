@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
 import 'package:navolaya_flutter/data/model/social_media_profiles_model.dart';
+import 'package:navolaya_flutter/data/model/update_privacy_settings_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/update_additional_info_model.dart';
@@ -34,6 +35,11 @@ class SessionManager {
     return _loginData;
   }
 
+  void updateAllowNotifications(bool allowNotifications) {
+    _loginData!.data!.allowNotifications = allowNotifications ? 1 : 0;
+    initiateUserLogin(_loginData!);
+  }
+
   void updateBasicInfo(LoginAndBasicInfoModel basicInfoData) {
     if (basicInfoData.data!.school != null) {
       _loginData?.data!.school = basicInfoData.data!.school!;
@@ -56,6 +62,28 @@ class SessionManager {
     if (basicInfoData.data!.occupation != null) {
       _loginData?.data!.occupation = basicInfoData.data!.occupation!;
     }
+    initiateUserLogin(_loginData!);
+  }
+
+  void updatePrivacySettings(UpdatePrivacySettingsModel updatePrivacySettingsData) {
+    _loginData!.data!.displaySettings!.phone =
+        updatePrivacySettingsData.data!.displaySettings!.phone!;
+    _loginData!.data!.displaySettings!.email =
+        updatePrivacySettingsData.data!.displaySettings!.email!;
+    _loginData!.data!.displaySettings!.findMeNearby =
+        updatePrivacySettingsData.data!.displaySettings!.findMeNearby!;
+    _loginData!.data!.displaySettings!.socialProfileLinks =
+        updatePrivacySettingsData.data!.displaySettings!.socialProfileLinks!;
+    _loginData!.data!.displaySettings!.permanentAddress =
+        updatePrivacySettingsData.data!.displaySettings!.permanentAddress!;
+    _loginData!.data!.displaySettings!.currentAddress =
+        updatePrivacySettingsData.data!.displaySettings!.currentAddress!;
+    _loginData!.data!.displaySettings!.birthYear =
+        updatePrivacySettingsData.data!.displaySettings!.birthYear!;
+    _loginData!.data!.displaySettings!.birthDayMonth =
+        updatePrivacySettingsData.data!.displaySettings!.birthDayMonth!;
+    _loginData!.data!.displaySettings!.userImage =
+        updatePrivacySettingsData.data!.displaySettings!.userImage!;
     initiateUserLogin(_loginData!);
   }
 

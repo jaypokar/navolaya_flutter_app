@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:navolaya_flutter/data/model/users_model.dart';
 
 import '../../../../core/color_constants.dart';
 
 class UserAddressDetailsWidget extends StatelessWidget {
-  final UserDataModel user;
+  final String userCurrentAddress;
+  final String userPermanentAddress;
 
-  const UserAddressDetailsWidget({required this.user, Key? key}) : super(key: key);
+  const UserAddressDetailsWidget(
+      {required this.userCurrentAddress, required this.userPermanentAddress, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,60 +25,56 @@ class UserAddressDetailsWidget extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          Row(
-            children: const [
-              Icon(
-                FontAwesomeIcons.locationArrow,
-                color: Colors.grey,
-                size: 15,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Expanded(
-                child: Text(
-                  'LBS College Marg, Raja Park, Jaipur',
-                  style: TextStyle(color: ColorConstants.textColor2, fontSize: 12),
+          if (userCurrentAddress.isNotEmpty) ...[
+            Row(
+              children: [
+                const Icon(
+                  FontAwesomeIcons.locationArrow,
+                  color: Colors.grey,
+                  size: 15,
                 ),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Text(
-                'Current',
-                style: TextStyle(color: ColorConstants.appColor, fontSize: 12),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Icon(
-                FontAwesomeIcons.locationArrow,
-                color: Colors.grey,
-                size: 15,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Expanded(
-                child: Text(
-                  'Unnati Tower, Vidyadharnagar, Jaipur There are many variations of passages',
-                  style: TextStyle(color: ColorConstants.textColor2, fontSize: 12),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: Text(
+                    userCurrentAddress,
+                    style: const TextStyle(color: ColorConstants.textColor2, fontSize: 12),
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Text(
-                'Permanent',
-                style: TextStyle(color: ColorConstants.appColor, fontSize: 12),
-              )
-            ],
-          ),
+                const SizedBox(width: 5),
+                const Text(
+                  'Current',
+                  style: TextStyle(color: ColorConstants.appColor, fontSize: 12),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+          ],
+          userPermanentAddress.isNotEmpty
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      FontAwesomeIcons.locationArrow,
+                      color: Colors.grey,
+                      size: 15,
+                    ),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: Text(
+                        userPermanentAddress,
+                        style: const TextStyle(color: ColorConstants.textColor2, fontSize: 12),
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    const Text(
+                      'Permanent',
+                      style: TextStyle(color: ColorConstants.appColor, fontSize: 12),
+                    )
+                  ],
+                )
+              : const SizedBox.shrink(),
         ],
       ),
     );

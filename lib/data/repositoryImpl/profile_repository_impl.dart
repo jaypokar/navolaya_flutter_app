@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:navolaya_flutter/core/either_extension_function.dart';
 import 'package:navolaya_flutter/core/failure.dart';
 import 'package:navolaya_flutter/data/model/basic_info_request_model.dart';
+import 'package:navolaya_flutter/data/model/delete_profile_model.dart';
 import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
 import 'package:navolaya_flutter/data/model/social_media_links_request_model.dart';
 import 'package:navolaya_flutter/data/model/social_media_profiles_model.dart';
@@ -10,11 +11,13 @@ import 'package:navolaya_flutter/data/model/update_email_model.dart';
 import 'package:navolaya_flutter/data/model/update_phone_model.dart';
 import 'package:navolaya_flutter/data/sessionManager/session_manager.dart';
 import 'package:navolaya_flutter/domain/profile_repository.dart';
+import 'package:navolaya_flutter/resources/string_resources.dart';
 
 import '../../resources/config_file.dart';
 import '../apiService/base_api_service.dart';
 import '../apiService/network_api_service.dart';
 import '../model/change_password_model.dart';
+import '../model/update_privacy_settings_model.dart' as privacy_settings;
 import '../model/update_send_otp_model.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
@@ -207,6 +210,70 @@ class ProfileRepositoryImpl implements ProfileRepository {
     final response = possibleData.getRight();
     ChangePasswordModel data = ChangePasswordModel.fromJson(response);
 
+    return right(data);
+  }
+
+  @override
+  Future<Either<Failure, privacy_settings.UpdatePrivacySettingsModel>> updatePrivacySettingsAPI(
+      {required Map<String, dynamic> updatePrivacySettingRequestData}) async {
+    //--->
+    //--->
+    //--->
+    final possibleData = await _baseAPIService.executeAPI(
+        url: ConfigFile.updatePrivacySettingsAPIUrl,
+        queryParameters: updatePrivacySettingRequestData,
+        isTokenNeeded: true,
+        apiType: ApiType.put);
+
+    if (possibleData.isLeft()) {
+      return left(Failure(possibleData.getLeft()!.error));
+    }
+
+    final response = possibleData.getRight();
+    privacy_settings.UpdatePrivacySettingsModel data =
+        privacy_settings.UpdatePrivacySettingsModel.fromJson(response);
+
+    if (data.data != null) {
+      _sessionManager.updatePrivacySettings(data);
+    } else {
+      return left(const Failure(StringResources.errorTitle));
+    }
+
+    return right(data);
+  }
+
+  @override
+  Either<Failure, DisplaySettings> fetchPrivacySettings() {
+    late final DisplaySettings? displaySettings;
+    if (_sessionManager.getUserDetails() != null) {
+      displaySettings = _sessionManager.getUserDetails()!.data!.displaySettings;
+    } else {
+      return left(const Failure(StringResources.errorTitle));
+    }
+
+    if (displaySettings != null) {
+      return right(displaySettings);
+    }
+    return left(const Failure(StringResources.errorTitle));
+  }
+
+  @override
+  Future<Either<Failure, DeleteProfileModel>> deleteProfile() async {
+    //--->
+    //--->
+    //--->
+    final possibleData = await _baseAPIService.executeAPI(
+        url: ConfigFile.deleteProfileAPIUrl,
+        queryParameters: {},
+        isTokenNeeded: true,
+        apiType: ApiType.delete);
+
+    if (possibleData.isLeft()) {
+      return left(Failure(possibleData.getLeft()!.error));
+    }
+
+    final response = possibleData.getRight();
+    DeleteProfileModel data = DeleteProfileModel.fromJson(response);
     return right(data);
   }
 }

@@ -7,6 +7,7 @@ import 'package:navolaya_flutter/presentation/bloc/userConnectionsBloc/user_conn
 import 'package:navolaya_flutter/presentation/ui/user/widget/user_about_me_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/user/widget/user_address_details_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/user/widget/user_personal_and_education_widget.dart';
+import 'package:navolaya_flutter/resources/image_resources.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 
 import '../../../data/model/users_model.dart';
@@ -20,7 +21,36 @@ class UserDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = user.userImage != null ? user.userImage!.filepath! : 'assets/1.jpg';
+    String image = ImageResources.userAvatarImg;
+    if (user.displaySettings != null) {
+      if (user.displaySettings!.userImage == 'all' ||
+          (user.isConnected! && user.displaySettings!.userImage == 'my_connections')) {
+        image = user.userImage != null ? user.userImage!.filepath! : ImageResources.userAvatarImg;
+      }
+    }
+
+    String userCurrentAddress = '';
+    if (user.displaySettings != null) {
+      if (user.displaySettings!.currentAddress == 'all' ||
+          (user.isConnected! && user.displaySettings!.currentAddress == 'my_connections')) {
+        userCurrentAddress = user.currentAddress ?? '';
+      }
+    }
+
+    String userPermanentAddress = '';
+    if (user.displaySettings != null) {
+      if (user.displaySettings!.permanentAddress == 'all' ||
+          (user.isConnected! && user.displaySettings!.permanentAddress == 'my_connections')) {
+        userPermanentAddress = user.permanentAddress ?? '';
+      }
+    }
+
+    bool showSocialMediaProfiles = false;
+    if (user.displaySettings != null) {
+      showSocialMediaProfiles = user.displaySettings!.socialProfileLinks == 'all' ||
+          (user.isConnected! && user.displaySettings!.socialProfileLinks == 'my_connections');
+    }
+
     return BlocListener<UserConnectionsBloc, UserConnectionsState>(
       listener: (_, state) {
         if (state is UserConnectionErrorState) {
@@ -46,16 +76,14 @@ class UserDetailPage extends StatelessWidget {
                         imageUrl: image,
                         fit: BoxFit.cover,
                         errorWidget: (_, __, ___) {
-                          return const LoadingWidget();
+                          return Padding(
+                              padding: const EdgeInsets.all(60),
+                              child: Image.asset(ImageResources.userAvatarImg));
                         },
                         progressIndicatorBuilder: (_, __, ___) {
                           return const LoadingWidget();
-                        },
-                      )
-                    : Image.asset(
-                        image,
-                        fit: BoxFit.cover,
-                      ),
+                        })
+                    : Padding(padding: const EdgeInsets.all(60), child: Image.asset(image)),
               ),
             ),
             SliverList(
@@ -67,17 +95,24 @@ class UserDetailPage extends StatelessWidget {
                 if (user.currentAddress == null && user.permanentAddress == null) ...[
                   const SizedBox.shrink()
                 ] else ...[
-                  UserAddressDetailsWidget(user: user),
-                  const SizedBox(height: 5),
-                  const Divider(color: Colors.grey),
-                  const SizedBox(height: 5),
+                  if (userCurrentAddress.isNotEmpty || userPermanentAddress.isNotEmpty) ...[
+                    UserAddressDetailsWidget(
+                      userCurrentAddress: userCurrentAddress,
+                      userPermanentAddress: userPermanentAddress,
+                    ),
+                    const SizedBox(height: 5),
+                    const Divider(color: Colors.grey),
+                    const SizedBox(height: 5),
+                  ]
                 ],
                 UserAboutMeWidget(user: user),
                 const SizedBox(height: 5),
                 const Divider(color: Colors.grey),
                 user.socialProfileLinks == null
                     ? const SizedBox.shrink()
-                    : UserSocialMediaWidget(user: user),
+                    : showSocialMediaProfiles
+                        ? UserSocialMediaWidget(user: user)
+                        : const SizedBox.shrink(),
               ]),
             ),
           ],

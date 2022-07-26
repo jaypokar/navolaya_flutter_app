@@ -78,19 +78,43 @@ class UserPersonalAndEducationWidget extends StatelessWidget {
             child: ListView.builder(
               itemBuilder: (context, i) {
                 late final IconData iconData;
-                late final String title;
+                String title = '';
                 if (i == 0) {
                   iconData = FontAwesomeIcons.cakeCandles;
-                  title = sl<CommonFunctions>()
-                      .convertedDate(user.birthDate ?? DateTime.now().toIso8601String());
+                  if (user.displaySettings != null) {
+                    if (user.displaySettings!.birthDayMonth == 'all' ||
+                        (user.isConnected! &&
+                            user.displaySettings!.birthDayMonth == 'my_connections')) {
+                      title = sl<CommonFunctions>()
+                          .getBirthMonth(user.birthDate ?? DateTime.now().toIso8601String());
+                    }
+                    if (user.displaySettings!.birthYear == 'all' ||
+                        (user.isConnected! &&
+                            user.displaySettings!.birthYear == 'my_connections')) {
+                      if (title.isEmpty) {
+                        title = sl<CommonFunctions>()
+                            .getBirthYear(user.birthDate ?? DateTime.now().toIso8601String());
+                      } else {
+                        title =
+                            '$title,${sl<CommonFunctions>().getBirthYear(user.birthDate ?? DateTime.now().toIso8601String())}';
+                      }
+                    }
+                  }
                 } else if (i == 1) {
                   iconData = FontAwesomeIcons.user;
                   title = user.gender ?? '-';
                 } else {
                   iconData = FontAwesomeIcons.phone;
-                  title = '${user.countryCode}-${user.phone}';
+                  if (user.displaySettings != null) {
+                    if (user.displaySettings!.phone == 'all' ||
+                        (user.isConnected! && user.displaySettings!.phone == 'my_connections')) {
+                      title = '${user.countryCode}-${user.phone}';
+                    }
+                  }
                 }
-                return UserQualificationItemWidget(title: title, iconData: iconData);
+                return title.isEmpty
+                    ? const SizedBox.shrink()
+                    : UserQualificationItemWidget(title: title, iconData: iconData);
               },
               itemCount: 3,
               physics: const ClampingScrollPhysics(),

@@ -83,6 +83,40 @@ class ChangePasswordState extends ProfileState {
   List<Object?> get props => [changePasswordResponse];
 }
 
+class UpdatePrivacySettingsState extends ProfileState {
+  final privacy_settings.UpdatePrivacySettingsModel response;
+
+  const UpdatePrivacySettingsState({required this.response});
+
+  @override
+  List<Object?> get props => [UpdatePrivacySettingsState];
+}
+
+class LoadPrivacySettingsState extends ProfileState {
+  final DisplaySettings? displaySettings;
+
+  const LoadPrivacySettingsState({required this.displaySettings});
+
+  @override
+  List<Object?> get props => [displaySettings];
+}
+
+class DeleteProfileResponseState extends ProfileState {
+  final DeleteProfileModel response;
+
+  const DeleteProfileResponseState({required this.response});
+
+  @override
+  List<Object?> get props => [response];
+}
+
+class DeleteProfileLoadingState extends ProfileState {
+  const DeleteProfileLoadingState();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class ProfileLoadingState extends ProfileState {
   const ProfileLoadingState();
 

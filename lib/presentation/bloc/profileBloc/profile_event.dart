@@ -80,6 +80,27 @@ class ChangePasswordEvent extends ProfileEvent {
   List<Object?> get props => [oldPassword, newPassword];
 }
 
+class UpdatePrivacySettingEvent extends ProfileEvent {
+  const UpdatePrivacySettingEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class FetchPrivacySettingEvent extends ProfileEvent {
+  const FetchPrivacySettingEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class DeleteProfileEvent extends ProfileEvent {
+  const DeleteProfileEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class FetchPersonalDetails extends ProfileEvent {
   const FetchPersonalDetails();
 

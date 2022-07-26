@@ -31,6 +31,8 @@ class ConfigFile {
   static const String updateEmailAPIUrl = '${apiBaseURL}profile/update-email';
   static const String updateJNVVerificationAPIUrl = '${apiBaseURL}profile/jnv-verification';
   static const String changePasswordAPIUrl = '${apiBaseURL}profile/password';
+  static const String updatePrivacySettingsAPIUrl = '${apiBaseURL}profile/privacy-settings';
+  static const String deleteProfileAPIUrl = '${apiBaseURL}profile';
 
   /*Users URL*/
   static const String getUsersAPIUrl = '${apiBaseURL}users';

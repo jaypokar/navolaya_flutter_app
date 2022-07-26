@@ -6,6 +6,7 @@ import 'package:navolaya_flutter/data/model/users_model.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/loading_widget.dart';
 
 import '../../../../core/color_constants.dart';
+import '../../../../resources/image_resources.dart';
 
 class UserItemWidget extends StatelessWidget {
   final UserDataModel user;
@@ -14,7 +15,14 @@ class UserItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = user.userImage != null ? user.userImage!.filepath! : 'assets/1.jpg';
+    String image = ImageResources.userAvatarImg;
+    if (user.displaySettings != null) {
+      if (user.displaySettings!.userImage == 'all' ||
+          (user.isConnected! && user.displaySettings!.userImage == 'my_connections')) {
+        image = user.userImage != null ? user.userImage!.filepath! : ImageResources.userAvatarImg;
+      }
+    }
+
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(RouteGenerator.userDetailPage, arguments: user);
@@ -31,16 +39,13 @@ class UserItemWidget extends StatelessWidget {
                       imageUrl: image,
                       fit: BoxFit.cover,
                       errorWidget: (_, __, ___) {
-                        return const LoadingWidget();
+                        return Container(color: ColorConstants.appColor, child: Image.asset(image));
                       },
                       progressIndicatorBuilder: (_, __, ___) {
                         return const LoadingWidget();
                       },
                     )
-                  : Image.asset(
-                      image,
-                      fit: BoxFit.cover,
-                    ),
+                  : Container(color: ColorConstants.appColor, child: Image.asset(image)),
               Positioned(
                 bottom: 0,
                 right: 0,
@@ -94,23 +99,6 @@ class UserItemWidget extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 5),
-                      /*
-                      OutlinedButton(
-                        onPressed: null,
-                        style: OutlinedButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: const Size.fromHeight(30),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          side: const BorderSide(width: 1.0, color: Colors.white),
-                        ),
-                        child: const Text(
-                          "Connect",
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
-                      )*/
                     ],
                   ),
                 ),

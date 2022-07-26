@@ -7,6 +7,7 @@ class ImageResources {
   static const String imgBg = "$assetImageBase/img_bg.png";
   static const String firstIntroImg = "$assetImageBase/first_intro_img.png";
   static const String helpAndInfoImg = "$assetImageBase/help_info_image.png";
+  static const String userAvatarImg = "$assetImageBase/user_avatar_img.png";
 
   //Icons
   static const String assetIconBase = 'assets/icons';

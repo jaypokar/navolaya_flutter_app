@@ -94,6 +94,8 @@ class StringResources {
   static const String birthDayAndMonth = 'Birth Day & Month';
   static const String birthYear = 'Birth Year';
   static const String socialProfiles = 'Social Profiles';
+  static const String currentAddress = 'Current Address';
+  static const String permanentAddress = 'Permanent Address';
   static const String findMeNearBy = 'Find me near by';
   static const String all = 'All';
   static const String none = 'none';

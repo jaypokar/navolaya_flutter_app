@@ -115,7 +115,7 @@ class Data {
     _isPhoneVerified = isPhoneVerified;
     _isBasicProfileUpdated = isBasicProfileUpdated;
     _jnvVerificationStatus = jnvVerificationStatus;
-    _allowNotifications = allowNotifications;
+    this.allowNotifications;
     this.socialProfileLinks;
     _displaySettings = displaySettings;
     _id = id;
@@ -149,7 +149,7 @@ class Data {
     _isPhoneVerified = json['is_phone_verified'];
     _isBasicProfileUpdated = json['is_basic_profile_updated'];
     _jnvVerificationStatus = json['jnv_verification_status'];
-    _allowNotifications = json['allow_notifications'];
+    allowNotifications = json['allow_notifications'];
     socialProfileLinks = json['social_profile_links'] != null
         ? SocialProfileLinks.fromJson(json['social_profile_links'])
         : null;
@@ -183,7 +183,7 @@ class Data {
   int? _isPhoneVerified;
   int? _isBasicProfileUpdated;
   int? _jnvVerificationStatus;
-  int? _allowNotifications;
+  int? allowNotifications;
   SocialProfileLinks? socialProfileLinks;
   DisplaySettings? _displaySettings;
   String? _id;
@@ -209,8 +209,6 @@ class Data {
   int? get isBasicProfileUpdated => _isBasicProfileUpdated;
 
   int? get jnvVerificationStatus => _jnvVerificationStatus;
-
-  int? get allowNotifications => _allowNotifications;
 
   DisplaySettings? get displaySettings => _displaySettings;
 
@@ -245,7 +243,7 @@ class Data {
     map['is_phone_verified'] = _isPhoneVerified;
     map['is_basic_profile_updated'] = _isBasicProfileUpdated;
     map['jnv_verification_status'] = _jnvVerificationStatus;
-    map['allow_notifications'] = _allowNotifications;
+    map['allow_notifications'] = allowNotifications;
     if (socialProfileLinks != null) {
       map['social_profile_links'] = socialProfileLinks?.toJson();
     }
@@ -281,68 +279,50 @@ class DisplaySettings {
     String? socialProfileLinks,
     String? findMeNearby,
   }) {
-    _phone = phone;
-    _email = email;
-    _userImage = userImage;
-    _birthDayMonth = birthDayMonth;
-    _birthYear = birthYear;
-    _currentAddress = currentAddress;
-    _permanentAddress = permanentAddress;
-    _socialProfileLinks = socialProfileLinks;
-    _findMeNearby = findMeNearby;
+    this.phone;
+    this.email;
+    this.userImage;
+    this.birthDayMonth;
+    this.birthYear;
+    this.currentAddress;
+    this.permanentAddress;
+    this.socialProfileLinks;
+    this.findMeNearby;
   }
 
   DisplaySettings.fromJson(dynamic json) {
-    _phone = json['phone'];
-    _email = json['email'];
-    _userImage = json['user_image'];
-    _birthDayMonth = json['birth_day_month'];
-    _birthYear = json['birth_year'];
-    _currentAddress = json['current_address'];
-    _permanentAddress = json['permanent_address'];
-    _socialProfileLinks = json['social_profile_links'];
-    _findMeNearby = json['find_me_nearby'];
+    phone = json['phone'];
+    email = json['email'];
+    userImage = json['user_image'];
+    birthDayMonth = json['birth_day_month'];
+    birthYear = json['birth_year'];
+    currentAddress = json['current_address'];
+    permanentAddress = json['permanent_address'];
+    socialProfileLinks = json['social_profile_links'];
+    findMeNearby = json['find_me_nearby'];
   }
 
-  String? _phone;
-  String? _email;
-  String? _userImage;
-  String? _birthDayMonth;
-  String? _birthYear;
-  String? _currentAddress;
-  String? _permanentAddress;
-  String? _socialProfileLinks;
-  String? _findMeNearby;
-
-  String? get phone => _phone;
-
-  String? get email => _email;
-
-  String? get userImage => _userImage;
-
-  String? get birthDayMonth => _birthDayMonth;
-
-  String? get birthYear => _birthYear;
-
-  String? get currentAddress => _currentAddress;
-
-  String? get permanentAddress => _permanentAddress;
-
-  String? get socialProfileLinks => _socialProfileLinks;
-
-  String? get findMeNearby => _findMeNearby;
+  String? phone;
+  String? email;
+  String? userImage;
+  String? birthDayMonth;
+  String? birthYear;
+  String? currentAddress;
+  String? permanentAddress;
+  String? socialProfileLinks;
+  String? findMeNearby;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['phone'] = _phone;
-    map['email'] = _email;
-    map['user_image'] = _userImage;
-    map['birth_day_month'] = _birthDayMonth;
-    map['birth_year'] = _birthYear;
-    map['current_address'] = _currentAddress;
-    map['permanent_address'] = _permanentAddress;
-    map['social_profile_links'] = _socialProfileLinks;
-    map['find_me_nearby'] = _findMeNearby;
+    map['phone'] = phone;
+    map['email'] = email;
+    map['user_image'] = userImage;
+    map['birth_day_month'] = birthDayMonth;
+    map['birth_year'] = birthYear;
+    map['current_address'] = currentAddress;
+    map['permanent_address'] = permanentAddress;
+    map['social_profile_links'] = socialProfileLinks;
+    map['find_me_nearby'] = findMeNearby;
     return map;
   }
 }

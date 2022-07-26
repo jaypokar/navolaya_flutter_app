@@ -68,21 +68,6 @@ class _GroupDropDownWidgetState<T> extends State<GroupDropDownWidget<T>> {
     if (widget.onValueSelect != null) {
       widget.onValueSelect!(newValue);
     }
-
-    /* if (newValue is Qualifications) {
-      if(newValue.title!.length>40){
-        _itemHeight = 60;
-      }else {
-        _itemHeight = 50;
-      }
-    } else if (newValue is Occupations) {
-      if(newValue.title!.length>40){
-        _itemHeight = 60;
-      }else {
-        _itemHeight = 50;
-      }
-    }*/
-
     setState(() {});
   }
 

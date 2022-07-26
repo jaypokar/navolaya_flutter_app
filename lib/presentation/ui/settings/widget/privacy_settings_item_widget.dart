@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/color_constants.dart';
 import '../../../../resources/string_resources.dart';
 import '../../../basicWidget/drop_down_widget.dart';
+import '../../../bloc/profileBloc/profile_bloc.dart';
 
 class PrivacySettingsItemWidget extends StatefulWidget {
   final String title;
+  final String value;
 
-  const PrivacySettingsItemWidget({required this.title, Key? key}) : super(key: key);
+  const PrivacySettingsItemWidget({required this.title, required this.value, Key? key})
+      : super(key: key);
 
   @override
   State<PrivacySettingsItemWidget> createState() => _PrivacySettingsItemWidgetState();
@@ -23,7 +27,8 @@ class _PrivacySettingsItemWidgetState extends State<PrivacySettingsItemWidget> {
       return StringResources.none;
     }
   });
-  final String _value = 'All';
+
+  //String _value = StringResources.all;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +44,7 @@ class _PrivacySettingsItemWidgetState extends State<PrivacySettingsItemWidget> {
         )),
         DropDownWidget<String>(
           list: privacySettingsOptionsList,
-          value: _value,
+          value: widget.value,
           isExpanded: false,
           paddingLeft: 10,
           paddingRight: 6,
@@ -49,6 +54,10 @@ class _PrivacySettingsItemWidgetState extends State<PrivacySettingsItemWidget> {
           height: 30,
           textSize: 12,
           showDropDown: true,
+          onValueSelect: (String value) {
+            /*widget.value = value;*/
+            context.read<ProfileBloc>().updatePrivacySettingsMap(widget.title, value);
+          },
         ),
       ],
     );
