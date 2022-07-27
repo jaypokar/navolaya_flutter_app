@@ -26,10 +26,12 @@ import 'package:navolaya_flutter/presentation/cubit/dashBoardTitleNotifierCubit/
 import 'package:navolaya_flutter/presentation/cubit/helpAndInfoCubit/help_and_info_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/homeTabsNotifierCubit/home_tabs_notifier_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/myConnectionsCubit/my_connections_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/nearByUsersCubit/near_by_users_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/otpTimerCubit/otptimer_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/popularUsersCubit/popular_users_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/recentUsersCubit/recent_users_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/usersVerificationsCubit/users_verifications_cubit.dart';
 import 'package:navolaya_flutter/presentation/uiNotifiers/ui_notifiers.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -104,6 +106,13 @@ void _initCubits() {
   );
   sl.registerFactory(
     () => HelpAndInfoCubit(sl()),
+  );
+  sl.registerFactory(
+    () => UsersVerificationsCubit(sl()),
+  );
+
+  sl.registerFactory(
+    () => MyConnectionsCubit(sl()),
   );
 }
 

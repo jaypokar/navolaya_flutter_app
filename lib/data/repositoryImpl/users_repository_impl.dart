@@ -3,6 +3,7 @@ import 'package:navolaya_flutter/core/either_extension_function.dart';
 import 'package:navolaya_flutter/core/failure.dart';
 import 'package:navolaya_flutter/data/apiService/base_api_service.dart';
 import 'package:navolaya_flutter/data/model/filter_data_request_model.dart';
+import 'package:navolaya_flutter/data/model/update_user_verfication_model.dart';
 import 'package:navolaya_flutter/data/model/users_model.dart';
 import 'package:navolaya_flutter/domain/users_repository.dart';
 
@@ -207,5 +208,40 @@ class UsersRepositoryImpl implements UsersRepository {
     _popularFilterMap['gender'] = filterData.gender;
     _popularFilterMap['state'] = filterData.state;
     _popularFilterMap['school'] = filterData.school;
+  }
+
+  @override
+  Future<Either<Failure, UsersModel>> fetchUsersVerificationsAPI({int page = 1}) async {
+    final possibleData = await _baseAPIService.executeAPI(
+        url: ConfigFile.getUsersVerificationsAPIUrl,
+        queryParameters: {'page': page},
+        isTokenNeeded: true,
+        apiType: ApiType.get);
+
+    if (possibleData.isLeft()) {
+      return left(Failure(possibleData.getLeft()!.error));
+    }
+
+    final response = possibleData.getRight();
+    UsersModel data = UsersModel.fromJson(response);
+    return right(data);
+  }
+
+  @override
+  Future<Either<Failure, UpdateUserVerificationModel>> updateUsersVerificationsAPI(
+      {required String action, required String userID}) async {
+    final possibleData = await _baseAPIService.executeAPI(
+        url: ConfigFile.updateUsersVerificationsAPIUrl,
+        queryParameters: {'action': action, 'request_user_id': userID},
+        isTokenNeeded: true,
+        apiType: ApiType.put);
+
+    if (possibleData.isLeft()) {
+      return left(Failure(possibleData.getLeft()!.error));
+    }
+
+    final response = possibleData.getRight();
+    UpdateUserVerificationModel data = UpdateUserVerificationModel.fromJson(response);
+    return right(data);
   }
 }

@@ -7,6 +7,8 @@ abstract class RecentUsersState extends Equatable {
 class UsersInitial extends RecentUsersState {
   @override
   List<Object> get props => [];
+
+  const UsersInitial();
 }
 
 class LoadingUsersState extends RecentUsersState {

@@ -103,4 +103,26 @@ class UserConnectionsRepositoryImpl implements UserConnectionsRepository {
         CreateOrUpdateConnectionRequestModel.fromJson(response);
     return right(data);
   }
+
+  @override
+  Future<Either<Failure, UsersModel>> fetchMyConnectionsAPI(
+      {int page = 1, String keyword = ''}) async {
+    //--->
+    //--->
+    //--->
+
+    final possibleData = await _baseAPIService.executeAPI(
+        url: ConfigFile.myConnectionAPIUrl,
+        queryParameters: {'keyword': keyword, 'page': page},
+        isTokenNeeded: true,
+        apiType: ApiType.get);
+
+    if (possibleData.isLeft()) {
+      return left(Failure(possibleData.getLeft()!.error));
+    }
+
+    final response = possibleData.getRight();
+    UsersModel data = UsersModel.fromJson(response);
+    return right(data);
+  }
 }

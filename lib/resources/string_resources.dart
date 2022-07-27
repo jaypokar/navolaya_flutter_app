@@ -62,6 +62,7 @@ class StringResources {
   static const String messages = 'Messages';
   static const String myConnections = 'My Connections';
   static const String connectionRequests = 'Connection Requests';
+  static const String userVerificationRequests = 'User Verification Requests';
   static const String settings = 'Settings';
   static const String helpAndInfo = 'Help & Info';
   static const String logout = 'Logout';
@@ -123,6 +124,8 @@ class StringResources {
   static const String youTube = 'Youtube';
   static const String twitter = 'Twitter';
 
+  static const String confirm = 'Confirm';
+  static const String decline = 'Decline';
   static const String connect = 'Connect';
   static const String accept = 'Accept';
   static const String blockUser = 'Block User';

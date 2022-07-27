@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/data/model/users_model.dart';
 import 'package:navolaya_flutter/presentation/cubit/dashBoardTitleNotifierCubit/dash_board_title_notifier_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/myConnectionsCubit/my_connections_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/pageIndicatorCubit/page_indicator_page_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/usersVerificationsCubit/users_verifications_cubit.dart';
 import 'package:navolaya_flutter/presentation/ui/auth/authentication_page.dart';
 import 'package:navolaya_flutter/presentation/ui/blockedUsers/blocked_users_page.dart';
 import 'package:navolaya_flutter/presentation/ui/changePassword/change_password_page.dart';
@@ -19,6 +21,7 @@ import 'package:navolaya_flutter/presentation/ui/registration/registration_page.
 import 'package:navolaya_flutter/presentation/ui/settings/settings_page.dart';
 import 'package:navolaya_flutter/presentation/ui/updatePassword/update_password_page.dart';
 import 'package:navolaya_flutter/presentation/ui/user/user_detail_page.dart';
+import 'package:navolaya_flutter/presentation/ui/userVerification/user_verification_page.dart';
 import 'package:navolaya_flutter/resources/value_key_resources.dart';
 
 import '../injection_container.dart';
@@ -48,6 +51,7 @@ class RouteGenerator {
   static const updateSocialProfileLinksPage = '/updateSocialProfileLinksPage';
   static const updatePhoneOrEmailPage = '/updatePhoneOrEmailPage';
   static const changePasswordPage = '/changePasswordPage';
+  static const userVerificationRequestPage = '/userVerificationRequestPage';
 
   const RouteGenerator();
 
@@ -107,19 +111,28 @@ class RouteGenerator {
             builder: (_) => MultiBlocProvider(providers: [
                   BlocProvider(create: (_) => sl<HomeTabsNotifierCubit>()),
                   BlocProvider(create: (_) => sl<DashBoardTitleNotifierCubit>()),
+                  BlocProvider(create: (_) => sl<MyConnectionsCubit>()),
                 ], child: const DashBoardPage()));
       case connectionRequestPage:
         return MaterialPageRoute(builder: (_) => const ConnectionRequestsPage());
+      /***-->***/ case userVerificationRequestPage:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (_) => sl<UsersVerificationsCubit>(),
+                  child: const UserVerificationPage(),
+                ));
       case editProfilePage:
         return MaterialPageRoute(builder: (_) => const EditProfilePage());
       case settingsPage:
         return MaterialPageRoute(builder: (_) => const SettingsPage());
       case blockedUserPage:
         return MaterialPageRoute(builder: (_) => const BlockedUsersPage());
-      case helpAndInfoPage:
+      /***-->***/ case helpAndInfoPage:
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
-                create: (_) => sl<HelpAndInfoCubit>(), child: const HelpAndInfoPage()));
+                  create: (_) => sl<HelpAndInfoCubit>(),
+                  child: const HelpAndInfoPage(),
+                ));
       case updateBasicInfoPage:
         return MaterialPageRoute(builder: (_) => const UpdateBasicInfoPage());
       case updateAdditionalInfoPage:
@@ -128,13 +141,16 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const UpdateSocialProfilesPage());
       case changePasswordPage:
         return MaterialPageRoute(builder: (_) => const ChangePasswordPage());
-      case updatePhoneOrEmailPage:
+      /***-->***/ case updatePhoneOrEmailPage:
         if (args is bool) {
           return MaterialPageRoute(
-              builder: (_) => MultiBlocProvider(providers: [
-                    BlocProvider(create: (_) => sl<MobileVerificationCubit>()),
-                    BlocProvider(create: (_) => sl<OTPTimerCubit>()),
-                  ], child: UpdatePhoneOrEmailPage(isEmail: args)));
+              builder: (_) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider(create: (_) => sl<MobileVerificationCubit>()),
+                      BlocProvider(create: (_) => sl<OTPTimerCubit>())
+                    ],
+                    child: UpdatePhoneOrEmailPage(isEmail: args),
+                  ));
         }
         return _errorRoute();
       case userDetailPage:

@@ -30,6 +30,7 @@ class _DashBoardDrawerWidgetState extends State<DashBoardDrawerWidget> {
       {'icon': ImageResources.userIcon, 'title': StringResources.editProfile},
       {'icon': ImageResources.chatIcon, 'title': StringResources.messages},
       {'icon': ImageResources.groupIcon, 'title': StringResources.myConnections},
+      {'icon': ImageResources.connectionsIcon, 'title': StringResources.userVerificationRequests},
       {'icon': ImageResources.connectionsIcon, 'title': StringResources.connectionRequests},
       {'icon': ImageResources.settingsIcon, 'title': StringResources.settings},
       {'icon': ImageResources.helpInfoIcon, 'title': StringResources.helpAndInfo},
@@ -100,7 +101,7 @@ class _DashBoardDrawerWidgetState extends State<DashBoardDrawerWidget> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: ListView.separated(
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
@@ -157,10 +158,13 @@ class _DashBoardDrawerWidgetState extends State<DashBoardDrawerWidget> {
               }
             }),
             Expanded(
-              child: Image.asset(
-                ImageResources.textLogoGradient,
-                height: 300,
-                width: 300,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Image.asset(
+                  ImageResources.textLogoGradient,
+                  /*height: 300,
+                  width: 300,*/
+                ),
               ),
             )
           ],

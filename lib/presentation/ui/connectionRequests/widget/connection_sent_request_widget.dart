@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../myConnections/widget/my_connections_item_widget.dart';
-
 class ConnectionSentRequestWidget extends StatelessWidget {
   const ConnectionSentRequestWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
+    return const SizedBox
+            .shrink() /*ListView.separated(
         itemBuilder: (_, i) {
           return const MyConnectionsItemWidget(
             connectionsType: ConnectionsType.connectionsSent,
@@ -22,6 +21,7 @@ class ConnectionSentRequestWidget extends StatelessWidget {
             ),
           );
         },
-        itemCount: 10);
+        itemCount: 10)*/
+        ;
   }
 }

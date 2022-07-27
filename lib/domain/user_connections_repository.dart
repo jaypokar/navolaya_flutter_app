@@ -13,4 +13,6 @@ abstract class UserConnectionsRepository {
   Future<Either<Failure, CreateOrUpdateConnectionRequestModel>> removeConnectionAPI(String userID);
 
   Future<Either<Failure, UsersModel>> getConnectionsAPI(String requestType, {int page = 1});
+
+  Future<Either<Failure, UsersModel>> fetchMyConnectionsAPI({int page = 1, String keyword = ''});
 }

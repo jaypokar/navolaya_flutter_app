@@ -68,7 +68,6 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
             if (state is UserConnectionLoadingState) {
               return const LoadingWidget();
             }
-
             if (state is CreateConnectionsState) {
               connectOrPending = StringResources.pending;
             } else if ((state is UpdateConnectionsState && !requestAccepted) ||
@@ -207,7 +206,7 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
         constraints: BoxConstraints.loose(
           Size(
             MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height * 0.33,
+            MediaQuery.of(context).size.height * (connectOrPending.isEmpty ? 0.33 : 0.20),
           ),
         ),
         isScrollControlled: false,
@@ -219,11 +218,15 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
         ),
         context: context,
         builder: (_) {
-          return const UserMoreOptionsWidget();
+          return UserMoreOptionsWidget(
+            isConnected: connectOrPending.isEmpty,
+          );
         });
 
     if (!mounted) return;
-    if (respondType == UserMoreOptionType.block) {}
+    if (respondType == UserMoreOptionType.unFriend) {
+      context.read<UserConnectionsBloc>().add(RemoveConnectionEvent(userID: widget.user.id!));
+    }
   }
 }
 
@@ -242,12 +245,12 @@ class ConnectionResponseWidget extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(horizontal: 18),
           leading: const Icon(
             Icons.person_add_rounded,
-            size: 34,
+            size: 30,
             color: ColorConstants.appColor,
           ),
           title: const Text(
             StringResources.accept,
-            style: TextStyle(color: Colors.black, fontSize: 16),
+            style: TextStyle(color: Colors.black, fontSize: 14),
           ),
           onTap: () {
             Navigator.of(context).pop(ConnectionRespondType.accept);
@@ -259,12 +262,12 @@ class ConnectionResponseWidget extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(horizontal: 20),
           leading: const Icon(
             Icons.person_remove,
-            size: 34,
+            size: 30,
             color: Colors.orange,
           ),
           title: const Text(
             StringResources.cancel,
-            style: TextStyle(color: Colors.black, fontSize: 16),
+            style: TextStyle(color: Colors.black, fontSize: 14),
           ),
           onTap: () {
             Navigator.of(context).pop(ConnectionRespondType.cancel);
@@ -277,7 +280,9 @@ class ConnectionResponseWidget extends StatelessWidget {
 }
 
 class UserMoreOptionsWidget extends StatelessWidget {
-  const UserMoreOptionsWidget({Key? key}) : super(key: key);
+  final bool isConnected;
+
+  const UserMoreOptionsWidget({required this.isConnected, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -291,7 +296,7 @@ class UserMoreOptionsWidget extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(horizontal: 18),
           leading: const Icon(
             Icons.person_off,
-            size: 34,
+            size: 30,
             color: ColorConstants.red,
           ),
           title: const Text(
@@ -302,24 +307,25 @@ class UserMoreOptionsWidget extends StatelessWidget {
             Navigator.of(context).pop(UserMoreOptionType.block);
           },
         ),
-        const Divider(),
-        ListTile(
-          horizontalTitleGap: 20,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-          leading: const Icon(
-            Icons.person_remove,
-            size: 34,
-            color: Colors.orange,
+        if (isConnected) ...[
+          const Divider(),
+          ListTile(
+            horizontalTitleGap: 20,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+            leading: const Icon(
+              Icons.person_remove,
+              size: 30,
+              color: Colors.orange,
+            ),
+            title: const Text(
+              StringResources.unFriend,
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            onTap: () {
+              Navigator.of(context).pop(UserMoreOptionType.unFriend);
+            },
           ),
-          title: const Text(
-            StringResources.unFriend,
-            style: TextStyle(color: Colors.black, fontSize: 16),
-          ),
-          onTap: () {
-            Navigator.of(context).pop(UserMoreOptionType.unFriend);
-          },
-        ),
-        const SizedBox(height: 10),
+        ],
         ButtonWidget(
             buttonText: StringResources.cancel,
             padding: 20,

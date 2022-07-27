@@ -48,8 +48,10 @@ class DrawerListItemWidget extends StatelessWidget {
           Scaffold.of(context).closeDrawer();
           tabController.index = 1;
         } else if (index == 3) {
-          Navigator.of(context).pushNamed(RouteGenerator.connectionRequestPage);
+          Navigator.of(context).pushNamed(RouteGenerator.userVerificationRequestPage);
         } else if (index == 4) {
+          Navigator.of(context).pushNamed(RouteGenerator.connectionRequestPage);
+        } else if (index == 5) {
           Navigator.of(context).pushNamed(RouteGenerator.settingsPage);
         } else {
           Navigator.of(context).pushNamed(RouteGenerator.helpAndInfoPage);

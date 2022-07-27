@@ -14,7 +14,7 @@ class RecentUsersCubit extends Cubit<RecentUsersState> {
   bool _isListFetchingComplete = false;
   final UsersRepository _repository;
 
-  RecentUsersCubit(this._repository) : super(UsersInitial());
+  RecentUsersCubit(this._repository) : super(const UsersInitial());
 
   void loadUsers() async {
     if (state is LoadingUsersState) return;
