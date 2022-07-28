@@ -31,7 +31,7 @@ class TextFieldWidget extends StatelessWidget {
       style: const TextStyle(
         fontSize: 14,
       ),
-      textCapitalization: TextCapitalization.words,
+      /*textCapitalization: TextCapitalization.none,*/
       maxLength: max,
       maxLines: maxLines,
       textAlign: TextAlign.start,

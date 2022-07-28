@@ -1,11 +1,16 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:navolaya_flutter/data/model/users_model.dart';
+import 'package:navolaya_flutter/presentation/basicWidget/user_circular_picture_widget.dart';
+import 'package:navolaya_flutter/presentation/cubit/connectionReceivedCubit/connection_received_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/connectionSentCubit/connection_sent_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/myConnectionsCubit/my_connections_cubit.dart';
 import 'package:navolaya_flutter/resources/image_resources.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
 import '../../../../core/color_constants.dart';
+import '../../../../core/route_generator.dart';
 import '../../../basicWidget/loading_widget.dart';
 
 enum ConnectionsType { myConnections, connectionsReceived, connectionsSent }
@@ -28,31 +33,15 @@ class MyConnectionsItemWidget extends StatelessWidget {
     }
 
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context).pushNamed(RouteGenerator.userDetailPage, arguments: user);
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 40,
-              child: image.contains('http')
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: CachedNetworkImage(
-                          imageUrl: image,
-                          fit: BoxFit.cover,
-                          errorWidget: (_, __, ___) {
-                            return Image.asset(ImageResources.userAvatarImg);
-                          },
-                          progressIndicatorBuilder: (_, __, ___) {
-                            return const LoadingWidget();
-                          }),
-                    )
-                  : ClipRRect(borderRadius: BorderRadius.circular(40), child: Image.asset(image)),
-            ),
-            const SizedBox(
-              width: 15,
-            ),
+            UserCircularPictureWidget(image: image),
+            const SizedBox(width: 15),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +50,7 @@ class MyConnectionsItemWidget extends StatelessWidget {
                   Text(
                     user.fullName!,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.black, fontSize: 18),
+                        fontWeight: FontWeight.bold, color: Colors.black, fontSize: 14),
                   ),
                   const SizedBox(height: 5),
                   Row(
@@ -103,53 +92,103 @@ class MyConnectionsItemWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 15),
-            getActionWidget(),
+            actionWidget(context),
           ],
         ),
       ),
     );
   }
 
-  Widget getActionWidget() {
+  Widget actionWidget(BuildContext context) {
+    bool isLoading = false;
     if (connectionsType == ConnectionsType.myConnections) {
-      return Container(
-        decoration: BoxDecoration(
-            border: Border.all(width: 1, color: ColorConstants.red),
-            borderRadius: BorderRadius.circular(5)),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: const Text(
-          StringResources.remove,
-          style: TextStyle(color: ColorConstants.red, fontSize: 12),
+      return InkWell(
+        onTap: () {
+          isLoading = true;
+          context.read<MyConnectionsCubit>().removeMyConnection(user.id!);
+        },
+        child: BlocBuilder<MyConnectionsCubit, MyConnectionsState>(
+          builder: (_, state) {
+            if (state is RemoveLoadingState && isLoading) {
+              return const LoadingWidget();
+            }
+            isLoading = false;
+            return Container(
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: ColorConstants.red),
+                  borderRadius: BorderRadius.circular(5)),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: const Text(
+                StringResources.remove,
+                style: TextStyle(color: ColorConstants.red, fontSize: 12),
+              ),
+            );
+          },
         ),
       );
     } else if (connectionsType == ConnectionsType.connectionsReceived) {
-      return Row(
-        children: [
-          Image.asset(
-            ImageResources.cancelIcon,
-            height: 25,
-            width: 25,
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Image.asset(
-            ImageResources.acceptIcon,
-            height: 25,
-            width: 25,
-          ),
-        ],
+      return BlocBuilder<ConnectionReceivedCubit, ConnectionReceivedState>(
+        builder: (_, state) {
+          if (state is UpdateConnectionLoadingState && isLoading) {
+            return const LoadingWidget();
+          }
+
+          isLoading = false;
+          return Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  isLoading = true;
+                  context.read<ConnectionReceivedCubit>().updateConnection('cancel', user.id!);
+                },
+                child: Image.asset(
+                  ImageResources.cancelIcon,
+                  height: 25,
+                  width: 25,
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              InkWell(
+                onTap: () {
+                  isLoading = true;
+                  context.read<ConnectionReceivedCubit>().updateConnection('accept', user.id!);
+                },
+                child: Image.asset(
+                  ImageResources.acceptIcon,
+                  height: 25,
+                  width: 25,
+                ),
+              ),
+            ],
+          );
+        },
       );
     } else {
-      return Container(
-        decoration: BoxDecoration(
-            border: Border.all(width: 1, color: ColorConstants.red),
-            borderRadius: BorderRadius.circular(5)),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: const Text(
-          StringResources.cancel,
-          style: TextStyle(color: ColorConstants.red, fontSize: 12),
-        ),
+      return BlocBuilder<ConnectionSentCubit, ConnectionSentState>(
+        builder: (_, state) {
+          if (state is UpdateConnectionSentLoadingState && isLoading) {
+            return const LoadingWidget();
+          }
+          isLoading = false;
+          return InkWell(
+            onTap: () {
+              isLoading = true;
+              context.read<ConnectionSentCubit>().updateConnection(user.id!);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: ColorConstants.red),
+                  borderRadius: BorderRadius.circular(5)),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: const Text(
+                StringResources.cancel,
+                style: TextStyle(color: ColorConstants.red, fontSize: 12),
+              ),
+            ),
+          );
+        },
       );
     }
   }

@@ -17,7 +17,7 @@ class UsersRepositoryImpl implements UsersRepository {
   final Map<String, dynamic> _popularFilterMap =
       FilterDataRequestModel().toJson(FilterType.popular);
 
-  UsersRepositoryImpl(this._baseAPIService);
+   UsersRepositoryImpl(this._baseAPIService);
 
   @override
   Future<Either<Failure, UsersModel>> fetchRecentUsersAPI(

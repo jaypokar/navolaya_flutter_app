@@ -65,7 +65,7 @@ class _MyConnectionsWidgetState extends State<MyConnectionsWidget>
       },
       child: BlocBuilder<MyConnectionsCubit, MyConnectionsState>(
         buildWhen: (_, state) {
-          if (state is RemoveLoadingState) {
+          if (state is RemoveLoadingState || state is ErrorLoadingMyConnectionsState) {
             return false;
           }
           return true;

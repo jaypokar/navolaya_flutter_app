@@ -102,6 +102,7 @@ class StringResources {
   static const String none = 'none';
   static const String changePassword = 'Change Password';
   static const String blockedUsers = 'Blocked Users';
+  static const String reasonToBlock = 'Please enter the reason to block';
   static const String deleteAccount = 'Delete Account';
   static const String unBlockedUsers = 'unblock';
 

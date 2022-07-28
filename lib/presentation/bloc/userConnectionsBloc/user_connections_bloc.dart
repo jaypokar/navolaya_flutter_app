@@ -7,7 +7,6 @@ import '../../../core/logger.dart';
 import '../../../domain/user_connections_repository.dart';
 
 part 'user_connections_event.dart';
-
 part 'user_connections_state.dart';
 
 class UserConnectionsBloc extends Bloc<UserConnectionsEvent, UserConnectionsState> {
@@ -37,13 +36,6 @@ class UserConnectionsBloc extends Bloc<UserConnectionsEvent, UserConnectionsStat
           data = possibleData.fold(
             (l) => UserConnectionErrorState(error: l.error),
             (r) => RemoveConnectionsState(createOrUpdateConnectionRequestResponse: r),
-          );
-        } else if (event is GetConnectionsEvent) {
-          final possibleData =
-              await _repository.getConnectionsAPI(event.requestType, page: event.page);
-          data = possibleData.fold(
-            (l) => UserConnectionErrorState(error: l.error),
-            (r) => GetConnectionsState(usersResponse: r),
           );
         }
 

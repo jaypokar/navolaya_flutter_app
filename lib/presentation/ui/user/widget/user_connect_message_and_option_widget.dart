@@ -4,10 +4,12 @@ import 'package:navolaya_flutter/core/logger.dart';
 import 'package:navolaya_flutter/data/model/users_model.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/loading_widget.dart';
 import 'package:navolaya_flutter/presentation/bloc/userConnectionsBloc/user_connections_bloc.dart';
+import 'package:navolaya_flutter/presentation/cubit/blockUsersCubit/block_users_cubit.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
 import '../../../../core/color_constants.dart';
 import '../../../basicWidget/custom_button.dart';
+import '../../../basicWidget/text_field_widget.dart';
 
 enum ConnectionType { connect, pending, respond }
 
@@ -226,7 +228,28 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
     if (!mounted) return;
     if (respondType == UserMoreOptionType.unFriend) {
       context.read<UserConnectionsBloc>().add(RemoveConnectionEvent(userID: widget.user.id!));
+    } else if (respondType == UserMoreOptionType.block) {
+      showBlockUserDialog(context);
     }
+  }
+
+  void showBlockUserDialog(BuildContext buildContext) async {
+    if (!mounted) return;
+    final blocUserCubit = context.read<BlockUsersCubit>();
+    showDialog(
+      context: context,
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      builder: (BuildContext context) {
+        return BlocProvider<BlockUsersCubit>.value(
+          value: blocUserCubit,
+          child: BlockUserDialogWidget(
+            userID: widget.user.id!,
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -331,6 +354,68 @@ class UserMoreOptionsWidget extends StatelessWidget {
             padding: 20,
             onPressButton: () => Navigator.of(context).pop(UserMoreOptionType.cancel))
       ],
+    );
+  }
+}
+
+class BlockUserDialogWidget extends StatelessWidget {
+  final String userID;
+
+  const BlockUserDialogWidget({required this.userID, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController reasonController = TextEditingController();
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.30,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              TextFieldWidget(
+                controller: reasonController,
+                hint: StringResources.reasonToBlock,
+                textInputType: TextInputType.text,
+                max: 1000,
+                maxLines: 5,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Builder(
+                builder: (BuildContext parentContext) {
+                  return BlocBuilder<BlockUsersCubit, BlockUsersState>(
+                    builder: (_, state) {
+                      if (state is BlockUserLoadingState) {
+                        return const LoadingWidget();
+                      }
+                      return ButtonWidget(
+                          buttonText: StringResources.blockUser.toUpperCase(),
+                          padding: 0,
+                          onPressButton: () {
+                            if (reasonController.text.isEmpty) {
+                              return;
+                            }
+                            context.read<BlockUsersCubit>().blockUser(
+                                  userID: userID,
+                                  reason: reasonController.text,
+                                );
+                          });
+                    },
+                  );
+                },
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -39,7 +39,12 @@ class MyConnectionsCubit extends Cubit<MyConnectionsState> {
     }
 
     _page++;
-    final users = (state as LoadingMyConnectionsState).oldUsers;
+    List<UserDataModel> users = [];
+    if (reset) {
+      users = [];
+    } else {
+      users = (state as LoadingMyConnectionsState).oldUsers;
+    }
     users.addAll(possibleData.getRight()!.data!.docs!);
     emit(LoadMyConnectionsState(usersData: users));
   }
@@ -49,6 +54,7 @@ class MyConnectionsCubit extends Cubit<MyConnectionsState> {
     final possibleData = await _repository.removeConnectionAPI(userID);
     if (possibleData.isLeft()) {
       emit(ErrorLoadingMyConnectionsState(message: possibleData.getLeft()!.error));
+      return;
     }
     emit(
         RemoveMyConnectionState(createOrUpdateConnectionRequestResponse: possibleData.getRight()!));

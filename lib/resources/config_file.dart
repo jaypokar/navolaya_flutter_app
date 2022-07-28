@@ -22,7 +22,6 @@ class ConfigFile {
   static const String updateForgotPasswordAPIUrl = '${apiBaseURL}auth/update-forgot-password';
 
   /*Update Profile URLS*/
-
   static const String updateAdditionalInfoAPIUrl = '${apiBaseURL}profile/additional-info';
   static const String updateProfileBasicInfoAPIUrl = '${apiBaseURL}profile/basic-info';
   static const String updateSocialMediaLinksAPIUrl = '${apiBaseURL}profile/social-links';
@@ -46,4 +45,9 @@ class ConfigFile {
   static const String myConnectionAPIUrl = '${apiBaseURL}connections';
   static const String removeMyConnectionAPIUrl = '${apiBaseURL}connections';
   static const String updateConnectionRequestAPIUrl = '${apiBaseURL}connections/requests';
+
+  /*Blocked User URL*/
+  static const String blockUserAPIUrl = '${apiBaseURL}blocked-users';
+  static const String fetchBlockedUsersAPIUrl = '${apiBaseURL}blocked-users';
+  static const String unBlockUsersAPIUrl = '${apiBaseURL}blocked-users';
 }

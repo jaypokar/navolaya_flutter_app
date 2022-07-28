@@ -14,11 +14,11 @@ import '../../../basicWidget/loading_widget.dart';
 
 class UserVerificationItemWidget extends StatelessWidget {
   final UserDataModel user;
-
   const UserVerificationItemWidget({required this.user, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    bool isLoading = false;
     String image = ImageResources.userAvatarImg;
     if (user.displaySettings != null) {
       if (user.displaySettings!.userImage == 'all' ||
@@ -39,17 +39,17 @@ class UserVerificationItemWidget extends StatelessWidget {
               radius: 40,
               child: image.contains('http')
                   ? ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: CachedNetworkImage(
-                          imageUrl: image,
-                          fit: BoxFit.cover,
-                          errorWidget: (_, __, ___) {
-                            return Image.asset(ImageResources.userAvatarImg);
-                          },
-                          progressIndicatorBuilder: (_, __, ___) {
-                            return const LoadingWidget();
-                          }),
-                    )
+                borderRadius: BorderRadius.circular(40),
+                child: CachedNetworkImage(
+                    imageUrl: image,
+                    fit: BoxFit.cover,
+                    errorWidget: (_, __, ___) {
+                      return Image.asset(ImageResources.userAvatarImg);
+                    },
+                    progressIndicatorBuilder: (_, __, ___) {
+                      return const LoadingWidget();
+                    }),
+              )
                   : ClipRRect(borderRadius: BorderRadius.circular(40), child: Image.asset(image)),
             ),
             const SizedBox(
@@ -104,11 +104,13 @@ class UserVerificationItemWidget extends StatelessWidget {
                     children: [
                       BlocBuilder<UsersVerificationsCubit, UsersVerificationsState>(
                         builder: (_, state) {
-                          if (state is ConfirmLoadingState) {
+                          if (state is ConfirmLoadingState && isLoading) {
                             return const LoadingWidget();
                           }
+                          isLoading = false;
                           return InkWell(
                             onTap: () {
+                              isLoading = true;
                               sl<UsersVerificationsCubit>()
                                   .updateUserVerificationRequest('confirm', user.id!);
                             },
@@ -129,11 +131,13 @@ class UserVerificationItemWidget extends StatelessWidget {
                       ),
                       BlocBuilder<UsersVerificationsCubit, UsersVerificationsState>(
                         builder: (_, state) {
-                          if (state is DeclineLoadingState) {
+                          if (state is DeclineLoadingState && isLoading) {
                             return const LoadingWidget();
                           }
+                          isLoading = false;
                           return InkWell(
                             onTap: () {
+                              isLoading = true;
                               sl<UsersVerificationsCubit>()
                                   .updateUserVerificationRequest('decline', user.id!);
                             },

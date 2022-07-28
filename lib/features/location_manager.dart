@@ -16,7 +16,10 @@ class LocationManager {
     }
     _locationData = await _location.getLocation();
     logger.i(
-        'the location data is fetched : \nLatitude : ${_locationData!.latitude}\nLongitude : ${_locationData!.longitude}');
+      'the location data is fetched :'
+      ' \nLatitude : ${_locationData!.latitude}'
+      '\nLongitude : ${_locationData!.longitude}',
+    );
     return right(_locationData);
   }
 

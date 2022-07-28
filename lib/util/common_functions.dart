@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 
 class CommonFunctions {
   static final DateFormat _formatter = DateFormat('dd MMM,yyyy');
+  static final DateFormat _yearFormatter = DateFormat('yyyy');
+  static final DateFormat _monthFormatter = DateFormat('dd MMM');
 
   const CommonFunctions();
 
@@ -31,11 +33,12 @@ class CommonFunctions {
     return MaterialColor(color.value, swatch);
   }
 
-  void showSnackBar({required BuildContext context,
-    required String message,
-    required Color bgColor,
-    required Color textColor,
-    int duration = 2}) {
+  void showSnackBar(
+      {required BuildContext context,
+      required String message,
+      required Color bgColor,
+      required Color textColor,
+      int duration = 2}) {
     final snackBar = SnackBar(
       duration: Duration(seconds: duration),
       content: Text(
@@ -80,6 +83,18 @@ class CommonFunctions {
   String convertedDate(String dateTime) {
     final DateTime dt1 = DateTime.parse(dateTime.substring(0, 10));
     final String expDateNew = _formatter.format(dt1);
+    return expDateNew;
+  }
+
+  String getBirthYear(String dateTime) {
+    final DateTime dt1 = DateTime.parse(dateTime.substring(0, 10));
+    final String expDateNew = _yearFormatter.format(dt1);
+    return expDateNew;
+  }
+
+  String getBirthMonth(String dateTime) {
+    final DateTime dt1 = DateTime.parse(dateTime.substring(0, 10));
+    final String expDateNew = _monthFormatter.format(dt1);
     return expDateNew;
   }
 }

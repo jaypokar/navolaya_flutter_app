@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/core/color_constants.dart';
 import 'package:navolaya_flutter/injection_container.dart';
 import 'package:navolaya_flutter/presentation/bloc/userConnectionsBloc/user_connections_bloc.dart';
+import 'package:navolaya_flutter/presentation/cubit/blockUsersCubit/block_users_cubit.dart';
 import 'package:navolaya_flutter/presentation/ui/user/widget/user_about_me_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/user/widget/user_address_details_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/user/widget/user_personal_and_education_widget.dart';
@@ -51,16 +52,38 @@ class UserDetailPage extends StatelessWidget {
           (user.isConnected! && user.displaySettings!.socialProfileLinks == 'my_connections');
     }
 
-    return BlocListener<UserConnectionsBloc, UserConnectionsState>(
-      listener: (_, state) {
-        if (state is UserConnectionErrorState) {
-          sl<CommonFunctions>().showSnackBar(
-              context: context,
-              message: state.error,
-              bgColor: ColorConstants.red,
-              textColor: Colors.white);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<UserConnectionsBloc, UserConnectionsState>(
+          listener: (_, state) {
+            if (state is UserConnectionErrorState) {
+              sl<CommonFunctions>().showSnackBar(
+                  context: context,
+                  message: state.error,
+                  bgColor: ColorConstants.red,
+                  textColor: Colors.white);
+            }
+          },
+        ),
+        BlocListener<BlockUsersCubit, BlockUsersState>(
+          listener: (_, state) {
+            if (state is ErrorLoadingBlockUsersState) {
+              sl<CommonFunctions>().showSnackBar(
+                  context: context,
+                  message: state.message,
+                  bgColor: ColorConstants.red,
+                  textColor: Colors.white);
+            } else if (state is BlockUserResponseState) {
+              Navigator.of(context).pop();
+              sl<CommonFunctions>().showSnackBar(
+                  context: context,
+                  message: state.response.message!,
+                  bgColor: Colors.green,
+                  textColor: Colors.white);
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         body: CustomScrollView(
           slivers: <Widget>[

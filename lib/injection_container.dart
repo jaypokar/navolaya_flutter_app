@@ -13,6 +13,7 @@ import 'package:navolaya_flutter/data/repositoryImpl/master_repository_impl.dart
 import 'package:navolaya_flutter/data/repositoryImpl/profile_repository_impl.dart';
 import 'package:navolaya_flutter/data/repositoryImpl/users_repository_impl.dart';
 import 'package:navolaya_flutter/domain/auth_repository.dart';
+import 'package:navolaya_flutter/domain/blocked_users_repository.dart';
 import 'package:navolaya_flutter/domain/help_and_info_repository.dart';
 import 'package:navolaya_flutter/domain/master_repository.dart';
 import 'package:navolaya_flutter/domain/profile_repository.dart';
@@ -22,6 +23,9 @@ import 'package:navolaya_flutter/features/location_manager.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
 import 'package:navolaya_flutter/presentation/bloc/userConnectionsBloc/user_connections_bloc.dart';
+import 'package:navolaya_flutter/presentation/cubit/blockUsersCubit/block_users_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/connectionReceivedCubit/connection_received_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/connectionSentCubit/connection_sent_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/dashBoardTitleNotifierCubit/dash_board_title_notifier_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/helpAndInfoCubit/help_and_info_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/homeTabsNotifierCubit/home_tabs_notifier_cubit.dart';
@@ -38,6 +42,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/apiService/base_api_service.dart';
 import 'data/apiService/network_api_service.dart';
+import 'data/repositoryImpl/blocked_user_repository_Impl.dart';
 import 'data/repositoryImpl/user_connections_repository_impl.dart';
 import 'data/sessionManager/session_manager.dart';
 import 'presentation/cubit/pageIndicatorCubit/page_indicator_page_cubit.dart';
@@ -114,6 +119,16 @@ void _initCubits() {
   sl.registerFactory(
     () => MyConnectionsCubit(sl()),
   );
+
+  sl.registerFactory(
+    () => ConnectionReceivedCubit(sl()),
+  );
+  sl.registerFactory(
+    () => ConnectionSentCubit(sl()),
+  );
+  sl.registerFactory(
+    () => BlockUsersCubit(sl()),
+  );
 }
 
 void _initRepositories() {
@@ -149,6 +164,11 @@ void _initRepositories() {
   //Help and info Repository
   sl.registerLazySingleton<HelpAndInfoRepository>(
     () => HelpAndInfoRepositoryImpl(sl()),
+  );
+
+  //Blocked User Repository
+  sl.registerLazySingleton<BlockedUserRepository>(
+    () => BlockedUserRepositoryImpl(sl()),
   );
 }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/data/model/users_model.dart';
+import 'package:navolaya_flutter/presentation/cubit/blockUsersCubit/block_users_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/connectionReceivedCubit/connection_received_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/dashBoardTitleNotifierCubit/dash_board_title_notifier_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/myConnectionsCubit/my_connections_cubit.dart';
@@ -25,6 +27,7 @@ import 'package:navolaya_flutter/presentation/ui/userVerification/user_verificat
 import 'package:navolaya_flutter/resources/value_key_resources.dart';
 
 import '../injection_container.dart';
+import '../presentation/cubit/connectionSentCubit/connection_sent_cubit.dart';
 import '../presentation/cubit/helpAndInfoCubit/help_and_info_cubit.dart';
 import '../presentation/cubit/homeTabsNotifierCubit/home_tabs_notifier_cubit.dart';
 import '../presentation/cubit/otpTimerCubit/otptimer_cubit.dart';
@@ -56,9 +59,7 @@ class RouteGenerator {
   const RouteGenerator();
 
   Route<dynamic> generateRoute(RouteSettings settings) {
-    // Getting arguments passed in while calling Navigator.pushNamed
     final args = settings.arguments;
-
     switch (settings.name) {
       /***-->***/ case splashScreen:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
@@ -113,8 +114,19 @@ class RouteGenerator {
                   BlocProvider(create: (_) => sl<DashBoardTitleNotifierCubit>()),
                   BlocProvider(create: (_) => sl<MyConnectionsCubit>()),
                 ], child: const DashBoardPage()));
-      case connectionRequestPage:
-        return MaterialPageRoute(builder: (_) => const ConnectionRequestsPage());
+      /***-->***/ case connectionRequestPage:
+        return MaterialPageRoute(
+            builder: (_) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider<ConnectionReceivedCubit>(
+                      create: (_) => sl<ConnectionReceivedCubit>(),
+                    ),
+                    BlocProvider<ConnectionSentCubit>(
+                      create: (_) => sl<ConnectionSentCubit>(),
+                    ),
+                  ],
+                  child: const ConnectionRequestsPage(),
+                ));
       /***-->***/ case userVerificationRequestPage:
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
@@ -125,8 +137,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const EditProfilePage());
       case settingsPage:
         return MaterialPageRoute(builder: (_) => const SettingsPage());
-      case blockedUserPage:
-        return MaterialPageRoute(builder: (_) => const BlockedUsersPage());
+      /***-->***/ case blockedUserPage:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider<BlockUsersCubit>(
+                  create: (_) => sl<BlockUsersCubit>(),
+                  child: const BlockedUsersPage(),
+                ));
       /***-->***/ case helpAndInfoPage:
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
@@ -153,9 +169,13 @@ class RouteGenerator {
                   ));
         }
         return _errorRoute();
-      case userDetailPage:
+      /***-->***/ case userDetailPage:
         if (args is UserDataModel) {
-          return MaterialPageRoute(builder: (_) => UserDetailPage(user: args));
+          return MaterialPageRoute(
+              builder: (_) => BlocProvider(
+                    create: (_) => sl<BlockUsersCubit>(),
+                    child: UserDetailPage(user: args),
+                  ));
         }
         return _errorRoute();
       default:

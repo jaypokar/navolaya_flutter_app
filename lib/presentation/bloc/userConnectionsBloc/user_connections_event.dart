@@ -32,12 +32,3 @@ class RemoveConnectionEvent extends UserConnectionsEvent {
   List<Object?> get props => [userID];
 }
 
-class GetConnectionsEvent extends UserConnectionsEvent {
-  final String requestType;
-  final int page;
-
-  const GetConnectionsEvent({required this.requestType, required this.page});
-
-  @override
-  List<Object?> get props => [requestType, page];
-}
