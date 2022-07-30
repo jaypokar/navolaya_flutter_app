@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/cubit/dashBoardTitleNotifierCubit/dash_board_title_notifier_cubit.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
-import '../../../../core/color_constants.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../../resources/image_resources.dart';
 
 class TabWidget extends StatelessWidget {

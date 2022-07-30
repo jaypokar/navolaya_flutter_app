@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:navolaya_flutter/data/model/masters_model.dart';
 
-import '../../core/color_constants.dart';
+import '../../resources/color_constants.dart';
 
 // ignore: must_be_immutable
 class DropDownWidget<T> extends StatefulWidget {

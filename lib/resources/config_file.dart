@@ -50,4 +50,7 @@ class ConfigFile {
   static const String blockUserAPIUrl = '${apiBaseURL}blocked-users';
   static const String fetchBlockedUsersAPIUrl = '${apiBaseURL}blocked-users';
   static const String unBlockUsersAPIUrl = '${apiBaseURL}blocked-users';
+
+  /*Notifications URL*/
+  static const String notificationsAPIUrl = '${apiBaseURL}notifications';
 }

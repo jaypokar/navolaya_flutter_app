@@ -7,8 +7,8 @@ import 'package:navolaya_flutter/presentation/basicWidget/otp_widget.dart';
 import 'package:navolaya_flutter/presentation/cubit/otpTimerCubit/otptimer_cubit.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
-import '../../../../core/color_constants.dart';
 import '../../../../injection_container.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../../util/common_functions.dart';
 import '../../../basicWidget/custom_button.dart';
 import '../../../basicWidget/loading_widget.dart';

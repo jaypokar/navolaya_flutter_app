@@ -6,8 +6,8 @@ import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
 import 'package:navolaya_flutter/presentation/cubit/pageIndicatorCubit/page_indicator_page_cubit.dart';
 
-import '../../../core/color_constants.dart';
 import '../../../injection_container.dart';
+import '../../../resources/color_constants.dart';
 import '../../../resources/image_resources.dart';
 import '../../../util/common_functions.dart';
 import '../../bloc/authBloc/auth_bloc.dart';

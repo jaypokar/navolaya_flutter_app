@@ -1,24 +1,26 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:navolaya_flutter/core/color_constants.dart';
 import 'package:navolaya_flutter/injection_container.dart';
 import 'package:navolaya_flutter/presentation/bloc/userConnectionsBloc/user_connections_bloc.dart';
 import 'package:navolaya_flutter/presentation/cubit/blockUsersCubit/block_users_cubit.dart';
 import 'package:navolaya_flutter/presentation/ui/user/widget/user_about_me_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/user/widget/user_address_details_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/user/widget/user_personal_and_education_widget.dart';
+import 'package:navolaya_flutter/resources/color_constants.dart';
 import 'package:navolaya_flutter/resources/image_resources.dart';
+import 'package:navolaya_flutter/resources/value_key_resources.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 
 import '../../../data/model/users_model.dart';
 import '../../basicWidget/loading_widget.dart';
 import 'widget/user_social_media_widget.dart';
 
+// ignore: must_be_immutable
 class UserDetailPage extends StatelessWidget {
-  final UserDataModel user;
+  UserDataModel user;
 
-  const UserDetailPage({required this.user, Key? key}) : super(key: key);
+  UserDetailPage({required this.user, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +64,12 @@ class UserDetailPage extends StatelessWidget {
                   message: state.error,
                   bgColor: ColorConstants.red,
                   textColor: Colors.white);
+            } else if (state is CreateConnectionsState) {
+              user.isRequestSent = true;
+            } else if (state is UpdateConnectionsState) {
+              user.isConnected = state.isRequestAccepted;
+            } else if (state is RemoveConnectionsState) {
+              user.isConnected = false;
             }
           },
         ),
@@ -84,61 +92,67 @@ class UserDetailPage extends StatelessWidget {
           },
         ),
       ],
-      child: Scaffold(
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              pinned: false,
-              snap: false,
-              floating: false,
-              expandedHeight: 360.0,
-              flexibleSpace: FlexibleSpaceBar(
-                title: const Text(''),
-                background: image.contains('http')
-                    ? CachedNetworkImage(
-                        imageUrl: image,
-                        fit: BoxFit.cover,
-                        errorWidget: (_, __, ___) {
-                          return Padding(
-                              padding: const EdgeInsets.all(60),
-                              child: Image.asset(ImageResources.userAvatarImg));
-                        },
-                        progressIndicatorBuilder: (_, __, ___) {
-                          return const LoadingWidget();
-                        })
-                    : Padding(padding: const EdgeInsets.all(60), child: Image.asset(image)),
+      child: WillPopScope(
+        onWillPop: () {
+          Navigator.of(context).pop({ValueKeyResources.userDataKey: user});
+          return Future(() => true);
+        },
+        child: Scaffold(
+          body: CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                pinned: false,
+                snap: false,
+                floating: false,
+                expandedHeight: 360.0,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: const Text(''),
+                  background: image.contains('http')
+                      ? CachedNetworkImage(
+                          imageUrl: image,
+                          fit: BoxFit.cover,
+                          errorWidget: (_, __, ___) {
+                            return Padding(
+                                padding: const EdgeInsets.all(60),
+                                child: Image.asset(ImageResources.userAvatarImg));
+                          },
+                          progressIndicatorBuilder: (_, __, ___) {
+                            return const LoadingWidget();
+                          })
+                      : Padding(padding: const EdgeInsets.all(60), child: Image.asset(image)),
+                ),
               ),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate([
-                UserPersonalAndEducationWidget(user: user),
-                const SizedBox(height: 5),
-                const Divider(color: Colors.grey),
-                const SizedBox(height: 5),
-                if (user.currentAddress == null && user.permanentAddress == null) ...[
-                  const SizedBox.shrink()
-                ] else ...[
-                  if (userCurrentAddress.isNotEmpty || userPermanentAddress.isNotEmpty) ...[
-                    UserAddressDetailsWidget(
-                      userCurrentAddress: userCurrentAddress,
-                      userPermanentAddress: userPermanentAddress,
-                    ),
-                    const SizedBox(height: 5),
-                    const Divider(color: Colors.grey),
-                    const SizedBox(height: 5),
-                  ]
-                ],
-                UserAboutMeWidget(user: user),
-                const SizedBox(height: 5),
-                const Divider(color: Colors.grey),
-                user.socialProfileLinks == null
-                    ? const SizedBox.shrink()
-                    : showSocialMediaProfiles
-                        ? UserSocialMediaWidget(user: user)
-                        : const SizedBox.shrink(),
-              ]),
-            ),
-          ],
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  UserPersonalAndEducationWidget(user: user),
+                  const SizedBox(height: 5),
+                  const Divider(color: Colors.grey),
+                  const SizedBox(height: 5),
+                  if (user.currentAddress == null && user.permanentAddress == null) ...[
+                    const SizedBox.shrink()
+                  ] else ...[
+                    if (userCurrentAddress.isNotEmpty || userPermanentAddress.isNotEmpty) ...[
+                      UserAddressDetailsWidget(
+                        userCurrentAddress: userCurrentAddress,
+                        userPermanentAddress: userPermanentAddress,
+                      ),
+                      const SizedBox(height: 5),
+                      const Divider(color: Colors.grey),
+                      const SizedBox(height: 5),
+                    ]
+                  ],
+                  UserAboutMeWidget(user: user),
+                  const SizedBox(height: 5),
+                  const Divider(color: Colors.grey),
+                  user.socialProfileLinks == null
+                      ? const SizedBox.shrink()
+                      : showSocialMediaProfiles
+                          ? UserSocialMediaWidget(user: user)
+                          : const SizedBox.shrink(),
+                ]),
+              ),
+            ],
+          ),
         ),
       ),
     );

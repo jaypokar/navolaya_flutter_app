@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:navolaya_flutter/core/color_constants.dart';
 import 'package:navolaya_flutter/presentation/cubit/myConnectionsCubit/my_connections_cubit.dart';
 import 'package:navolaya_flutter/presentation/ui/myConnections/widget/my_connections_item_widget.dart';
+import 'package:navolaya_flutter/resources/color_constants.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 
 import '../../../data/model/users_model.dart';

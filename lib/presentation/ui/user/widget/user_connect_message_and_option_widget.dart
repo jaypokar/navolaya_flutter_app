@@ -7,7 +7,7 @@ import 'package:navolaya_flutter/presentation/bloc/userConnectionsBloc/user_conn
 import 'package:navolaya_flutter/presentation/cubit/blockUsersCubit/block_users_cubit.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
-import '../../../../core/color_constants.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../basicWidget/custom_button.dart';
 import '../../../basicWidget/text_field_widget.dart';
 
@@ -28,8 +28,7 @@ class UserConnectMessageAndOptionWidget extends StatefulWidget {
 }
 
 class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAndOptionWidget> {
-  String connectOrPending = '';
-  bool requestAccepted = true;
+  String _connectOrPending = '';
 
   @override
   void initState() {
@@ -40,17 +39,17 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
   void checkRequestStatus() {
     if (widget.user.isConnected != null) {
       if (!widget.user.isConnected!) {
-        connectOrPending = StringResources.connect;
+        _connectOrPending = StringResources.connect;
       }
     }
     if (widget.user.isRequestSent != null) {
       if (widget.user.isRequestSent!) {
-        connectOrPending = StringResources.pending;
+        _connectOrPending = StringResources.pending;
       }
     }
     if (widget.user.isRequestReceived != null) {
       if (widget.user.isRequestReceived!) {
-        connectOrPending = StringResources.respond;
+        _connectOrPending = StringResources.respond;
       }
     }
   }
@@ -71,12 +70,11 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
               return const LoadingWidget();
             }
             if (state is CreateConnectionsState) {
-              connectOrPending = StringResources.pending;
-            } else if ((state is UpdateConnectionsState && !requestAccepted) ||
-                state is RemoveConnectionsState) {
-              connectOrPending = StringResources.connect;
-            } else if (state is UpdateConnectionsState && requestAccepted) {
-              connectOrPending = '';
+              _connectOrPending = StringResources.pending;
+            } else if (state is UpdateConnectionsState) {
+              _connectOrPending = state.isRequestAccepted ? '' : StringResources.connect;
+            } else if (state is RemoveConnectionsState) {
+              _connectOrPending = StringResources.connect;
             }
 
             return manageConnectButton();
@@ -121,17 +119,17 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
     /*if (connectionStatus.isNotEmpty) {
       connectOrPending = connectionStatus;
     }*/
-    logger.i('the connection status is :$connectOrPending');
-    if (connectOrPending == StringResources.connect ||
-        connectOrPending == StringResources.respond) {
+    logger.i('the connection status is :$_connectOrPending');
+    if (_connectOrPending == StringResources.connect ||
+        _connectOrPending == StringResources.respond) {
       return Expanded(
         child: ElevatedButton(
           onPressed: () {
-            if (connectOrPending == StringResources.connect) {
+            if (_connectOrPending == StringResources.connect) {
               context
                   .read<UserConnectionsBloc>()
                   .add(CreateConnectionsEvent(userID: widget.user.id!));
-            } else if (connectOrPending == StringResources.respond) {
+            } else if (_connectOrPending == StringResources.respond) {
               showAcceptOrRejectBottomSheet();
             }
           },
@@ -142,12 +140,12 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
             side: const BorderSide(width: 1.0, color: ColorConstants.appColor),
           ),
           child: Text(
-            connectOrPending,
+            _connectOrPending,
             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
           ),
         ),
       );
-    } else if (connectOrPending == StringResources.pending) {
+    } else if (_connectOrPending == StringResources.pending) {
       return Expanded(
         child: OutlinedButton(
           onPressed: () {
@@ -163,9 +161,12 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
             ),
           ),
           child: Text(
-            connectOrPending,
+            _connectOrPending,
             style: const TextStyle(
-                color: ColorConstants.greyColor, fontWeight: FontWeight.bold, fontSize: 12),
+              color: ColorConstants.greyColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
           ),
         ),
       );
@@ -196,10 +197,10 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
 
     if (!mounted) return;
     if (respondType != ConnectionRespondType.none) {
-      requestAccepted = respondType == ConnectionRespondType.accept;
       context.read<UserConnectionsBloc>().add(UpdateConnectionRequestEvent(
           userID: widget.user.id!,
-          acceptOrCancel: respondType != ConnectionRespondType.accept ? 'accept' : 'cancel'));
+          acceptOrCancel: respondType != ConnectionRespondType.accept ? 'accept' : 'cancel',
+          isRequestAccepted: respondType == ConnectionRespondType.accept));
     }
   }
 
@@ -208,7 +209,7 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
         constraints: BoxConstraints.loose(
           Size(
             MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height * (connectOrPending.isEmpty ? 0.33 : 0.20),
+            MediaQuery.of(context).size.height * (_connectOrPending.isEmpty ? 0.33 : 0.20),
           ),
         ),
         isScrollControlled: false,
@@ -221,7 +222,7 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
         context: context,
         builder: (_) {
           return UserMoreOptionsWidget(
-            isConnected: connectOrPending.isEmpty,
+            isConnected: _connectOrPending.isEmpty,
           );
         });
 

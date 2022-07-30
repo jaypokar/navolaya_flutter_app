@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:navolaya_flutter/data/model/users_model.dart';
 
-import '../../../../core/color_constants.dart';
+import '../../../../resources/color_constants.dart';
 
 class UserAboutMeWidget extends StatelessWidget {
   final UserDataModel user;

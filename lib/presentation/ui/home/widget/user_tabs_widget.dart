@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/cubit/homeTabsNotifierCubit/home_tabs_notifier_cubit.dart';
 
-import '../../../../core/color_constants.dart';
+import '../../../../resources/color_constants.dart';
 
 class UserTabsWidget extends StatefulWidget {
   const UserTabsWidget({Key? key}) : super(key: key);

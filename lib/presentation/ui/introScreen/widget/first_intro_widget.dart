@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:navolaya_flutter/core/color_constants.dart';
+import 'package:navolaya_flutter/resources/color_constants.dart';
 import 'package:navolaya_flutter/resources/image_resources.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 

@@ -2,10 +2,10 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:navolaya_flutter/core/color_constants.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
 import 'package:navolaya_flutter/presentation/cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
+import 'package:navolaya_flutter/resources/color_constants.dart';
 import 'package:navolaya_flutter/resources/value_key_resources.dart';
 
 import '../../../injection_container.dart';

@@ -9,7 +9,7 @@ import 'package:navolaya_flutter/presentation/basicWidget/custom_button.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 
-import '../../core/color_constants.dart';
+import '../../resources/color_constants.dart';
 import '../../resources/image_resources.dart';
 
 typedef _PickImageFromCameraOrGallery = Future<XFile?> Function();

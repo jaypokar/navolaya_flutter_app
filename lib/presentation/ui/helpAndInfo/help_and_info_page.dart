@@ -10,7 +10,7 @@ import 'package:navolaya_flutter/resources/image_resources.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../../core/color_constants.dart';
+import '../../../resources/color_constants.dart';
 import '../../basicWidget/divider_and_space_widget.dart';
 
 enum SocialType { fb, insta, youtube, linkedin }

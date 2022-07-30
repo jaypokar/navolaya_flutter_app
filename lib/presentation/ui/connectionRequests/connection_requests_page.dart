@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:navolaya_flutter/core/color_constants.dart';
 import 'package:navolaya_flutter/presentation/cubit/connectionReceivedCubit/connection_received_cubit.dart';
 import 'package:navolaya_flutter/presentation/ui/connectionRequests/widget/connection_received_request_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/connectionRequests/widget/connection_sent_request_widget.dart';
 import 'package:navolaya_flutter/presentation/ui/connectionRequests/widget/connection_tabs_widget.dart';
+import 'package:navolaya_flutter/resources/color_constants.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 
@@ -19,7 +19,8 @@ class ConnectionRequestsPage extends StatefulWidget {
   State<ConnectionRequestsPage> createState() => _ConnectionRequestsPageState();
 }
 
-class _ConnectionRequestsPageState extends State<ConnectionRequestsPage> {
+class _ConnectionRequestsPageState extends State<ConnectionRequestsPage>
+    with AutomaticKeepAliveClientMixin {
   late List<Widget> _widgetOptions;
   final PageStorageBucket _bucket = PageStorageBucket();
 
@@ -28,10 +29,10 @@ class _ConnectionRequestsPageState extends State<ConnectionRequestsPage> {
     super.initState();
     _widgetOptions = <Widget>[
       const ConnectionReceivedRequestWidget(
-        key: PageStorageKey('connection-received'),
+        key: PageStorageKey('connectionReceived'),
       ),
       const ConnectionSentRequestWidget(
-        key: PageStorageKey('connection-sent'),
+        key: PageStorageKey('connectionSent'),
       ),
     ];
 
@@ -40,6 +41,7 @@ class _ConnectionRequestsPageState extends State<ConnectionRequestsPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return MultiBlocListener(
       listeners: [
         BlocListener<ConnectionReceivedCubit, ConnectionReceivedState>(
@@ -113,4 +115,7 @@ class _ConnectionRequestsPageState extends State<ConnectionRequestsPage> {
     sl<UiNotifiers>().connectionRequestTabNotifier.dispose();
     super.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

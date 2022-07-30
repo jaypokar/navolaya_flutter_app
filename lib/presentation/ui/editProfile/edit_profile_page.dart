@@ -4,7 +4,7 @@ import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
-import '../../../core/color_constants.dart';
+import '../../../resources/color_constants.dart';
 import '../../profileImageWidget/profile_image_widget.dart';
 
 class EditProfilePage extends StatefulWidget {

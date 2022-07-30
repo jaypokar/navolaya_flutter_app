@@ -16,6 +16,7 @@ import 'package:navolaya_flutter/domain/auth_repository.dart';
 import 'package:navolaya_flutter/domain/blocked_users_repository.dart';
 import 'package:navolaya_flutter/domain/help_and_info_repository.dart';
 import 'package:navolaya_flutter/domain/master_repository.dart';
+import 'package:navolaya_flutter/domain/notifications_repository.dart';
 import 'package:navolaya_flutter/domain/profile_repository.dart';
 import 'package:navolaya_flutter/domain/user_connections_repository.dart';
 import 'package:navolaya_flutter/domain/users_repository.dart';
@@ -29,9 +30,11 @@ import 'package:navolaya_flutter/presentation/cubit/connectionSentCubit/connecti
 import 'package:navolaya_flutter/presentation/cubit/dashBoardTitleNotifierCubit/dash_board_title_notifier_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/helpAndInfoCubit/help_and_info_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/homeTabsNotifierCubit/home_tabs_notifier_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/keyboardVisibiltyCubit/key_board_visibility_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/myConnectionsCubit/my_connections_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/nearByUsersCubit/near_by_users_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/notificationsCubit/notifications_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/otpTimerCubit/otptimer_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/popularUsersCubit/popular_users_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/recentUsersCubit/recent_users_cubit.dart';
@@ -43,6 +46,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'data/apiService/base_api_service.dart';
 import 'data/apiService/network_api_service.dart';
 import 'data/repositoryImpl/blocked_user_repository_Impl.dart';
+import 'data/repositoryImpl/notification_repository_impl.dart';
 import 'data/repositoryImpl/user_connections_repository_impl.dart';
 import 'data/sessionManager/session_manager.dart';
 import 'presentation/cubit/pageIndicatorCubit/page_indicator_page_cubit.dart';
@@ -129,6 +133,13 @@ void _initCubits() {
   sl.registerFactory(
     () => BlockUsersCubit(sl()),
   );
+
+  sl.registerFactory(
+    () => NotificationsCubit(sl()),
+  );
+  sl.registerFactory(
+    () => KeyBoardVisibilityCubit(),
+  );
 }
 
 void _initRepositories() {
@@ -169,6 +180,11 @@ void _initRepositories() {
   //Blocked User Repository
   sl.registerLazySingleton<BlockedUserRepository>(
     () => BlockedUserRepositoryImpl(sl()),
+  );
+
+  //Notifications Repository
+  sl.registerLazySingleton<NotificationsRepository>(
+    () => NotificationRepositoryImpl(sl()),
   );
 }
 

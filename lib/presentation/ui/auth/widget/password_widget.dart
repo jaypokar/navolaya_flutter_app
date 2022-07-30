@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/ui/registration/widget/password_input_widget.dart';
 
-import '../../../../core/color_constants.dart';
 import '../../../../injection_container.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../../resources/string_resources.dart';
 import '../../../../util/common_functions.dart';
 import '../../../basicWidget/auth_rich_text_widget.dart';

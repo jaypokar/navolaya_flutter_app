@@ -60,7 +60,8 @@ dependencies:
   # To check Value Equality between objects same Type or data we use Equatable
   equatable: ^2.0.3
   # To Select Country code for mobile number verification
-  country_code_picker: ^2.0.2
+  # country_code_picker: ^2.0.2
+  country_picker: ^2.0.15
   # expandable widget package for expanding a view in settings page
   expandable: ^5.0.1
   # Image picker dependency to upload image from either camera or gallery
@@ -77,6 +78,8 @@ dependencies:
   flutter_html: ^2.2.1
   # Accordion view to show FAQ's.
   accordion: ^2.5.1
+  # Notifies when keyboard is opened and closed
+  flutter_keyboard_visibility: ^5.3.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

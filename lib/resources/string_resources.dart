@@ -17,6 +17,8 @@ class StringResources {
   static const String pleaseEnterValidNumber = 'Please Enter Valid Mobile Number';
   static const String continueText = 'continue';
 
+  static const String searchByCountry = 'Search by country';
+
   static const String updatePassword = 'Update Password';
   static const String newPassword = 'New Password';
   static const String updatePasswordSubTitle =
@@ -54,6 +56,7 @@ class StringResources {
   static const String pleaseSelectProfession = 'Please select profession';
 
   static const String next = 'Next';
+  static const String newNotification = 'New';
 
   static const String birthDate = 'Birth Date';
   static const String aboutMe = 'About Me';
@@ -61,6 +64,8 @@ class StringResources {
   static const String editProfile = 'Edit Profile';
   static const String messages = 'Messages';
   static const String myConnections = 'My Connections';
+  static const String receivedRequests = 'Received Requests';
+  static const String sentRequests = 'Sent Requests';
   static const String connectionRequests = 'Connection Requests';
   static const String userVerificationRequests = 'User Verification Requests';
   static const String settings = 'Settings';

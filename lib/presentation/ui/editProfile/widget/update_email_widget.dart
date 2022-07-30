@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/text_field_widget.dart';
 
-import '../../../../core/color_constants.dart';
 import '../../../../data/sessionManager/session_manager.dart';
 import '../../../../injection_container.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../../resources/string_resources.dart';
 import '../../../../util/common_functions.dart';
 import '../../../basicWidget/custom_button.dart';

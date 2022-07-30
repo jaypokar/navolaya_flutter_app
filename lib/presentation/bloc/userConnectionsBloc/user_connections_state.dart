@@ -29,11 +29,13 @@ class CreateConnectionsState extends UserConnectionsState {
 
 class UpdateConnectionsState extends UserConnectionsState {
   final CreateOrUpdateConnectionRequestModel createOrUpdateConnectionRequestResponse;
+  final bool isRequestAccepted;
 
-  const UpdateConnectionsState({required this.createOrUpdateConnectionRequestResponse});
+  const UpdateConnectionsState(
+      {required this.createOrUpdateConnectionRequestResponse, required this.isRequestAccepted});
 
   @override
-  List<Object> get props => [createOrUpdateConnectionRequestResponse];
+  List<Object> get props => [createOrUpdateConnectionRequestResponse, isRequestAccepted];
 }
 
 class RemoveConnectionsState extends UserConnectionsState {

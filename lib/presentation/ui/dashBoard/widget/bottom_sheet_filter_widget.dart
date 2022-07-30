@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:navolaya_flutter/core/color_constants.dart';
 import 'package:navolaya_flutter/data/model/filter_data_request_model.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/custom_slider_widget.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/loading_widget.dart';
+import 'package:navolaya_flutter/resources/color_constants.dart';
 
 import '../../../../data/model/masters_model.dart';
 import '../../../../domain/master_repository.dart';

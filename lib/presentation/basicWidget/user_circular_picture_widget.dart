@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../core/color_constants.dart';
+import '../../resources/color_constants.dart';
 import '../../resources/image_resources.dart';
 import 'loading_widget.dart';
 

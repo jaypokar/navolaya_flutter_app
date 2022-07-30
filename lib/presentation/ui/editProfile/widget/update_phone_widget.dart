@@ -1,17 +1,19 @@
-import 'package:country_code_picker/country_code_picker.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/data/sessionManager/session_manager.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
 
-import '../../../../core/color_constants.dart';
 import '../../../../core/logger.dart';
 import '../../../../injection_container.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../../resources/string_resources.dart';
 import '../../../../util/common_functions.dart';
+import '../../../basicWidget/country_flag_and_code_rich_text_widget.dart';
 import '../../../basicWidget/custom_button.dart';
 import '../../../basicWidget/loading_widget.dart';
+import '../../auth/widget/mobile_number_widget.dart';
 
 class UpdatePhoneWidget extends StatefulWidget {
   final Function onUpdateClick;
@@ -25,6 +27,15 @@ class UpdatePhoneWidget extends StatefulWidget {
 class _UpdatePhoneWidgetState extends State<UpdatePhoneWidget> {
   String _countryCode = '+91';
   final TextEditingController _textController = TextEditingController();
+  final CountryCodeSelection _countryCodeSelection =
+      CountryCodeSelection(flagEmoji: '🇮🇳', countryCode: '+91');
+  late final ValueNotifier<CountryCodeSelection> countryPickerNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    countryPickerNotifier = ValueNotifier(_countryCodeSelection);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,26 +92,17 @@ class _UpdatePhoneWidgetState extends State<UpdatePhoneWidget> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: CountryCodePicker(
-                      onChanged: (code) {
-                        _countryCode = code.dialCode!;
-                        logger.i("New Country selected: $_countryCode");
-                      },
-                      flagWidth: 15,
-                      padding: const EdgeInsets.all(0),
-                      initialSelection: 'IN',
-                      textOverflow: TextOverflow.fade,
-                      textStyle: const TextStyle(
-                        color: ColorConstants.textColor3,
-                        fontSize: 10,
-                      ),
-                      favorite: const ['+91'],
-                      showCountryOnly: false,
-                      showOnlyCountryWhenClosed: false,
-                      alignLeft: true,
-                    ),
+                  ValueListenableBuilder<CountryCodeSelection>(
+                    valueListenable: countryPickerNotifier,
+                    builder: (_, code, __) {
+                      return Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: CountryFlagAndCodeRichTextWidget(
+                            onClickEvent: () => showCountryPickerDialog(),
+                            textOne: code.flagEmoji,
+                            textTwo: code.countryCode,
+                          ));
+                    },
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
@@ -180,6 +182,39 @@ class _UpdatePhoneWidgetState extends State<UpdatePhoneWidget> {
         );
       }
     });
+  }
+
+  void showCountryPickerDialog() {
+    showCountryPicker(
+        context: context,
+        showPhoneCode: true,
+        favorite: ['IN'],
+        countryListTheme: CountryListThemeData(
+          flagSize: 25,
+          backgroundColor: Colors.white,
+          textStyle: const TextStyle(fontSize: 16, color: Colors.blueGrey),
+          bottomSheetHeight: 500,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+          inputDecoration: InputDecoration(
+            labelText: 'Search',
+            hintText: 'Start typing to search',
+            prefixIcon: const Icon(Icons.search),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: const Color(0xFF8C98A8).withOpacity(0.2),
+              ),
+            ),
+          ),
+        ),
+        onSelect: (Country country) {
+          logger.i('Select country: ${country.flagEmoji}');
+          _countryCode = '+${country.phoneCode}';
+          countryPickerNotifier.value = CountryCodeSelection(
+              flagEmoji: country.flagEmoji, countryCode: '+${country.phoneCode}');
+        });
   }
 
   @override

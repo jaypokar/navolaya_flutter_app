@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
 
-import '../../../../core/color_constants.dart';
 import '../../../../data/model/masters_model.dart';
 import '../../../../domain/master_repository.dart';
 import '../../../../injection_container.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../../resources/string_resources.dart';
 import '../../../../util/common_functions.dart';
 import '../../../basicWidget/custom_button.dart';

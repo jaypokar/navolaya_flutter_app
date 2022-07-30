@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/color_constants.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../../resources/string_resources.dart';
 import '../../../basicWidget/drop_down_widget.dart';
 import '../../../bloc/profileBloc/profile_bloc.dart';

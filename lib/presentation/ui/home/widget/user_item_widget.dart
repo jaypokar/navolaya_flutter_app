@@ -4,14 +4,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/data/model/users_model.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/loading_widget.dart';
+import 'package:navolaya_flutter/resources/value_key_resources.dart';
 
-import '../../../../core/color_constants.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../../resources/image_resources.dart';
 
+// ignore: must_be_immutable
 class UserItemWidget extends StatelessWidget {
-  final UserDataModel user;
+  UserDataModel user;
 
-  const UserItemWidget({required this.user, Key? key}) : super(key: key);
+  UserItemWidget({required this.user, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +26,10 @@ class UserItemWidget extends StatelessWidget {
     }
 
     return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed(RouteGenerator.userDetailPage, arguments: user);
+      onTap: () async {
+        final userDetail = await Navigator.of(context)
+            .pushNamed(RouteGenerator.userDetailPage, arguments: user) as Map<String, dynamic>;
+        user = userDetail[ValueKeyResources.userDataKey];
       },
       child: Container(
         margin: const EdgeInsets.all(5),

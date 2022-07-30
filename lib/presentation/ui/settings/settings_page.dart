@@ -9,7 +9,7 @@ import 'package:navolaya_flutter/presentation/basicWidget/loading_widget.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 
-import '../../../core/color_constants.dart';
+import '../../../resources/color_constants.dart';
 import '../../../resources/string_resources.dart';
 import '../../basicWidget/custom_button.dart';
 import '../../basicWidget/divider_and_space_widget.dart';

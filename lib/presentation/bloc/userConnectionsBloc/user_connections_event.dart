@@ -16,11 +16,13 @@ class CreateConnectionsEvent extends UserConnectionsEvent {
 class UpdateConnectionRequestEvent extends UserConnectionsEvent {
   final String userID;
   final String acceptOrCancel;
+  final bool isRequestAccepted;
 
-  const UpdateConnectionRequestEvent({required this.userID, required this.acceptOrCancel});
+  const UpdateConnectionRequestEvent(
+      {required this.userID, required this.acceptOrCancel, required this.isRequestAccepted});
 
   @override
-  List<Object?> get props => [userID, acceptOrCancel];
+  List<Object?> get props => [userID, acceptOrCancel, isRequestAccepted];
 }
 
 class RemoveConnectionEvent extends UserConnectionsEvent {
@@ -31,4 +33,3 @@ class RemoveConnectionEvent extends UserConnectionsEvent {
   @override
   List<Object?> get props => [userID];
 }
-

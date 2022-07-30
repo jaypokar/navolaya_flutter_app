@@ -4,8 +4,8 @@ import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
 import 'package:navolaya_flutter/data/model/social_media_links_request_model.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
 
-import '../../../core/color_constants.dart';
 import '../../../injection_container.dart';
+import '../../../resources/color_constants.dart';
 import '../../../resources/string_resources.dart';
 import '../../../util/common_functions.dart';
 import '../../basicWidget/custom_button.dart';

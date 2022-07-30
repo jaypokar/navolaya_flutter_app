@@ -7,8 +7,8 @@ import 'package:navolaya_flutter/injection_container.dart';
 import 'package:navolaya_flutter/presentation/cubit/usersVerificationsCubit/users_verifications_cubit.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
-import '../../../../core/color_constants.dart';
 import '../../../../core/route_generator.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../../resources/image_resources.dart';
 import '../../../basicWidget/loading_widget.dart';
 

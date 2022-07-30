@@ -29,7 +29,9 @@ class UserConnectionsBloc extends Bloc<UserConnectionsEvent, UserConnectionsStat
               await _repository.updateConnectionRequestAPI(event.acceptOrCancel, event.userID);
           data = possibleData.fold(
             (l) => UserConnectionErrorState(error: l.error),
-            (r) => UpdateConnectionsState(createOrUpdateConnectionRequestResponse: r),
+            (r) => UpdateConnectionsState(
+                createOrUpdateConnectionRequestResponse: r,
+                isRequestAccepted: event.isRequestAccepted),
           );
         } else if (event is RemoveConnectionEvent) {
           final possibleData = await _repository.removeConnectionAPI(event.userID);

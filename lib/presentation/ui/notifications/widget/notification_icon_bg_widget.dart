@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/color_constants.dart';
+import '../../../../resources/color_constants.dart';
 
 class NotificationIconBgWidget extends StatelessWidget {
   const NotificationIconBgWidget({Key? key}) : super(key: key);

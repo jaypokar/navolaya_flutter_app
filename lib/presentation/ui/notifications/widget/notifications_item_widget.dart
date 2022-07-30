@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:navolaya_flutter/core/color_constants.dart';
+import 'package:navolaya_flutter/data/model/notification_model.dart';
 import 'package:navolaya_flutter/presentation/ui/notifications/widget/notification_icon_bg_widget.dart';
+import 'package:navolaya_flutter/resources/color_constants.dart';
+import 'package:navolaya_flutter/resources/string_resources.dart';
+import 'package:navolaya_flutter/util/common_functions.dart';
+
+import '../../../../injection_container.dart';
 
 class NotificationsItemWidget extends StatelessWidget {
-  final int pos;
+  final NotificationDataModel notification;
 
-  const NotificationsItemWidget({required this.pos, Key? key}) : super(key: key);
+  const NotificationsItemWidget({required this.notification, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,16 +30,17 @@ class NotificationsItemWidget extends StatelessWidget {
               child: Column(
                 children: [
                   Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    const Expanded(
+                    Expanded(
                         child: Text(
-                      'Where does it came from?',
-                      style: TextStyle(
+                      notification.message!,
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 15,
+                        overflow: TextOverflow.ellipsis,
                         fontWeight: FontWeight.bold,
                       ),
                     )),
-                    pos == 0
+                    notification.isRead == 0
                         ? Container(
                             decoration: BoxDecoration(
                               color: ColorConstants.appColor,
@@ -42,21 +48,25 @@ class NotificationsItemWidget extends StatelessWidget {
                             ),
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                             child: const Text(
-                              'New',
+                              StringResources.newNotification,
                               style: TextStyle(color: Colors.white, fontSize: 10),
                             ),
                           )
-                        : const Text(
-                            '12:05 PM',
-                            style: TextStyle(color: ColorConstants.textColor5, fontSize: 12),
+                        : Text(
+                            sl<CommonFunctions>().getDateMonthAndTime(notification.createdAt!),
+                            style: const TextStyle(
+                              color: ColorConstants.textColor5,
+                              fontSize: 12,
+                            ),
                           ),
                   ]),
-                  const Text(
-                    'There are many variations of passages of Fake Ipsum available, but the majority suffered',
-                    style: TextStyle(fontSize: 12, color: ColorConstants.textColor2, height: 1.5),
+                  /*Text(
+                    notification.message!,
+                    style: const TextStyle(
+                        fontSize: 12, color: ColorConstants.textColor2, height: 1.5),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
-                  )
+                  )*/
                 ],
               ),
             ),

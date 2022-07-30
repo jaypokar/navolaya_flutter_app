@@ -39,22 +39,13 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
     fetchInitialData();
   }
 
   void fetchInitialData() async {
     await sl<MasterRepository>().fetchAllContentsData();
     await sl<MasterRepository>().fetchAllMasterData();
-
-    /* if (mounted) {
-      Navigator.pushReplacementNamed(context, RouteGenerator.registrationPage,
-          arguments: {ConfigFile.countryCodeKey: '+91', ConfigFile.mobileNumberKey: '8160231082'});
-    }*/
-
-    /* Navigator.pushReplacementNamed(
-      context,
-      RouteGenerator.introPage,
-    );*/
 
     Timer(const Duration(seconds: 2), () {
       if (sl<SessionManager>().isUserFirstTimeIn()) {

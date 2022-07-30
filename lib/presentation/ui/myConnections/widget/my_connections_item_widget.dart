@@ -9,8 +9,8 @@ import 'package:navolaya_flutter/presentation/cubit/myConnectionsCubit/my_connec
 import 'package:navolaya_flutter/resources/image_resources.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
-import '../../../../core/color_constants.dart';
 import '../../../../core/route_generator.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../basicWidget/loading_widget.dart';
 
 enum ConnectionsType { myConnections, connectionsReceived, connectionsSent }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:navolaya_flutter/core/color_constants.dart';
+import 'package:navolaya_flutter/resources/color_constants.dart';
 
 class ButtonWidget extends StatelessWidget {
   final String buttonText;

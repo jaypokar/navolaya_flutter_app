@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/color_constants.dart';
 import '../../../../injection_container.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../uiNotifiers/ui_notifiers.dart';
 
 class ConnectionTabsWidget extends StatefulWidget {
@@ -41,16 +41,9 @@ class _ConnectionTabsWidgetState extends State<ConnectionTabsWidget>
         controller: _tabController,
         unselectedLabelColor: ColorConstants.textColor2,
         indicator: BoxDecoration(color: Colors.black12.withOpacity(0.1)),
-        onTap: (index) {
-          sl<UiNotifiers>().connectionRequestTabNotifier.value = index;
-        },
+        onTap: (index) => sl<UiNotifiers>().connectionRequestTabNotifier.value = index,
         tabs: ['Received Requests', 'Sent Requests']
-            .map((e) => Tab(
-                  child: Text(
-                    e,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ))
+            .map((e) => Tab(child: Text(e, style: const TextStyle(fontSize: 16))))
             .toList(),
       ),
     );

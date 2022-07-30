@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/cubit/blockUsersCubit/block_users_cubit.dart';
 import 'package:navolaya_flutter/presentation/ui/blockedUsers/widget/blocked_users_item_widget.dart';
 
-import '../../../core/color_constants.dart';
 import '../../../data/model/users_model.dart';
 import '../../../injection_container.dart';
+import '../../../resources/color_constants.dart';
 import '../../../resources/string_resources.dart';
 import '../../../util/common_functions.dart';
 import '../../basicWidget/loading_widget.dart';

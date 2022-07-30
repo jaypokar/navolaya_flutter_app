@@ -205,9 +205,9 @@ class UserDataModel {
     _socialProfileLinks = socialProfileLinks;
     _displaySettings = displaySettings;
     _distance = distance;
-    _isConnected = isConnected;
-    _isRequestSent = isRequestSent;
-    _isRequestReceived = isRequestReceived;
+    this.isConnected;
+    this.isRequestSent;
+    this.isRequestReceived;
   }
 
   UserDataModel.fromJson(dynamic json) {
@@ -236,9 +236,9 @@ class UserDataModel {
         ? DisplaySettings.fromJson(json['display_settings'])
         : null;
     _distance = json['distance'];
-    _isConnected = json['is_connected'];
-    _isRequestSent = json['is_request_sent'];
-    _isRequestReceived = json['is_request_received'];
+    isConnected = json['is_connected'];
+    isRequestSent = json['is_request_sent'];
+    isRequestReceived = json['is_request_received'];
   }
 
   String? _id;
@@ -261,9 +261,9 @@ class UserDataModel {
   SocialProfileLinks? _socialProfileLinks;
   DisplaySettings? _displaySettings;
   dynamic _distance;
-  bool? _isConnected;
-  bool? _isRequestSent;
-  bool? _isRequestReceived;
+  bool? isConnected;
+  bool? isRequestSent;
+  bool? isRequestReceived;
 
   String? get id => _id;
 
@@ -305,12 +305,6 @@ class UserDataModel {
 
   dynamic get distance => _distance;
 
-  bool? get isConnected => _isConnected;
-
-  bool? get isRequestSent => _isRequestSent;
-
-  bool? get isRequestReceived => _isRequestReceived;
-
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['_id'] = _id;
@@ -343,9 +337,9 @@ class UserDataModel {
       map['display_settings'] = _displaySettings?.toJson();
     }
     map['distance'] = _distance;
-    map['is_connected'] = _isConnected;
-    map['is_request_sent'] = _isRequestSent;
-    map['is_request_received'] = _isRequestReceived;
+    map['is_connected'] = isConnected;
+    map['is_request_sent'] = isRequestSent;
+    map['is_request_received'] = isRequestReceived;
     return map;
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
 
-import '../../../../core/color_constants.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../../resources/image_resources.dart';
 
 class DrawerListItemWidget extends StatelessWidget {

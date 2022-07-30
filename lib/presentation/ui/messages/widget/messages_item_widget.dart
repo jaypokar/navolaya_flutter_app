@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../../core/color_constants.dart';
+import '../../../../resources/color_constants.dart';
 
 class MessagesItemWidget extends StatelessWidget {
   const MessagesItemWidget({Key? key}) : super(key: key);

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/data/model/users_model.dart';
+import 'package:navolaya_flutter/presentation/bloc/userConnectionsBloc/user_connections_bloc.dart';
 import 'package:navolaya_flutter/presentation/cubit/blockUsersCubit/block_users_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/connectionReceivedCubit/connection_received_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/dashBoardTitleNotifierCubit/dash_board_title_notifier_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/myConnectionsCubit/my_connections_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/notificationsCubit/notifications_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/pageIndicatorCubit/page_indicator_page_cubit.dart';
 import 'package:navolaya_flutter/presentation/cubit/usersVerificationsCubit/users_verifications_cubit.dart';
 import 'package:navolaya_flutter/presentation/ui/auth/authentication_page.dart';
@@ -113,6 +115,7 @@ class RouteGenerator {
                   BlocProvider(create: (_) => sl<HomeTabsNotifierCubit>()),
                   BlocProvider(create: (_) => sl<DashBoardTitleNotifierCubit>()),
                   BlocProvider(create: (_) => sl<MyConnectionsCubit>()),
+                  BlocProvider(create: (_) => sl<NotificationsCubit>()),
                 ], child: const DashBoardPage()));
       /***-->***/ case connectionRequestPage:
         return MaterialPageRoute(
@@ -172,8 +175,11 @@ class RouteGenerator {
       /***-->***/ case userDetailPage:
         if (args is UserDataModel) {
           return MaterialPageRoute(
-              builder: (_) => BlocProvider(
-                    create: (_) => sl<BlockUsersCubit>(),
+              builder: (_) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider(create: (_) => sl<BlockUsersCubit>()),
+                      BlocProvider(create: (_) => sl<UserConnectionsBloc>()),
+                    ],
                     child: UserDetailPage(user: args),
                   ));
         }

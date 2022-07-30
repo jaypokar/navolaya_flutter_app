@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/user_circular_picture_widget.dart';
 import 'package:navolaya_flutter/presentation/cubit/blockUsersCubit/block_users_cubit.dart';
 
-import '../../../../core/color_constants.dart';
 import '../../../../core/route_generator.dart';
 import '../../../../data/model/users_model../../../../resources/string_resources.dart';
 import '../../../../data/model/users_model.dart';
+import '../../../../resources/color_constants.dart';
 import '../../../../resources/image_resources.dart';
 import '../../../basicWidget/loading_widget.dart';
 

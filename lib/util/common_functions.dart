@@ -8,6 +8,7 @@ class CommonFunctions {
   static final DateFormat _formatter = DateFormat('dd MMM,yyyy');
   static final DateFormat _yearFormatter = DateFormat('yyyy');
   static final DateFormat _monthFormatter = DateFormat('dd MMM');
+  static final DateFormat _dayMonthAndTimeFormatter = DateFormat('dd MMM hh:mm a');
 
   const CommonFunctions();
 
@@ -95,6 +96,12 @@ class CommonFunctions {
   String getBirthMonth(String dateTime) {
     final DateTime dt1 = DateTime.parse(dateTime.substring(0, 10));
     final String expDateNew = _monthFormatter.format(dt1);
+    return expDateNew;
+  }
+
+  String getDateMonthAndTime(String dateTime) {
+    final DateTime dt1 = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(dateTime);
+    final String expDateNew = _dayMonthAndTimeFormatter.format(dt1);
     return expDateNew;
   }
 }

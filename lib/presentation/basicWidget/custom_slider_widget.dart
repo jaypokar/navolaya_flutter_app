@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:navolaya_flutter/core/color_constants.dart';
+import 'package:navolaya_flutter/resources/color_constants.dart';
 
 // ignore: must_be_immutable
 class CustomSliderWidget extends StatefulWidget {
