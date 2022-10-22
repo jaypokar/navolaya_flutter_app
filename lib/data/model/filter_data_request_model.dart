@@ -12,32 +12,41 @@ class FilterDataRequestModel {
   String gender;
   String state;
   String school;
+  String qualification;
+  String searchNearBy;
+  String occupation;
 
   FilterDataRequestModel(
       {this.page = 1,
       this.keyword = '',
       this.sortBy = '',
-      this.distanceRange = 0.0,
+      this.distanceRange = 50.0,
       this.longitude = 0.0,
       this.latitude = 0.0,
       this.toYear = '',
       this.fromYear = '',
       this.gender = '',
       this.state = '',
-      this.school = ''});
+      this.school = '',
+      this.qualification = '',
+      this.searchNearBy = '',
+      this.occupation = ''});
 
   FilterDataRequestModel.fromJson(dynamic json,
       {this.page = 1,
       this.keyword = '',
       this.sortBy = '',
-      this.distanceRange = 0.0,
+      this.distanceRange = 50.0,
       this.longitude = 0.0,
       this.latitude = 0.0,
       this.toYear = '',
       this.fromYear = '',
       this.gender = '',
       this.state = '',
-      this.school = ''}) {
+      this.school = '',
+      this.qualification = '',
+      this.searchNearBy = '',
+      this.occupation = ''}) {
     page = json['page'];
     keyword = json['keyword'];
     sortBy = json['sort_by'];
@@ -49,6 +58,9 @@ class FilterDataRequestModel {
     gender = json['gender'];
     state = json['state'];
     school = json['school'];
+    qualification = json['qualification'];
+    searchNearBy = json['searchByLocality'];
+    occupation = json['occupation'];
   }
 
   Map<String, dynamic> toJson(FilterType filterType) {
@@ -72,6 +84,11 @@ class FilterDataRequestModel {
     json['gender'] = gender;
     json['state'] = state;
     json['school'] = school;
+    json['qualification'] = qualification;
+    if (filterType == FilterType.nearBy) {
+      json['searchByLocality'] = searchNearBy;
+    }
+    json['occupation'] = occupation;
     return json;
   }
 }

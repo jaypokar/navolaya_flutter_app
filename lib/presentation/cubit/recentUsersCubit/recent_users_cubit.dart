@@ -14,15 +14,22 @@ class RecentUsersCubit extends Cubit<RecentUsersState> {
   bool _isListFetchingComplete = false;
   final UsersRepository _repository;
 
-  RecentUsersCubit(this._repository) : super(const UsersInitial());
+  RecentUsersCubit(this._repository) : super(const UsersInitial()) {
+    if (state is UsersInitial) {
+      _repository.clearFilter();
+    }
+  }
 
-  void loadUsers() async {
-    if (state is LoadingUsersState) return;
+  void loadUsers({bool reset = false}) async {
+    if (reset) {
+      _page = 1;
+    }
+    if (state is LoadingUsersState || _isListFetchingComplete && !reset) return;
 
     final currentState = state;
 
     List<UserDataModel> oldPosts = [];
-    if (currentState is LoadUsersState) {
+    if (currentState is LoadUsersState && _page != 1) {
       oldPosts = currentState.usersData;
     }
 
@@ -41,14 +48,18 @@ class RecentUsersCubit extends Cubit<RecentUsersState> {
     }
 
     _page++;
-    final users = (state as LoadingUsersState).oldUsers;
+    List<UserDataModel> users = (state as LoadingUsersState).oldUsers;
     users.addAll(possibleData.getRight()!.data!.docs!);
     emit(LoadUsersState(usersData: users));
   }
 
+  bool get shouldLoadData => state is UsersInitial;
+
   bool get isListFetchingComplete => _isListFetchingComplete;
 
   void filterList({required FilterDataRequestModel filterData}) async {
+    _isListFetchingComplete = false;
+    _page = 1;
     emit(LoadingUsersState(const [], isFirstFetch: _page == 1));
 
     final possibleData = await _repository.fetchRecentUsersAPI(filterDataRequestData: filterData);
@@ -63,7 +74,24 @@ class RecentUsersCubit extends Cubit<RecentUsersState> {
     emit(LoadUsersState(usersData: users));
   }
 
+  void clearData() {
+    _page = 1;
+    _isListFetchingComplete = false;
+  }
+
+  void updateUsersAfterBlockingUser(UserDataModel user) {
+    final currentState = state;
+    if (currentState is LoadUsersState) {
+      final users = currentState.usersData;
+      users.remove(user);
+      emit(LoadingUsersState(users, isFirstFetch: false));
+      emit(LoadUsersState(usersData: users));
+    }
+  }
+
   Future<void> clearFilter() async {
+    _isListFetchingComplete = false;
+    _page = 1;
     _repository.clearFilter();
     await Future.delayed(const Duration(seconds: 1));
     filterList(filterData: FilterDataRequestModel());

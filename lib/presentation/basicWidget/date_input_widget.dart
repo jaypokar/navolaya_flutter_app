@@ -2,7 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:navolaya_flutter/core/logger.dart';
+import 'package:navolaya_flutter/util/common_functions.dart';
 
+import '../../injection_container.dart';
 import '../../resources/image_resources.dart';
 import '../../resources/string_resources.dart';
 import 'text_field_widget.dart';
@@ -24,24 +27,37 @@ class _DateInputWidgetState extends State<DateInputWidget> {
   @override
   void initState() {
     super.initState();
+    logger.i('date selected is ${widget.initialDate}');
     if (widget.initialDate != null) {
-      _birthdateController.text = widget.initialDate!;
+      if (widget.initialDate!.isNotEmpty) {
+        _birthdateController.text = widget.initialDate!;
+        if (_birthdateController.text.contains('-')) {
+          _birthdateController.text =
+              sl<CommonFunctions>().convertDateToDayMonthYear(_birthdateController.text);
+        }
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => selectDate(),
-      child: TextFieldWidget(
-        controller: _birthdateController,
-        hint: StringResources.birthDate,
-        isEnabled: false,
-        suffixIcon: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Image.asset(
-            ImageResources.calenderIcon,
-            height: 5,
+      onTap: () {
+        selectDate();
+      },
+      child: IgnorePointer(
+        ignoring: true,
+        ignoringSemantics: true,
+        child: TextFieldWidget(
+          controller: _birthdateController,
+          hint: StringResources.birthDateOptional,
+          isEnabled: true,
+          suffixIcon: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Image.asset(
+              ImageResources.calenderIcon,
+              height: 5,
+            ),
           ),
         ),
       ),
@@ -59,7 +75,8 @@ class _DateInputWidgetState extends State<DateInputWidget> {
       if (newDate != null) {
         selectedDate = newDate;
         String formattedDate = DateFormat('yyyy-MM-dd').format(newDate);
-        _birthdateController.text = formattedDate;
+        String displayDate = DateFormat('dd/MM/yyyy').format(newDate);
+        _birthdateController.text = displayDate;
         widget.onDateSelected(formattedDate);
       }
     });

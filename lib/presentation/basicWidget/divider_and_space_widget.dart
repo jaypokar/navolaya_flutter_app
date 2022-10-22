@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navolaya_flutter/resources/color_constants.dart';
 
 class DividerAndSpaceWidget extends StatelessWidget {
   const DividerAndSpaceWidget({Key? key}) : super(key: key);
@@ -8,13 +9,14 @@ class DividerAndSpaceWidget extends StatelessWidget {
     return Column(
       children: const [
         SizedBox(
-          height: 15,
+          height: 8,
         ),
         Divider(
           height: 1,
+          color: ColorConstants.dividerColor,
         ),
         SizedBox(
-          height: 15,
+          height: 8,
         ),
       ],
     );

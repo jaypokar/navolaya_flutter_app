@@ -43,11 +43,15 @@ class Data {
     String? birthDate,
     String? aboutMe,
     String? userImage,
+    String? currentAddress,
+    String? permanentAddress,
   }) {
     _house = house;
     _birthDate = birthDate;
     _aboutMe = aboutMe;
     _userImage = userImage;
+    _currentAddress = currentAddress;
+    _permanentAddress = permanentAddress;
   }
 
   Data.fromJson(dynamic json) {
@@ -55,12 +59,22 @@ class Data {
     _birthDate = json['birth_date'];
     _aboutMe = json['about_me'];
     _userImage = json['user_image'];
+    _currentAddress = '';
+    if (json['current_address'] != null) {
+      _currentAddress = json['current_address'];
+    }
+    _permanentAddress = '';
+    if (json['permanent_address'] != null) {
+      _permanentAddress = json['permanent_address'];
+    }
   }
 
   String? _house;
   String? _birthDate;
   String? _aboutMe;
   String? _userImage;
+  String? _currentAddress;
+  String? _permanentAddress;
 
   String? get house => _house;
 
@@ -69,6 +83,10 @@ class Data {
   String? get aboutMe => _aboutMe;
 
   String? get userImage => _userImage;
+
+  String? get currentAddress => _currentAddress;
+
+  String? get permanentAddress => _permanentAddress;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

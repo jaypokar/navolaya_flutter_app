@@ -1,0 +1,45 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_chat_bubble/bubble_type.dart';
+import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_2.dart';
+import 'package:navolaya_flutter/resources/color_constants.dart';
+
+import '../../../../injection_container.dart';
+import '../../../../util/common_functions.dart';
+
+class ReceivedMessageWidget extends StatelessWidget {
+  final String message;
+  final String messageTime;
+
+  const ReceivedMessageWidget({required this.message, required this.messageTime, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChatBubble(
+      clipper: ChatBubbleClipper2(
+        type: BubbleType.receiverBubble,
+      ),
+      backGroundColor: ColorConstants.messageReceivedBgColor,
+      margin: const EdgeInsets.only(right: 80, left: 10, top: 20),
+      elevation: 1,
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          Text(
+            message,
+            style: const TextStyle(fontSize: 15, color: ColorConstants.textColor8),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            messageTime.isEmpty
+                ? sl<CommonFunctions>().getSentMessageTime()
+                : sl<CommonFunctions>().getMessageTime(messageTime),
+            style: const TextStyle(fontSize: 11, color: ColorConstants.textColor5),
+          )
+        ]),
+      ),
+    );
+  }
+}

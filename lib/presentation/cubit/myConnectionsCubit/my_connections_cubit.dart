@@ -15,17 +15,22 @@ class MyConnectionsCubit extends Cubit<MyConnectionsState> {
 
   MyConnectionsCubit(this._repository) : super(const MyConnectionsInitial());
 
-  void loadUsers({bool reset = false}) async {
-    if (state is LoadingMyConnectionsState) return;
+  void loadUsers({bool reset = false, bool update = false}) async {
+    if (reset || update) {
+      _page = 1;
+    }
+    if (state is LoadingMyConnectionsState || _isListFetchingComplete && !reset && !update) return;
 
     final currentState = state;
 
     List<UserDataModel> oldPosts = [];
-    if (currentState is LoadMyConnectionsState && !reset) {
+    if (currentState is LoadMyConnectionsState && _page != 1) {
       oldPosts = currentState.usersData;
     }
 
-    emit(LoadingMyConnectionsState(oldPosts, isFirstFetch: _page == 1));
+    if (!update) {
+      emit(LoadingMyConnectionsState(oldPosts, isFirstFetch: _page == 1));
+    }
 
     final possibleData = await _repository.fetchMyConnectionsAPI(page: _page);
 
@@ -39,11 +44,11 @@ class MyConnectionsCubit extends Cubit<MyConnectionsState> {
     }
 
     _page++;
-    List<UserDataModel> users = [];
-    if (reset) {
-      users = [];
-    } else {
+    late final List<UserDataModel> users;
+    if (state is LoadingMyConnectionsState) {
       users = (state as LoadingMyConnectionsState).oldUsers;
+    } else {
+      users = [];
     }
     users.addAll(possibleData.getRight()!.data!.docs!);
     emit(LoadMyConnectionsState(usersData: users));
@@ -56,10 +61,7 @@ class MyConnectionsCubit extends Cubit<MyConnectionsState> {
       emit(ErrorLoadingMyConnectionsState(message: possibleData.getLeft()!.error));
       return;
     }
-    emit(
-        RemoveMyConnectionState(createOrUpdateConnectionRequestResponse: possibleData.getRight()!));
-    _page = 1;
-    loadUsers(reset: true);
+    loadUsers(update: true);
   }
 
   bool get isListFetchingComplete => _isListFetchingComplete;

@@ -11,6 +11,7 @@ import '../../../resources/color_constants.dart';
 import '../../../resources/image_resources.dart';
 import '../../../util/common_functions.dart';
 import '../../bloc/authBloc/auth_bloc.dart';
+import '../../cubit/socketConnectionCubit/socket_connection_cubit.dart';
 import 'widget/additional_info_widget.dart';
 import 'widget/basic_info_widget.dart';
 import 'widget/step_indicator_widget.dart';
@@ -48,7 +49,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           if (state is ProfileErrorState) {
             showMessage(true, state.message);
           } else if (state is UpdateAdditionalInfoState) {
-            showMessage(false, state.updateAdditionalInfo.message!);
+            //showMessage(false, state.updateAdditionalInfo.message!);
             Timer(const Duration(seconds: 2), () {
               Navigator.of(context).pushReplacementNamed(RouteGenerator.dashBoardPage);
             });
@@ -58,7 +59,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
           if (state is AuthErrorState) {
             showMessage(true, state.message);
           } else if (state is UpdateBasicInfoState) {
-            showMessage(false, state.loginAndBasicInfoData.message!);
+            //showMessage(false, state.loginAndBasicInfoData.message!);
+            context.read<SocketConnectionCubit>().init();
             _controller.jumpToPage(1);
           }
         }),
@@ -72,11 +74,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
             Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
-                image: DecorationImage(
+                /*image: DecorationImage(
                     image: AssetImage(
                       ImageResources.imgBg,
                     ),
-                    fit: BoxFit.cover),
+                    fit: BoxFit.cover),*/
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -110,10 +112,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
             Expanded(
               flex: 7,
               child: PageView(
-                /*physics: const NeverScrollableScrollPhysics(),*/
                 onPageChanged: (int page) =>
                     context.read<PageIndicatorPageCubit>().changePage(page),
                 controller: _controller,
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   BasicInfoWidget(
                     countryCode: widget.countryCode,
@@ -131,11 +133,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   void showMessage(bool isError, String message) {
     if (mounted) {
-      sl<CommonFunctions>().showSnackBar(
+      sl<CommonFunctions>().showFlushBar(
         context: context,
         message: message,
-        bgColor: isError ? Colors.red : ColorConstants.appColor,
-        textColor: Colors.white,
+        bgColor: isError ? ColorConstants.messageErrorBgColor : ColorConstants.messageBgColor,
       );
     }
   }

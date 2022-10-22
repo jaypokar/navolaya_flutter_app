@@ -40,7 +40,7 @@ class Data {
   Data({
     SocialProfileLinks? socialProfileLinks,
   }) {
-    this.socialProfileLinks = socialProfileLinks;
+    this.socialProfileLinks;
   }
 
   Data.fromJson(dynamic json) {

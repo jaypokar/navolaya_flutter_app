@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:navolaya_flutter/resources/image_resources.dart';
+import 'package:navolaya_flutter/resources/string_resources.dart';
 
 import '../../../../resources/color_constants.dart';
 
@@ -14,36 +15,40 @@ class UserAddressDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Address Details',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+            StringResources.addressDetails,
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 21),
           ),
           const SizedBox(
             height: 10,
           ),
           if (userCurrentAddress.isNotEmpty) ...[
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(
-                  FontAwesomeIcons.locationArrow,
-                  color: Colors.grey,
-                  size: 15,
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Image.asset(
+                    ImageResources.locationIcon,
+                    color: Colors.black,
+                    height: 16,
+                  ),
                 ),
-                const SizedBox(width: 5),
+                const SizedBox(width: 6),
                 Expanded(
                   child: Text(
                     userCurrentAddress,
-                    style: const TextStyle(color: ColorConstants.textColor2, fontSize: 12),
+                    style: const TextStyle(color: ColorConstants.textColor3, fontSize: 13),
                   ),
                 ),
-                const SizedBox(width: 5),
+                const SizedBox(width: 6),
                 const Text(
                   'Current',
-                  style: TextStyle(color: ColorConstants.appColor, fontSize: 12),
+                  style: TextStyle(color: ColorConstants.appColor, fontSize: 13),
                 )
               ],
             ),
@@ -55,22 +60,25 @@ class UserAddressDetailsWidget extends StatelessWidget {
               ? Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      FontAwesomeIcons.locationArrow,
-                      color: Colors.grey,
-                      size: 15,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Image.asset(
+                        ImageResources.locationIcon,
+                        color: Colors.black,
+                        height: 16,
+                      ),
                     ),
-                    const SizedBox(width: 5),
+                    const SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         userPermanentAddress,
-                        style: const TextStyle(color: ColorConstants.textColor2, fontSize: 12),
+                        style: const TextStyle(color: ColorConstants.textColor3, fontSize: 13),
                       ),
                     ),
-                    const SizedBox(width: 5),
+                    const SizedBox(width: 6),
                     const Text(
                       'Permanent',
-                      style: TextStyle(color: ColorConstants.appColor, fontSize: 12),
+                      style: TextStyle(color: ColorConstants.appColor, fontSize: 13),
                     )
                   ],
                 )

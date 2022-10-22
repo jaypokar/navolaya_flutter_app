@@ -190,6 +190,7 @@ class Settings {
     String? officialEmail,
     String? officialAddress,
     int? maxConnectionLimit,
+    String? shareTheAppText,
   }) {
     _socialMediaLinks = socialMediaLinks;
     _liveAppLinks = liveAppLinks;
@@ -198,6 +199,7 @@ class Settings {
     _officialEmail = officialEmail;
     _officialAddress = officialAddress;
     _maxConnectionLimit = maxConnectionLimit;
+    _shareTheAppText = shareTheAppText;
   }
 
   Settings.fromJson(dynamic json) {
@@ -211,6 +213,7 @@ class Settings {
     _officialEmail = json['official_email'];
     _officialAddress = json['official_address'];
     _maxConnectionLimit = json['max_connection_limit'];
+    _shareTheAppText = json['share_the_app_text'];
   }
 
   SocialMediaLinks? _socialMediaLinks;
@@ -219,6 +222,7 @@ class Settings {
   String? _officialPhone;
   String? _officialEmail;
   String? _officialAddress;
+  String? _shareTheAppText;
   int? _maxConnectionLimit;
 
   Settings copyWith({
@@ -228,6 +232,7 @@ class Settings {
     String? officialPhone,
     String? officialEmail,
     String? officialAddress,
+    String? shareTheAppText,
     int? maxConnectionLimit,
   }) =>
       Settings(
@@ -238,6 +243,7 @@ class Settings {
         officialEmail: officialEmail ?? _officialEmail,
         officialAddress: officialAddress ?? _officialAddress,
         maxConnectionLimit: maxConnectionLimit ?? _maxConnectionLimit,
+        shareTheAppText: shareTheAppText ?? _shareTheAppText,
       );
 
   SocialMediaLinks? get socialMediaLinks => _socialMediaLinks;
@@ -251,6 +257,8 @@ class Settings {
   String? get officialEmail => _officialEmail;
 
   String? get officialAddress => _officialAddress;
+
+  String? get shareTheAppText => _shareTheAppText;
 
   int? get maxConnectionLimit => _maxConnectionLimit;
 
@@ -267,6 +275,7 @@ class Settings {
     map['official_email'] = _officialEmail;
     map['official_address'] = _officialAddress;
     map['max_connection_limit'] = _maxConnectionLimit;
+    map['share_the_app_text'] = _shareTheAppText;
     return map;
   }
 }
@@ -332,11 +341,13 @@ class SocialMediaLinks {
     String? instagram,
     String? youtube,
     String? linkedin,
+    String? twitter,
   }) {
     _facebook = facebook;
     _instagram = instagram;
     _youtube = youtube;
     _linkedin = linkedin;
+    _twitter = twitter;
   }
 
   SocialMediaLinks.fromJson(dynamic json) {
@@ -344,12 +355,18 @@ class SocialMediaLinks {
     _instagram = json['instagram'];
     _youtube = json['youtube'];
     _linkedin = json['linkedin'];
+    if (json['twitter'] != null) {
+      _twitter = json['twitter'];
+    } else {
+      _twitter == '';
+    }
   }
 
   String? _facebook;
   String? _instagram;
   String? _youtube;
   String? _linkedin;
+  String? _twitter;
 
   SocialMediaLinks copyWith({
     String? facebook,
@@ -372,12 +389,15 @@ class SocialMediaLinks {
 
   String? get linkedin => _linkedin;
 
+  String? get twitter => _twitter;
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['facebook'] = _facebook;
     map['instagram'] = _instagram;
     map['youtube'] = _youtube;
     map['linkedin'] = _linkedin;
+    map['twitter'] = _twitter;
     return map;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navolaya_flutter/core/logger.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class UserSocialMedialItemWidget extends StatelessWidget {
@@ -15,6 +16,7 @@ class UserSocialMedialItemWidget extends StatelessWidget {
         size: 17,
       ),
       onPressed: () {
+        logger.i('the social media url is : ${data['link'].toString()}');
         launchUrlString(data['link'].toString());
       },
       label: Text(

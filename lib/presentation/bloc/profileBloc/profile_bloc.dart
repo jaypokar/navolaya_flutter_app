@@ -4,9 +4,11 @@ import 'package:navolaya_flutter/data/model/basic_info_request_model.dart';
 import 'package:navolaya_flutter/data/model/change_password_model.dart';
 import 'package:navolaya_flutter/data/model/delete_profile_model.dart';
 import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
+import 'package:navolaya_flutter/data/model/profile_image_or_allow_notification_model.dart';
 import 'package:navolaya_flutter/data/model/social_media_links_request_model.dart';
 import 'package:navolaya_flutter/data/model/social_media_profiles_model.dart';
 import 'package:navolaya_flutter/data/model/update_email_model.dart';
+import 'package:navolaya_flutter/data/model/update_jnv_verification_model.dart';
 import 'package:navolaya_flutter/data/model/update_phone_model.dart';
 import 'package:navolaya_flutter/data/model/update_privacy_settings_model.dart' as privacy_settings;
 import 'package:navolaya_flutter/data/model/update_privacy_settings_request_model.dart';
@@ -18,7 +20,6 @@ import '../../../data/model/update_additional_info_model.dart';
 import '../../../domain/profile_repository.dart';
 
 part 'profile_event.dart';
-
 part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
@@ -32,9 +33,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if (event is DeleteProfileEvent) {
           emit(const DeleteProfileLoadingState());
           data = await _deleteProfile(event, emit);
+        } else if (event is UpdateProfileImageOrAllowNotificationEvent) {
+          data = await _updateProfileImageOrAllowNotification(event, emit);
         } else {
           emit(const ProfileLoadingState());
         }
+
         if (event is InitiateUpdateAdditionalInfo) {
           data = await _updateAdditionalInfo(event, emit);
         } else if (event is FetchPersonalDetails) {
@@ -55,6 +59,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           data = await _updatePrivacySettings(event, emit);
         } else if (event is FetchPrivacySettingEvent) {
           data = await _loadPrivacySettings(event, emit);
+        } else if (event is UpdateJNVVerificationEvent) {
+          data = await _updateJNVVerification(event, emit);
+        } else if (event is GetProfileEvent) {
+          data = await _getProfile(event, emit);
         }
         emit(data);
       } catch (e) {
@@ -64,12 +72,21 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     });
   }
 
+  @override
+  void onTransition(Transition<ProfileEvent, ProfileState> transition) {
+    super.onTransition(transition);
+    logger.d(
+        'Profile State Transition=>\nEvent : ${transition.event}\nState : ${transition.currentState}');
+  }
+
   Future<ProfileState> _updateAdditionalInfo(
       InitiateUpdateAdditionalInfo event, Emitter emit) async {
     final possibleData = await _repository.updateAdditionalInfoAPI(
       house: event.house,
       aboutMe: event.aboutMe,
       birthDate: event.birthDate,
+      currentAddress: event.currentAddress,
+      permanentAddress: event.permanentAddress,
     );
     return possibleData.fold(
       (l) => ProfileErrorState(message: l.error),
@@ -182,6 +199,32 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     );
   }
 
+  Future<ProfileState> _updateJNVVerification(
+      UpdateJNVVerificationEvent event, Emitter emit) async {
+    final possibleData = await _repository.updateJnvVerificationAPI(event.reqData);
+    return possibleData.fold(
+      (l) => ProfileErrorState(message: l.error),
+      (r) => UpdateJNVVerificationState(response: r),
+    );
+  }
+
+  Future<ProfileState> _updateProfileImageOrAllowNotification(
+      UpdateProfileImageOrAllowNotificationEvent event, Emitter emit) async {
+    final possibleData = await _repository.updateProfileImageOrAllowNotificationAPI(event.reqData);
+    return possibleData.fold(
+      (l) => ProfileErrorState(message: l.error),
+      (r) => UpdateProfileImageOrAllowNotificationState(response: r),
+    );
+  }
+
+  Future<ProfileState> _getProfile(GetProfileEvent event, Emitter emit) async {
+    final possibleData = await _repository.getProfileAPI();
+    return possibleData.fold(
+      (l) => ProfileErrorState(message: l.error),
+      (r) => GetProfileState(loginAndBasicInfo: r),
+    );
+  }
+
   void updatePrivacySettingsMap(String key, String value) {
     if (key == StringResources.phoneNumber) {
       key = 'phone';
@@ -201,6 +244,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       key = 'social_profile_links';
     } else if (key == StringResources.findMeNearBy) {
       key = 'find_me_nearby';
+    } else if (key == StringResources.sendMessages) {
+      key = 'send_messages';
     }
 
     if (value == StringResources.all) {

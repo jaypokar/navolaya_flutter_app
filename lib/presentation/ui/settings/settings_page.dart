@@ -11,7 +11,7 @@ import 'package:navolaya_flutter/util/common_functions.dart';
 
 import '../../../resources/color_constants.dart';
 import '../../../resources/string_resources.dart';
-import '../../basicWidget/custom_button.dart';
+import '../../../resources/value_key_resources.dart';
 import '../../basicWidget/divider_and_space_widget.dart';
 import 'widget/privacy_settings_widget.dart';
 
@@ -24,6 +24,10 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _switchValue = false;
+  final ExpandableController _generalSettingsExpandableController =
+      ExpandableController(initialExpanded: true);
+  final ExpandableController _privacySettingsExpandableController =
+      ExpandableController(initialExpanded: true);
 
   @override
   void initState() {
@@ -37,18 +41,15 @@ class _SettingsPageState extends State<SettingsPage> {
     return BlocListener<ProfileBloc, ProfileState>(
       listener: (_, state) {
         if (state is ProfileErrorState) {
-          sl<CommonFunctions>().showSnackBar(
+          sl<CommonFunctions>().showFlushBar(
             context: context,
             message: state.message,
-            bgColor: Colors.red,
-            textColor: Colors.white,
+            bgColor: ColorConstants.messageErrorBgColor,
           );
         } else if (state is UpdatePrivacySettingsState) {
-          sl<CommonFunctions>().showSnackBar(
+          sl<CommonFunctions>().showFlushBar(
             context: context,
             message: state.response.message!,
-            bgColor: Colors.green,
-            textColor: Colors.white,
           );
         }
       },
@@ -70,12 +71,16 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               ExpandablePanel(
                 theme: const ExpandableThemeData(
-                    headerAlignment: ExpandablePanelHeaderAlignment.center,
-                    iconPadding: EdgeInsets.symmetric(vertical: 5)),
+                  headerAlignment: ExpandablePanelHeaderAlignment.center,
+                  iconSize: 28,
+                  expandIcon: Icons.navigate_next,
+                  iconPadding: EdgeInsets.symmetric(vertical: 5),
+                ),
                 header: const Text(
                   StringResources.generalSettings,
                   style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w700),
                 ),
+                controller: _generalSettingsExpandableController,
                 collapsed: const SizedBox.shrink(),
                 expanded: Row(
                   children: [
@@ -90,13 +95,16 @@ class _SettingsPageState extends State<SettingsPage> {
                     Transform.translate(
                       offset: const Offset(10, 0),
                       child: Transform.scale(
-                        scale: 0.5,
+                        scale: 0.6,
                         child: CupertinoSwitch(
                           value: _switchValue,
                           onChanged: (bool value) {
                             setState(() {
                               _switchValue = value;
-                              sl<SessionManager>().updateAllowNotifications(_switchValue);
+                              context.read<ProfileBloc>().add(
+                                      UpdateProfileImageOrAllowNotificationEvent(reqData: {
+                                    ValueKeyResources.allowNotificationsKey: _switchValue ? 1 : 0
+                                  }));
                             });
                           },
                         ),
@@ -109,7 +117,10 @@ class _SettingsPageState extends State<SettingsPage> {
               ExpandablePanel(
                 theme: const ExpandableThemeData(
                     headerAlignment: ExpandablePanelHeaderAlignment.center,
+                    iconSize: 28,
+                    expandIcon: Icons.navigate_next,
                     iconPadding: EdgeInsets.symmetric(vertical: 5)),
+                controller: _privacySettingsExpandableController,
                 header: const Text(
                   StringResources.privacySettings,
                   style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w700),
@@ -118,6 +129,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 expanded: const PrivacySettingsWidget(),
               ),
               const DividerAndSpaceWidget(),
+              const SizedBox(
+                height: 5,
+              ),
               InkWell(
                 onTap: () {
                   Navigator.of(context).pushNamed(RouteGenerator.changePasswordPage);
@@ -140,7 +154,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
+              const SizedBox(
+                height: 5,
+              ),
               const DividerAndSpaceWidget(),
+              const SizedBox(
+                height: 5,
+              ),
               InkWell(
                 onTap: () {
                   Navigator.of(context).pushNamed(RouteGenerator.blockedUserPage);
@@ -163,13 +183,51 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
+              const SizedBox(
+                height: 5,
+              ),
               const DividerAndSpaceWidget(),
+              const SizedBox(
+                height: 5,
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pushNamed(RouteGenerator.reportUserPage);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    Text(
+                      StringResources.reportedUsers,
+                      style:
+                          TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w700),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.navigate_next,
+                      color: ColorConstants.navigateIconColor,
+                      size: 28,
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              const DividerAndSpaceWidget(),
+              const SizedBox(
+                height: 5,
+              ),
               ExpandablePanel(
                 theme: const ExpandableThemeData(
                     headerAlignment: ExpandablePanelHeaderAlignment.center,
+                    iconSize: 28,
+                    expandIcon: Icons.navigate_next,
+                    iconPlacement: ExpandablePanelIconPlacement.right,
                     iconPadding: EdgeInsets.symmetric(vertical: 5)),
                 header: const Text(
-                  StringResources.generalSettings,
+                  StringResources.accountDeletion,
                   style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w700),
                 ),
                 collapsed: const SizedBox.shrink(),
@@ -185,8 +243,17 @@ class _SettingsPageState extends State<SettingsPage> {
                       return const LoadingWidget();
                     }
                     return InkWell(
-                      onTap: () {
-                        context.read<ProfileBloc>().add(const DeleteProfileEvent());
+                      onTap: () async {
+                        final result = await sl<CommonFunctions>().showConfirmationDialog(
+                          context: context,
+                          title: StringResources.deleteAccount,
+                          message: StringResources.deleteDescription,
+                          buttonPositiveText: StringResources.confirm,
+                          buttonNegativeText: StringResources.cancel,
+                        );
+                        if (result && mounted) {
+                          context.read<ProfileBloc>().add(const DeleteProfileEvent());
+                        }
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -204,26 +271,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 ),
               ),
+              const SizedBox(
+                height: 5,
+              ),
               const DividerAndSpaceWidget(),
-              BlocBuilder<ProfileBloc, ProfileState>(
-                buildWhen: (_, state) {
-                  if (state is DeleteProfileResponseState) {
-                    return false;
-                  }
-                  return true;
-                },
-                builder: (_, state) {
-                  if (state is ProfileLoadingState) {
-                    return const LoadingWidget();
-                  }
-                  return ButtonWidget(
-                    buttonText: StringResources.update,
-                    onPressButton: () {
-                      context.read<ProfileBloc>().add(const UpdatePrivacySettingEvent());
-                    },
-                  );
-                },
-              )
             ],
           ),
         ),

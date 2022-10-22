@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navolaya_flutter/resources/string_resources.dart';
 
 // ignore: must_be_immutable
 class GenderRadioWidget extends StatefulWidget {
@@ -12,56 +13,70 @@ class GenderRadioWidget extends StatefulWidget {
 }
 
 class _GenderRadioWidgetState extends State<GenderRadioWidget> {
+  String? genderValue;
+
+  @override
+  void initState() {
+    super.initState();
+    genderValue = widget.gender;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         Radio<String>(
-          value: "Male",
-          groupValue: widget.gender,
+          value: StringResources.male,
+          groupValue: genderValue!,
           visualDensity: const VisualDensity(
             horizontal: VisualDensity.minimumDensity,
             vertical: VisualDensity.minimumDensity,
           ),
           onChanged: (value) {
+            if (widget.onValueSelect != null) {
+              widget.onValueSelect!(value);
+            }
             setState(() {
-              widget.gender = value!;
+              genderValue = value!;
             });
           },
         ),
-        const Text("Male"),
+        const Text(StringResources.male),
+        const Spacer(),
         Radio<String>(
-          value: "Female",
-          groupValue: widget.gender,
+          value: StringResources.female,
+          groupValue: genderValue!,
           visualDensity: const VisualDensity(
             horizontal: VisualDensity.minimumDensity,
             vertical: VisualDensity.minimumDensity,
           ),
           onChanged: (value) {
-            widget.gender = value!;
+            genderValue = value!;
             if (widget.onValueSelect != null) {
               widget.onValueSelect!(value);
             }
             setState(() {});
           },
         ),
-        const Text("Female"),
+        const Text(StringResources.female),
+        const Spacer(),
         Radio<String>(
-          value: "Other",
-          groupValue: widget.gender,
+          value: StringResources.other,
+          groupValue: genderValue!,
           visualDensity: const VisualDensity(
             horizontal: VisualDensity.minimumDensity,
             vertical: VisualDensity.minimumDensity,
           ),
           onChanged: (value) {
-            setState(() {
-              widget.gender = value!;
-            });
+            genderValue = value!;
+            if (widget.onValueSelect != null) {
+              widget.onValueSelect!(value);
+            }
+            setState(() {});
           },
         ),
-        const Text("Other"),
+        const Text(StringResources.other),
       ],
     );
   }

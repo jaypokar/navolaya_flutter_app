@@ -37,17 +37,22 @@ class UpdatePrivacySettingsModel {
 class Data {
   Data({
     DisplaySettings? displaySettings,
+    String? authToken,
   }) {
     _displaySettings = displaySettings;
+    this.authToken;
   }
 
   Data.fromJson(dynamic json) {
     _displaySettings = json['display_settings'] != null
         ? DisplaySettings.fromJson(json['display_settings'])
         : null;
+
+    authToken = json['auth_token'];
   }
 
   DisplaySettings? _displaySettings;
+  String? authToken;
 
   DisplaySettings? get displaySettings => _displaySettings;
 
@@ -56,6 +61,7 @@ class Data {
     if (_displaySettings != null) {
       map['display_settings'] = _displaySettings?.toJson();
     }
+    map['auth_token'] = authToken;
     return map;
   }
 }
@@ -81,6 +87,7 @@ class DisplaySettings {
     String? permanentAddress,
     String? socialProfileLinks,
     String? findMeNearby,
+    String? sendMessages,
   }) {
     _phone = phone;
     _email = email;
@@ -91,6 +98,7 @@ class DisplaySettings {
     _permanentAddress = permanentAddress;
     _socialProfileLinks = socialProfileLinks;
     _findMeNearby = findMeNearby;
+    _sendMessages = sendMessages;
   }
 
   DisplaySettings.fromJson(dynamic json) {
@@ -103,6 +111,7 @@ class DisplaySettings {
     _permanentAddress = json['permanent_address'];
     _socialProfileLinks = json['social_profile_links'];
     _findMeNearby = json['find_me_nearby'];
+    _sendMessages = json['send_messages'];
   }
 
   String? _phone;
@@ -114,6 +123,7 @@ class DisplaySettings {
   String? _permanentAddress;
   String? _socialProfileLinks;
   String? _findMeNearby;
+  String? _sendMessages;
 
   String? get phone => _phone;
 
@@ -133,6 +143,8 @@ class DisplaySettings {
 
   String? get findMeNearby => _findMeNearby;
 
+  String? get sendMessages => _sendMessages;
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['phone'] = _phone;
@@ -144,6 +156,7 @@ class DisplaySettings {
     map['permanent_address'] = _permanentAddress;
     map['social_profile_links'] = _socialProfileLinks;
     map['find_me_nearby'] = _findMeNearby;
+    map['send_messages'] = _sendMessages;
     return map;
   }
 }

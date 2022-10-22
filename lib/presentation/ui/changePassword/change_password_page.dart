@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/presentation/ui/registration/widget/password_input_widget.dart';
 
 import '../../../injection_container.dart';
+import '../../../resources/color_constants.dart';
 import '../../../resources/string_resources.dart';
 import '../../../util/common_functions.dart';
 import '../../basicWidget/custom_button.dart';
@@ -24,19 +25,21 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<ProfileBloc, ProfileState>(
-      listener: (_, state) {
+      listener: (_, state) async {
         if (state is ProfileErrorState) {
-          sl<CommonFunctions>().showSnackBar(
-              context: context,
-              message: state.message,
-              bgColor: Colors.red,
-              textColor: Colors.white);
+          sl<CommonFunctions>().showFlushBar(
+            context: context,
+            message: state.message,
+            bgColor: ColorConstants.messageErrorBgColor,
+          );
         } else if (state is ChangePasswordState) {
-          sl<CommonFunctions>().showSnackBar(
-              context: context,
-              message: state.changePasswordResponse.message!,
-              bgColor: Colors.green,
-              textColor: Colors.white);
+          await sl<CommonFunctions>().showFlushBar(
+            context: context,
+            message: state.changePasswordResponse.message!,
+            duration: 1,
+          );
+          if (!mounted) return;
+          Navigator.pop(context);
         }
       },
       child: Scaffold(
@@ -56,7 +59,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ),
               PasswordInputWidget(
                 textEditingController: _oldPasswordTextController,
-                showOrHidePassword: false,
+                showOrHidePassword: true,
                 hint: StringResources.passwordOldHint,
               ),
               const SizedBox(
@@ -72,7 +75,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ),
               PasswordInputWidget(
                 textEditingController: _cfmPasswordTextController,
-                showOrHidePassword: false,
+                showOrHidePassword: true,
                 hint: StringResources.passwordCFMHint,
               ),
               const SizedBox(
@@ -95,32 +98,32 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           buttonText: StringResources.submit.toUpperCase(),
           onPressButton: () {
             if (_oldPasswordTextController.text.isEmpty) {
-              sl<CommonFunctions>().showSnackBar(
-                  context: context,
-                  message: StringResources.pleaseEnterOldPassword,
-                  bgColor: Colors.orange,
-                  textColor: Colors.white);
+              sl<CommonFunctions>().showFlushBar(
+                context: context,
+                message: StringResources.pleaseEnterOldPassword,
+                bgColor: ColorConstants.messageErrorBgColor,
+              );
               return;
             } else if (_newPasswordTextController.text.isEmpty) {
-              sl<CommonFunctions>().showSnackBar(
-                  context: context,
-                  message: StringResources.pleaseEnterNewPassword,
-                  bgColor: Colors.orange,
-                  textColor: Colors.white);
+              sl<CommonFunctions>().showFlushBar(
+                context: context,
+                message: StringResources.pleaseEnterNewPassword,
+                bgColor: ColorConstants.messageErrorBgColor,
+              );
               return;
             } else if (_cfmPasswordTextController.text.isEmpty) {
-              sl<CommonFunctions>().showSnackBar(
-                  context: context,
-                  message: StringResources.pleaseEnterCFMPassword,
-                  bgColor: Colors.orange,
-                  textColor: Colors.white);
+              sl<CommonFunctions>().showFlushBar(
+                context: context,
+                message: StringResources.pleaseEnterCFMPassword,
+                bgColor: ColorConstants.messageErrorBgColor,
+              );
               return;
             } else if (_cfmPasswordTextController.text != _newPasswordTextController.text) {
-              sl<CommonFunctions>().showSnackBar(
-                  context: context,
-                  message: StringResources.passwordDidNotMatched,
-                  bgColor: Colors.orange,
-                  textColor: Colors.white);
+              sl<CommonFunctions>().showFlushBar(
+                context: context,
+                message: StringResources.passwordDidNotMatched,
+                bgColor: ColorConstants.messageErrorBgColor,
+              );
               return;
             } else {
               context.read<ProfileBloc>().add(ChangePasswordEvent(

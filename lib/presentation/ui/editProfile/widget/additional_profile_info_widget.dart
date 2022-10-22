@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
+import 'package:navolaya_flutter/presentation/basicWidget/image_loader_widget.dart';
 
+import '../../../../core/route_generator.dart';
 import '../../../../data/model/masters_model.dart';
 import '../../../../domain/master_repository.dart';
 import '../../../../injection_container.dart';
@@ -29,35 +31,56 @@ class _AdditionalProfileInfoWidgetState extends State<AdditionalProfileInfoWidge
   late final List<JnvHouses> _jnvHousesList;
   String _selectedDate = '';
   final TextEditingController _aboutController = TextEditingController();
+  final TextEditingController _currentAddressController = TextEditingController();
+  final TextEditingController _permanentAddressController = TextEditingController();
+  late final Future<void> _fetchFutureEditData;
 
   @override
   void initState() {
     super.initState();
+
+    _fetchFutureEditData = fetchPersonalDetails();
     final masterRepository = sl<MasterRepository>();
 
     ///
     _jnvHousesList = masterRepository.jnvHousesList;
     _jnvHousesValues = _jnvHousesList.first;
-
-    if (widget.isEdit) {
-      context.read<ProfileBloc>().add(const FetchPersonalDetails());
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<ProfileBloc, ProfileState>(
-      listener: (_, state) {
+      listener: (_, state) async {
         if (widget.isEdit) {
           if (state is ProfileErrorState) {
             showMessage(true, state.message);
           } else if (state is UpdateAdditionalInfoState) {
-            showMessage(false, state.updateAdditionalInfo.message!);
+            if (widget.isEdit) {
+              await showMessage(false, state.updateAdditionalInfo.message!, duration: 1);
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            }
           } else if (state is LoadPersonalDetailsState) {
             _loadPersonalDetails(state.loginAndBasicInfoData);
           }
         }
       },
+      child: widget.isEdit
+          ? FutureBuilder(
+              future: _fetchFutureEditData,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const ImageLoaderWidget();
+                }
+                return _loadMainView();
+              })
+          : _loadMainView(),
+    );
+  }
+
+  Widget _loadMainView() {
+    return SingleChildScrollView(
       child: Column(
         children: [
           const SizedBox(
@@ -95,14 +118,37 @@ class _AdditionalProfileInfoWidgetState extends State<AdditionalProfileInfoWidge
           ),
           TextFieldWidget(
             controller: _aboutController,
-            hint: StringResources.aboutMe,
-            textInputType: TextInputType.text,
+            hint: StringResources.aboutMeOptional,
+            textInputType: TextInputType.multiline,
+            allowSmileys: true,
             max: 1000,
-            maxLines: 6,
+            maxLines: 3,
           ),
           const SizedBox(
             height: 15,
           ),
+          if (widget.isEdit) ...[
+            TextFieldWidget(
+              controller: _currentAddressController,
+              hint: StringResources.currentAddressOptional,
+              textInputType: TextInputType.streetAddress,
+              max: 1000,
+              maxLines: 3,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            TextFieldWidget(
+              controller: _permanentAddressController,
+              hint: StringResources.permanentAddressOptional,
+              textInputType: TextInputType.streetAddress,
+              max: 1000,
+              maxLines: 3,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+          ],
           BlocBuilder<ProfileBloc, ProfileState>(builder: (_, state) {
             if (state is ProfileLoadingState) {
               return const LoadingWidget();
@@ -113,26 +159,70 @@ class _AdditionalProfileInfoWidgetState extends State<AdditionalProfileInfoWidge
                       : StringResources.submit.toUpperCase(),
                   padding: 0,
                   onPressButton: () {
-                    if (_jnvHousesValues.id!.isNotEmpty) {
+                    if (_jnvHousesValues.id!.isNotEmpty ||
+                        _selectedDate.isNotEmpty ||
+                        _aboutController.text.isNotEmpty ||
+                        _currentAddressController.text.isNotEmpty ||
+                        _permanentAddressController.text.isNotEmpty) {
                       context.read<ProfileBloc>().add(
                             InitiateUpdateAdditionalInfo(
-                                house: _jnvHousesValues.id!.isEmpty ? '' : _jnvHousesValues.title!,
-                                birthDate: _selectedDate,
-                                aboutMe: _aboutController.text),
+                              house: _jnvHousesValues.id!.isEmpty ? '' : _jnvHousesValues.title!,
+                              birthDate: _selectedDate,
+                              aboutMe: _aboutController.text,
+                              currentAddress: _currentAddressController.text,
+                              permanentAddress: _permanentAddressController.text,
+                            ),
                           );
                     } else {
-                      sl<CommonFunctions>().showSnackBar(
-                          context: context,
-                          message: StringResources.pleaseSelectHouse,
-                          bgColor: Colors.orange,
-                          textColor: Colors.white);
+                      if (!widget.isEdit) {
+                        Navigator.of(context).pushReplacementNamed(RouteGenerator.dashBoardPage);
+                      }
                     }
                   });
             }
           }),
+          if (!widget.isEdit) ...[
+            const SizedBox(
+              height: 15,
+            ),
+            OutlinedButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed(RouteGenerator.dashBoardPage);
+              },
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size.fromHeight(42),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                side: const BorderSide(
+                  width: 1.0,
+                  color: ColorConstants.messageBgColor,
+                ),
+              ),
+              child: Text(
+                StringResources.skipAndContinue.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    color: ColorConstants.messageBgColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+          ]
         ],
       ),
     );
+  }
+
+  Future<void> fetchPersonalDetails() async {
+    if (widget.isEdit) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (!mounted) return;
+      context.read<ProfileBloc>().add(const FetchPersonalDetails());
+    }
   }
 
   void _loadPersonalDetails(LoginAndBasicInfoModel loginAndBasicInfo) {
@@ -140,20 +230,25 @@ class _AdditionalProfileInfoWidgetState extends State<AdditionalProfileInfoWidge
       if (loginAndBasicInfo.data!.house!.isNotEmpty) {
         _jnvHousesValues =
             _jnvHousesList.firstWhere((element) => loginAndBasicInfo.data!.house == element.title);
-        _aboutController.text = loginAndBasicInfo.data!.aboutMe!;
-        setState(() {});
       }
     }
+    _aboutController.text = loginAndBasicInfo.data!.aboutMe!;
+    if (loginAndBasicInfo.data!.currentAddress != null) {
+      _currentAddressController.text = loginAndBasicInfo.data!.currentAddress!;
+    }
+    if (loginAndBasicInfo.data!.permanentAddress != null) {
+      _permanentAddressController.text = loginAndBasicInfo.data!.permanentAddress!;
+    }
+    setState(() {});
   }
 
-  void showMessage(bool isError, String message) {
+  Future<void> showMessage(bool isError, String message, {int duration = 2}) async {
     if (mounted) {
-      sl<CommonFunctions>().showSnackBar(
-        context: context,
-        message: message,
-        bgColor: isError ? Colors.red : ColorConstants.appColor,
-        textColor: Colors.white,
-      );
+      await sl<CommonFunctions>().showFlushBar(
+          context: context,
+          message: message,
+          bgColor: isError ? ColorConstants.messageErrorBgColor : ColorConstants.messageBgColor,
+          duration: duration);
     }
   }
 

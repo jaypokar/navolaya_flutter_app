@@ -32,15 +32,8 @@ class LoadUsersVerificationsState extends UsersVerificationsState {
   List<Object> get props => [usersData];
 }
 
-class ConfirmLoadingState extends UsersVerificationsState {
-  const ConfirmLoadingState();
-
-  @override
-  List<Object> get props => [];
-}
-
-class DeclineLoadingState extends UsersVerificationsState {
-  const DeclineLoadingState();
+class UpdateVerificationLoadingState extends UsersVerificationsState {
+  const UpdateVerificationLoadingState();
 
   @override
   List<Object> get props => [];

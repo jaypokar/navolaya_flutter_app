@@ -11,6 +11,7 @@ import 'package:navolaya_flutter/resources/value_key_resources.dart';
 import '../../../injection_container.dart';
 import '../../../resources/image_resources.dart';
 import '../../../util/common_functions.dart';
+import '../../cubit/socketConnectionCubit/socket_connection_cubit.dart';
 import 'widget/mobile_number_widget.dart';
 import 'widget/password_widget.dart';
 import 'widget/verify_mobile_number_widget.dart';
@@ -42,12 +43,12 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         if (state is AuthErrorState) {
           showMessage(true, state.message);
         } else if (state is ValidatePhoneState) {
-          showMessage(false, state.validatePhoneData.message!);
+          //showMessage(false, state.validatePhoneData.message!);
           _isUserRegistered = state.validatePhoneData.data!.isUserAccountVerified == 1;
-          context.read<MobileVerificationCubit>().changeNumber(_mobileNumber);
+          context.read<MobileVerificationCubit>().changeNumber('$_countryCode-$_mobileNumber');
           _controller.jumpToPage(_isUserRegistered ? 2 : 1);
         } else if (state is VerifyOtpState) {
-          showMessage(false, state.verifyOtpData.message!);
+          //showMessage(false, state.verifyOtpData.message!);
           _isUserRegistered
               ? _controller.jumpToPage(2)
               : Navigator.of(context).pushReplacementNamed(RouteGenerator.registrationPage,
@@ -56,9 +57,10 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                       ValueKeyResources.countryCodeKey: _countryCode
                     });
         } else if (state is SendOtpState) {
-          showMessage(false, state.sendOtpData.message!);
+          //showMessage(false, state.sendOtpData.message!);
         } else if (state is LoginState) {
           Navigator.of(context).pushReplacementNamed(RouteGenerator.dashBoardPage);
+          context.read<SocketConnectionCubit>().init();
         }
       },
       child: Scaffold(
@@ -71,8 +73,8 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
-                image: const DecorationImage(
-                    image: AssetImage(ImageResources.imgBg), fit: BoxFit.cover),
+                /*image: const DecorationImage(
+                    image: AssetImage(ImageResources.imgBg), fit: BoxFit.cover),*/
               ),
               child: const Padding(
                 padding: EdgeInsets.symmetric(
@@ -169,12 +171,10 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   }
 
   void showMessage(bool isError, String message) {
-    sl<CommonFunctions>().showSnackBar(
-      context: context,
-      message: message,
-      bgColor: isError ? Colors.red : ColorConstants.appColor,
-      textColor: Colors.white,
-    );
+    sl<CommonFunctions>().showFlushBar(
+        context: context,
+        message: message,
+        bgColor: isError ? ColorConstants.messageErrorBgColor : ColorConstants.messageBgColor);
   }
 
   @override

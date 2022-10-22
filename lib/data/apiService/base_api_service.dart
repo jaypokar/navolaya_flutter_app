@@ -13,4 +13,6 @@ abstract class BaseAPIService {
       required ApiType apiType});
 
   Future<void> initiateLogoutProcess();
+
+  Future<String> getJWTToken();
 }

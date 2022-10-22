@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:navolaya_flutter/core/logger.dart';
 import 'package:navolaya_flutter/data/model/masters_model.dart';
 
 import '../../resources/color_constants.dart';
@@ -67,6 +68,7 @@ class _GroupDropDownWidgetState<T> extends State<GroupDropDownWidget<T>> {
     widget.value = newValue;
     if (widget.onValueSelect != null) {
       widget.onValueSelect!(newValue);
+      logger.i('the value selected in group dropdown : $newValue');
     }
     setState(() {});
   }
@@ -76,7 +78,7 @@ class _GroupDropDownWidgetState<T> extends State<GroupDropDownWidget<T>> {
     bool isWidgetEnabled = true;
     if (value is Qualifications) {
       isWidgetEnabled = !value.isSeparator!;
-      title = value.title!;
+      title = value.shortName!;
     } else if (value is Occupations) {
       isWidgetEnabled = !value.isSeparator!;
       title = value.title!;

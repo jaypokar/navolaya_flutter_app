@@ -1,12 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:navolaya_flutter/core/logger.dart';
 import 'package:navolaya_flutter/data/model/users_model.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/loading_widget.dart';
+import 'package:navolaya_flutter/presentation/bloc/createChatBloc/create_chat_bloc.dart';
 import 'package:navolaya_flutter/presentation/bloc/userConnectionsBloc/user_connections_bloc.dart';
 import 'package:navolaya_flutter/presentation/cubit/blockUsersCubit/block_users_cubit.dart';
+import 'package:navolaya_flutter/presentation/cubit/reportUsersCubit/report_users_cubit.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
+import '../../../../data/sessionManager/session_manager.dart';
+import '../../../../injection_container.dart';
 import '../../../../resources/color_constants.dart';
 import '../../../basicWidget/custom_button.dart';
 import '../../../basicWidget/text_field_widget.dart';
@@ -15,7 +19,7 @@ enum ConnectionType { connect, pending, respond }
 
 enum ConnectionRespondType { accept, cancel, none }
 
-enum UserMoreOptionType { block, unFriend, cancel }
+enum UserMoreOptionType { report, block, unFriend, cancel }
 
 class UserConnectMessageAndOptionWidget extends StatefulWidget {
   final UserDataModel user;
@@ -29,11 +33,20 @@ class UserConnectMessageAndOptionWidget extends StatefulWidget {
 
 class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAndOptionWidget> {
   String _connectOrPending = '';
+  bool showMessageView = true;
+  bool _isJnvStatusVerified = true;
 
   @override
   void initState() {
     super.initState();
     checkRequestStatus();
+    checkShowMessageButton();
+    _isJnvStatusVerified = sl<SessionManager>().getUserDetails()!.data!.jnvVerificationStatus! == 1;
+  }
+
+  void checkShowMessageButton() {
+    showMessageView = widget.user.displaySettings!.sendMessage! == 'all' ||
+        (widget.user.displaySettings!.sendMessage! == 'my_connections' && widget.user.isConnected!);
   }
 
   void checkRequestStatus() {
@@ -48,170 +61,213 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
       }
     }
     if (widget.user.isRequestReceived != null) {
-      if (widget.user.isRequestReceived!) {
-        _connectOrPending = StringResources.respond;
+      if (widget.user.isRequestReceived! && !widget.user.isConnected!) {
+        _connectOrPending = StringResources.accept;
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        BlocBuilder<UserConnectionsBloc, UserConnectionsState>(
-          buildWhen: (_, state) {
-            if (state is GetConnectionsState) {
-              return false;
-            }
-            return true;
-          },
-          builder: (_, state) {
-            if (state is UserConnectionLoadingState) {
-              return const LoadingWidget();
-            }
-            if (state is CreateConnectionsState) {
-              _connectOrPending = StringResources.pending;
-            } else if (state is UpdateConnectionsState) {
-              _connectOrPending = state.isRequestAccepted ? '' : StringResources.connect;
-            } else if (state is RemoveConnectionsState) {
-              _connectOrPending = StringResources.connect;
-            }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: BlocBuilder<UserConnectionsBloc, UserConnectionsState>(
+        buildWhen: (_, state) {
+          if (state is GetConnectionsState || state is UserConnectionLoadingState) {
+            return false;
+          }
+          return true;
+        },
+        builder: (_, state) {
+          if (state is CreateConnectionsState) {
+            _connectOrPending = StringResources.pending;
+          } else if (state is UpdateConnectionsState) {
+            _connectOrPending = state.isRequestAccepted ? '' : StringResources.connect;
+            showMessageView = widget.user.displaySettings!.sendMessage! == 'all' ||
+                (widget.user.displaySettings!.sendMessage! == 'my_connections' &&
+                    state.isRequestAccepted);
+          } else if (state is RemoveConnectionsState) {
+            _connectOrPending = StringResources.connect;
+          }
 
-            return manageConnectButton();
-          },
-        ),
-        const SizedBox(width: 10),
-        Expanded(
+          return Row(
+            children: [
+              manageConnectButton(),
+              messageButton(),
+              const SizedBox(width: 10),
+              InkWell(
+                onTap: _isJnvStatusVerified ? () => showMoreOptionsBottomSheet() : null,
+                child: Container(
+                    height: 42,
+                    width: 42,
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.more_horiz,
+                      color: _isJnvStatusVerified ? Colors.black : ColorConstants.messageBgColor,
+                    )),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget messageButton() {
+    return BlocBuilder<CreateChatBloc, CreateChatState>(
+      builder: (_, state) {
+        return Expanded(
           child: OutlinedButton(
-            onPressed: () {},
+            onPressed: (!showMessageView && !_isJnvStatusVerified)
+                ? null
+                : () => context.read<CreateChatBloc>().add(
+                      InitiateChatEvent(userID: widget.user.id!),
+                    ),
             style: OutlinedButton.styleFrom(
+              minimumSize: const Size.fromHeight(42),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0),
               ),
-              side: const BorderSide(
+              side: BorderSide(
                 width: 1.0,
-                color: ColorConstants.appColor,
+                color: state == const CreateChatLoadingState()
+                    ? ColorConstants.messageBgColor
+                    : (showMessageView && _isJnvStatusVerified)
+                        ? ColorConstants.appColor
+                        : ColorConstants.greyColor,
               ),
             ),
-            child: const Text(
-              StringResources.message,
+            child: Text(
+              state == const CreateChatLoadingState()
+                  ? StringResources.loading
+                  : StringResources.message.toUpperCase(),
+              textAlign: TextAlign.center,
               style: TextStyle(
-                  color: ColorConstants.appColor, fontWeight: FontWeight.bold, fontSize: 12),
+                  color: state == const CreateChatLoadingState()
+                      ? ColorConstants.messageBgColor
+                      : (showMessageView && _isJnvStatusVerified)
+                          ? ColorConstants.appColor
+                          : ColorConstants.greyColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16),
             ),
           ),
-        ),
-        const SizedBox(width: 10),
-        InkWell(
-          onTap: () => showMoreOptionsBottomSheet(),
-          child: Container(
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.3),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.more_horiz)),
-        ),
-      ],
+        );
+      },
     );
   }
 
   Widget manageConnectButton() {
-    /*if (connectionStatus.isNotEmpty) {
-      connectOrPending = connectionStatus;
-    }*/
     logger.i('the connection status is :$_connectOrPending');
     if (_connectOrPending == StringResources.connect ||
-        _connectOrPending == StringResources.respond) {
-      return Expanded(
-        child: ElevatedButton(
-          onPressed: () {
-            if (_connectOrPending == StringResources.connect) {
-              context
-                  .read<UserConnectionsBloc>()
-                  .add(CreateConnectionsEvent(userID: widget.user.id!));
-            } else if (_connectOrPending == StringResources.respond) {
-              showAcceptOrRejectBottomSheet();
-            }
-          },
-          style: OutlinedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            side: const BorderSide(width: 1.0, color: ColorConstants.appColor),
-          ),
-          child: Text(
-            _connectOrPending,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
-          ),
-        ),
-      );
-    } else if (_connectOrPending == StringResources.pending) {
-      return Expanded(
-        child: OutlinedButton(
-          onPressed: () {
-            //showAcceptOrRejectBottomSheet();
-          },
-          style: OutlinedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            side: const BorderSide(
-              width: 1.0,
-              color: ColorConstants.greyColor,
-            ),
-          ),
-          child: Text(
-            _connectOrPending,
-            style: const TextStyle(
-              color: ColorConstants.greyColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-          ),
-        ),
-      );
+        _connectOrPending == StringResources.accept) {
+      return connectOrAcceptButton();
+    } else if (_connectOrPending == StringResources.pending || _connectOrPending == '') {
+      return pendingOrConnectedButton();
     }
-
     return const SizedBox.shrink();
   }
 
-  void showAcceptOrRejectBottomSheet() async {
-    ConnectionRespondType respondType = await showModalBottomSheet(
-        constraints: BoxConstraints.loose(
-          Size(
-            MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height * 0.23,
-          ),
-        ),
-        isScrollControlled: false,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
-          ),
-        ),
-        context: context,
-        builder: (_) {
-          return const ConnectionResponseWidget();
-        });
+  Widget connectOrAcceptButton() {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(right: 10),
+        child: BlocBuilder<UserConnectionsBloc, UserConnectionsState>(
+          builder: (_, state) {
+            logger.i('the state is $state');
 
-    if (!mounted) return;
-    if (respondType != ConnectionRespondType.none) {
-      context.read<UserConnectionsBloc>().add(UpdateConnectionRequestEvent(
-          userID: widget.user.id!,
-          acceptOrCancel: respondType != ConnectionRespondType.accept ? 'accept' : 'cancel',
-          isRequestAccepted: respondType == ConnectionRespondType.accept));
-    }
+            return ElevatedButton(
+              onPressed: _isJnvStatusVerified
+                  ? () {
+                      logger.i('the connection status is :$_connectOrPending');
+                      if (_connectOrPending == StringResources.connect) {
+                        context
+                            .read<UserConnectionsBloc>()
+                            .add(CreateConnectionsEvent(userID: widget.user.id!));
+                      } else if (_connectOrPending == StringResources.accept) {
+                        context.read<UserConnectionsBloc>().add(UpdateConnectionRequestEvent(
+                            userID: widget.user.id!,
+                            acceptOrCancel: 'accept',
+                            isRequestAccepted: true));
+                      }
+                    }
+                  : null,
+              style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(42),
+                  onPrimary: Colors.white,
+                  primary: state == const UserConnectionLoadingState()
+                      ? ColorConstants.messageBgColor
+                      : ColorConstants.appColor,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+              child: Text(
+                state == const UserConnectionLoadingState()
+                    ? StringResources.loading
+                    : _connectOrPending.toUpperCase(),
+                textAlign: TextAlign.center,
+                style:
+                    const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget pendingOrConnectedButton() {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(right: 10),
+        child: BlocBuilder<UserConnectionsBloc, UserConnectionsState>(
+          builder: (_, state) {
+            String title = '';
+            Color color;
+            if (state is UserConnectionLoadingState) {
+              title = StringResources.loading;
+              color = ColorConstants.messageBgColor;
+            } else if (_connectOrPending.isEmpty) {
+              title = StringResources.connected;
+              color = ColorConstants.appColor.withOpacity(0.4);
+            } else {
+              title = StringResources.pending;
+              color = ColorConstants.greyColor;
+            }
+
+            return OutlinedButton(
+              onPressed: () {},
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size.fromHeight(42),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                side: BorderSide(
+                  width: 1.0,
+                  color: color,
+                ),
+              ),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   void showMoreOptionsBottomSheet() async {
-    UserMoreOptionType respondType = await showModalBottomSheet(
-        constraints: BoxConstraints.loose(
-          Size(
-            MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height * (_connectOrPending.isEmpty ? 0.33 : 0.20),
-          ),
-        ),
+    UserMoreOptionType? respondType = await showModalBottomSheet(
+        isDismissible: true,
         isScrollControlled: false,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -223,18 +279,26 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
         builder: (_) {
           return UserMoreOptionsWidget(
             isConnected: _connectOrPending.isEmpty,
+            connectionStatus: _connectOrPending,
           );
         });
 
     if (!mounted) return;
-    if (respondType == UserMoreOptionType.unFriend) {
-      context.read<UserConnectionsBloc>().add(RemoveConnectionEvent(userID: widget.user.id!));
-    } else if (respondType == UserMoreOptionType.block) {
-      showBlockUserDialog(context);
+    if (respondType != null) {
+      if (respondType == UserMoreOptionType.unFriend) {
+        context.read<UserConnectionsBloc>().add(RemoveConnectionEvent(userID: widget.user.id!));
+      } else if (respondType == UserMoreOptionType.cancel) {
+        context.read<UserConnectionsBloc>().add(UpdateConnectionRequestEvent(
+            userID: widget.user.id!, acceptOrCancel: 'cancel', isRequestAccepted: false));
+      } else if (respondType == UserMoreOptionType.block) {
+        showBlockUserDialog();
+      } else if (respondType == UserMoreOptionType.report) {
+        showReportUserDialog();
+      }
     }
   }
 
-  void showBlockUserDialog(BuildContext buildContext) async {
+  void showBlockUserDialog() async {
     if (!mounted) return;
     final blocUserCubit = context.read<BlockUsersCubit>();
     showDialog(
@@ -252,76 +316,95 @@ class _UserConnectMessageAndOptionWidgetState extends State<UserConnectMessageAn
       },
     );
   }
-}
 
-class ConnectionResponseWidget extends StatelessWidget {
-  const ConnectionResponseWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 20,
-        ),
-        ListTile(
-          horizontalTitleGap: 20,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 18),
-          leading: const Icon(
-            Icons.person_add_rounded,
-            size: 30,
-            color: ColorConstants.appColor,
+  void showReportUserDialog() async {
+    if (!mounted) return;
+    final reportUserCubit = context.read<ReportUsersCubit>();
+    showDialog(
+      context: context,
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      builder: (BuildContext context) {
+        return BlocProvider<ReportUsersCubit>.value(
+          value: reportUserCubit,
+          child: ReportUserDialogWidget(
+            userID: widget.user.id!,
           ),
-          title: const Text(
-            StringResources.accept,
-            style: TextStyle(color: Colors.black, fontSize: 14),
-          ),
-          onTap: () {
-            Navigator.of(context).pop(ConnectionRespondType.accept);
-          },
-        ),
-        const Divider(),
-        ListTile(
-          horizontalTitleGap: 20,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-          leading: const Icon(
-            Icons.person_remove,
-            size: 30,
-            color: Colors.orange,
-          ),
-          title: const Text(
-            StringResources.cancel,
-            style: TextStyle(color: Colors.black, fontSize: 14),
-          ),
-          onTap: () {
-            Navigator.of(context).pop(ConnectionRespondType.cancel);
-          },
-        ),
-        const SizedBox(height: 10),
-      ],
+        );
+      },
     );
   }
 }
 
 class UserMoreOptionsWidget extends StatelessWidget {
   final bool isConnected;
+  final String connectionStatus;
 
-  const UserMoreOptionsWidget({required this.isConnected, Key? key}) : super(key: key);
+  const UserMoreOptionsWidget({required this.isConnected, this.connectionStatus = '', Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String connectionRespondTitle = '';
+    if (connectionStatus == StringResources.accept || connectionStatus == StringResources.pending) {
+      connectionRespondTitle = StringResources.cancelRequest;
+    } else if (connectionStatus == '') {
+      connectionRespondTitle = StringResources.unFriend;
+    }
+
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
+        if (connectionRespondTitle.isNotEmpty) ...[
+          ListTile(
+            horizontalTitleGap: 0,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+            leading: const Icon(
+              Icons.cancel,
+              size: 30,
+              color: ColorConstants.messageErrorBgColor,
+            ),
+            title: Text(
+              connectionRespondTitle,
+              style: const TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            onTap: () {
+              Navigator.of(context).pop((connectionStatus == StringResources.accept ||
+                      connectionStatus == StringResources.pending)
+                  ? UserMoreOptionType.cancel
+                  : UserMoreOptionType.unFriend);
+            },
+          ),
+          const Divider(),
+        ],
         ListTile(
-          horizontalTitleGap: 20,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+          horizontalTitleGap: 0,
+          contentPadding: const EdgeInsets.only(left: 18, bottom: 0),
+          leading: const Icon(
+            Icons.report,
+            size: 30,
+            color: ColorConstants.messageErrorBgColor,
+          ),
+          title: const Text(
+            StringResources.reportUser,
+            style: TextStyle(color: Colors.black, fontSize: 16),
+          ),
+          onTap: () {
+            Navigator.of(context).pop(UserMoreOptionType.report);
+          },
+        ),
+        const Divider(),
+        ListTile(
+          horizontalTitleGap: 0,
+          contentPadding: const EdgeInsets.only(left: 18, bottom: 10),
           leading: const Icon(
             Icons.person_off,
             size: 30,
-            color: ColorConstants.red,
+            color: ColorConstants.messageErrorBgColor,
           ),
           title: const Text(
             StringResources.blockUser,
@@ -331,29 +414,9 @@ class UserMoreOptionsWidget extends StatelessWidget {
             Navigator.of(context).pop(UserMoreOptionType.block);
           },
         ),
-        if (isConnected) ...[
-          const Divider(),
-          ListTile(
-            horizontalTitleGap: 20,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-            leading: const Icon(
-              Icons.person_remove,
-              size: 30,
-              color: Colors.orange,
-            ),
-            title: const Text(
-              StringResources.unFriend,
-              style: TextStyle(color: Colors.black, fontSize: 16),
-            ),
-            onTap: () {
-              Navigator.of(context).pop(UserMoreOptionType.unFriend);
-            },
-          ),
-        ],
-        ButtonWidget(
-            buttonText: StringResources.cancel,
-            padding: 20,
-            onPressButton: () => Navigator.of(context).pop(UserMoreOptionType.cancel))
+        const SizedBox(
+          height: 10,
+        ),
       ],
     );
   }
@@ -370,22 +433,37 @@ class BlockUserDialogWidget extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.30,
+        height: 390,
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const Text(
+                StringResources.blockUserTitle,
+                style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                StringResources.blockUserDescription,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: ColorConstants.textColor2,
+                  fontSize: 13,
+                ),
+              ),
               const SizedBox(
                 height: 10,
               ),
               TextFieldWidget(
                 controller: reasonController,
                 hint: StringResources.reasonToBlock,
-                textInputType: TextInputType.text,
+                textInputType: TextInputType.multiline,
                 max: 1000,
-                maxLines: 5,
+                maxLines: 3,
               ),
               const SizedBox(
                 height: 10,
@@ -400,11 +478,90 @@ class BlockUserDialogWidget extends StatelessWidget {
                       return ButtonWidget(
                           buttonText: StringResources.blockUser.toUpperCase(),
                           padding: 0,
+                          color: ColorConstants.messageErrorBgColor,
                           onPressButton: () {
                             if (reasonController.text.isEmpty) {
                               return;
                             }
                             context.read<BlockUsersCubit>().blockUser(
+                                  userID: userID,
+                                  reason: reasonController.text,
+                                );
+                          });
+                    },
+                  );
+                },
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ReportUserDialogWidget extends StatelessWidget {
+  final String userID;
+
+  const ReportUserDialogWidget({required this.userID, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController reasonController = TextEditingController();
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      child: SizedBox(
+        height: 390,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                StringResources.reasonUserTitle,
+                style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                StringResources.reportUserDescription,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: ColorConstants.textColor2,
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextFieldWidget(
+                controller: reasonController,
+                hint: StringResources.reasonToReport,
+                textInputType: TextInputType.multiline,
+                max: 1000,
+                maxLines: 3,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Builder(
+                builder: (BuildContext parentContext) {
+                  return BlocBuilder<ReportUsersCubit, ReportUsersState>(
+                    builder: (_, state) {
+                      if (state is ReportUserLoadingState) {
+                        return const LoadingWidget();
+                      }
+                      return ButtonWidget(
+                          buttonText: StringResources.reportUser.toUpperCase(),
+                          padding: 0,
+                          color: ColorConstants.messageErrorBgColor,
+                          onPressButton: () {
+                            if (reasonController.text.isEmpty) {
+                              return;
+                            }
+                            context.read<ReportUsersCubit>().reportUser(
                                   userID: userID,
                                   reason: reasonController.text,
                                 );

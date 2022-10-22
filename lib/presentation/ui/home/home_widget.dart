@@ -37,20 +37,23 @@ class _HomeWidgetState extends State<HomeWidget> with AutomaticKeepAliveClientMi
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Column(
-      children: [
-        const UserTabsWidget(),
-        Expanded(
-          child: BlocBuilder<HomeTabsNotifierCubit, int>(
-            builder: (_, pos) {
-              return PageStorage(
-                bucket: _bucket,
-                child: _widgetOptions[pos],
-              );
-            },
-          ),
-        )
-      ],
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          const UserTabsWidget(),
+          Expanded(
+            child: BlocBuilder<HomeTabsNotifierCubit, int>(
+              builder: (_, pos) {
+                return PageStorage(
+                  bucket: _bucket,
+                  child: _widgetOptions[pos],
+                );
+              },
+            ),
+          )
+        ],
+      ),
     );
   }
 

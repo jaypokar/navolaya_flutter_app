@@ -14,9 +14,8 @@ class UsersInitial extends RecentUsersState {
 class LoadingUsersState extends RecentUsersState {
   final List<UserDataModel> oldUsers;
   final bool isFirstFetch;
-  final bool isFinalData;
 
-  const LoadingUsersState(this.oldUsers, {this.isFirstFetch = false, this.isFinalData = false});
+  const LoadingUsersState(this.oldUsers, {this.isFirstFetch = false});
 
   @override
   List<Object> get props => [oldUsers, isFirstFetch];

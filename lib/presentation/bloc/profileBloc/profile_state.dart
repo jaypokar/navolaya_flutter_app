@@ -117,6 +117,33 @@ class DeleteProfileLoadingState extends ProfileState {
   List<Object?> get props => [];
 }
 
+class UpdateJNVVerificationState extends ProfileState {
+  final UpdateJnvVerificationModel response;
+
+  const UpdateJNVVerificationState({required this.response});
+
+  @override
+  List<Object?> get props => [response];
+}
+
+class UpdateProfileImageOrAllowNotificationState extends ProfileState {
+  final ProfileImageOrAllowNotificationModel response;
+
+  const UpdateProfileImageOrAllowNotificationState({required this.response});
+
+  @override
+  List<Object?> get props => [response];
+}
+
+class GetProfileState extends ProfileState {
+  final LoginAndBasicInfoModel loginAndBasicInfo;
+
+  const GetProfileState({required this.loginAndBasicInfo});
+
+  @override
+  List<Object?> get props => [loginAndBasicInfo];
+}
+
 class ProfileLoadingState extends ProfileState {
   const ProfileLoadingState();
 
@@ -132,3 +159,4 @@ class ProfileErrorState extends ProfileState {
   @override
   List<Object?> get props => [message];
 }
+

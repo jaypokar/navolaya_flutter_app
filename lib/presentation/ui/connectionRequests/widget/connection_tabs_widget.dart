@@ -19,6 +19,13 @@ class _ConnectionTabsWidgetState extends State<ConnectionTabsWidget>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      /*if(_tabController.index == 0){
+        context.read<ConnectionReceivedCubit>().resetData();
+      }else {
+
+      }*/
+    });
   }
 
   @override

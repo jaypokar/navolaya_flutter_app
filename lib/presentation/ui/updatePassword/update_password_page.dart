@@ -12,7 +12,8 @@ import '../../../util/common_functions.dart';
 import '../../basicWidget/custom_button.dart';
 import '../../basicWidget/loading_widget.dart';
 import '../../bloc/authBloc/auth_bloc.dart';
-import '../../cubit/otpTimerCubit/otptimer_cubit.dart';
+import '../../cubit/keyboardVisibilityCubit/key_board_visibility_cubit.dart';
+import '../../cubit/otpTimerCubit/otpTimer_cubit.dart';
 import '../registration/widget/password_input_widget.dart';
 
 class UpdatePasswordPage extends StatefulWidget {
@@ -36,6 +37,12 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
   final TextEditingController _textController4 = TextEditingController();
   final TextEditingController _newPassController = TextEditingController();
 
+  final FocusNode textController1FocusNode = FocusNode();
+  final FocusNode textController2FocusNode = FocusNode();
+  final FocusNode textController3FocusNode = FocusNode();
+  final FocusNode textController4FocusNode = FocusNode();
+
+  final ScrollController _scrollController = ScrollController();
   late final String _updatePasswordSubTitleHint;
   final int timerMaxSeconds = 120;
   int currentSeconds = 0;
@@ -50,36 +57,45 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
     super.initState();
     _updatePasswordSubTitleHint = StringResources.updatePasswordSubTitle
         .replaceAll("{number}", '${widget.countryCode}-${widget.mobileNumber}');
+    reSendOTP();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _screenHeight = MediaQuery.of(context).size.height * 0.10;
-    reSendOTP();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthErrorState) {
-          sl<CommonFunctions>().showSnackBar(
-              context: context,
-              message: state.message,
-              bgColor: Colors.red,
-              textColor: Colors.white);
-        } else if (state is UpdateForgotPasswordState) {
-          if (mounted) {
-            sl<CommonFunctions>().showSnackBar(
-                context: context,
-                message: state.updateForgotPasswordData.message!,
-                bgColor: Colors.green,
-                textColor: Colors.white);
-          }
-          Navigator.of(context).pop();
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) async {
+            if (state is AuthErrorState) {
+              sl<CommonFunctions>().showFlushBar(
+                  context: context,
+                  message: state.message,
+                  bgColor: ColorConstants.messageErrorBgColor);
+            } else if (state is UpdateForgotPasswordState) {
+              if (mounted) {
+                await sl<CommonFunctions>().showFlushBar(
+                  context: context,
+                  message: state.updateForgotPasswordData.message!,
+                  duration: 1,
+                );
+              }
+              if (!mounted) return;
+              Navigator.of(context).pop();
+            }
+          },
+        ),
+        BlocListener<KeyBoardVisibilityCubit, bool>(
+            listener: (_, isVisible) => sl<CommonFunctions>().animateWidgetWhenKeyboardOpens(
+                  scrollController: _scrollController,
+                  isKeyBoardVisible: isVisible,
+                ))
+      ],
       child: Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
@@ -91,6 +107,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
         body: Padding(
           padding: const EdgeInsets.all(10),
           child: SingleChildScrollView(
+            controller: _scrollController,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -118,7 +135,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                   height: 10,
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Text(
                     _updatePasswordSubTitleHint,
                     textAlign: TextAlign.center,
@@ -135,18 +152,29 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    OtpWidget(textEditingController: _textController1),
-                    OtpWidget(textEditingController: _textController2),
-                    OtpWidget(textEditingController: _textController3),
-                    OtpWidget(textEditingController: _textController4),
+                    OtpWidget(
+                        textEditingController: _textController1,
+                        textControllerFocusNode: textController1FocusNode),
+                    OtpWidget(
+                        textEditingController: _textController2,
+                        textControllerFocusNode: textController2FocusNode),
+                    OtpWidget(
+                        textEditingController: _textController3,
+                        textControllerFocusNode: textController3FocusNode),
+                    OtpWidget(
+                        textEditingController: _textController4,
+                        textControllerFocusNode: textController4FocusNode),
                   ],
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                PasswordInputWidget(
-                  textEditingController: _newPassController,
-                  showOrHidePassword: true,
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: PasswordInputWidget(
+                    textEditingController: _newPassController,
+                    showOrHidePassword: true,
+                  ),
                 ),
                 const SizedBox(
                   height: 10,
@@ -189,24 +217,22 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
         return const LoadingWidget();
       } else {
         return ButtonWidget(
-          buttonText: StringResources.verify.toUpperCase(),
+          buttonText: StringResources.submit.toUpperCase(),
           onPressButton: () {
             if (_textController1.text.isEmpty ||
                 _textController2.text.isEmpty ||
                 _textController3.text.isEmpty ||
                 _textController4.text.isEmpty) {
-              sl<CommonFunctions>().showSnackBar(
+              sl<CommonFunctions>().showFlushBar(
                   context: context,
                   message: StringResources.pleaseEnterOTP,
-                  bgColor: Colors.orange,
-                  textColor: Colors.white);
+                  bgColor: ColorConstants.messageErrorBgColor);
               return;
             } else if (_newPassController.text.isEmpty) {
-              sl<CommonFunctions>().showSnackBar(
+              sl<CommonFunctions>().showFlushBar(
                   context: context,
                   message: StringResources.pleaseEnterPassword,
-                  bgColor: Colors.orange,
-                  textColor: Colors.white);
+                  bgColor: ColorConstants.messageErrorBgColor);
             } else {
               updatePassword();
             }
@@ -242,18 +268,16 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
         _textController2.text.isEmpty ||
         _textController3.text.isEmpty ||
         _textController4.text.isEmpty) {
-      sl<CommonFunctions>().showSnackBar(
+      sl<CommonFunctions>().showFlushBar(
           context: context,
           message: StringResources.pleaseEnterOTP,
-          bgColor: Colors.orange,
-          textColor: Colors.white);
+          bgColor: ColorConstants.messageErrorBgColor);
       return;
     } else if (_newPassController.text.isEmpty) {
-      sl<CommonFunctions>().showSnackBar(
+      sl<CommonFunctions>().showFlushBar(
           context: context,
           message: StringResources.pleaseEnterPassword,
-          bgColor: Colors.orange,
-          textColor: Colors.white);
+          bgColor: ColorConstants.messageErrorBgColor);
     } else {
       final otp = _textController1.text +
           _textController2.text +

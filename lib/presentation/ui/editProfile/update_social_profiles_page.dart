@@ -35,11 +35,13 @@ class _UpdateSocialProfilesPageState extends State<UpdateSocialProfilesPage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<ProfileBloc, ProfileState>(
-      listener: (_, state) {
+      listener: (_, state) async {
         if (state is ProfileErrorState) {
           showMessage(isError: true, message: state.message);
         } else if (state is LoadUpdateSocialMediaLinksState) {
-          showMessage(isError: false, message: state.socialMediaProfiles.message!);
+          await showMessage(isError: false, message: state.socialMediaProfiles.message!);
+          if (!mounted) return;
+          Navigator.of(context).pop();
         } else if (state is LoadPersonalDetailsState) {
           loadSocialLinks(state.loginAndBasicInfoData);
         }
@@ -54,53 +56,68 @@ class _UpdateSocialProfilesPageState extends State<UpdateSocialProfilesPage> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              TextFieldWidget(
-                controller: _fbController,
-                hint: StringResources.facebook,
-                textInputType: TextInputType.text,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFieldWidget(
-                controller: _instaController,
-                hint: StringResources.instagram,
-                textInputType: TextInputType.text,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFieldWidget(
-                controller: _linkedInController,
-                hint: StringResources.linkedIn,
-                textInputType: TextInputType.text,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFieldWidget(
-                controller: _youTubeController,
-                hint: StringResources.youTube,
-                textInputType: TextInputType.text,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFieldWidget(
-                controller: _twitterController,
-                hint: StringResources.twitter,
-                textInputType: TextInputType.text,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              getButton()
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFieldWidget(
+                  controller: _fbController,
+                  hint: StringResources.facebook,
+                  textInputType: TextInputType.text,
+                  max: 250,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFieldWidget(
+                  controller: _instaController,
+                  hint: StringResources.instagram,
+                  textInputType: TextInputType.text,
+                  max: 250,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFieldWidget(
+                  controller: _linkedInController,
+                  hint: StringResources.linkedIn,
+                  textInputType: TextInputType.text,
+                  max: 250,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFieldWidget(
+                  controller: _youTubeController,
+                  hint: StringResources.youTube,
+                  textInputType: TextInputType.text,
+                  max: 250,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFieldWidget(
+                  controller: _twitterController,
+                  hint: StringResources.twitter,
+                  textInputType: TextInputType.text,
+                  max: 250,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  StringResources.socialProfileDesc,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(color: ColorConstants.messageErrorBgColor, fontSize: 12),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                getButton()
+              ],
+            ),
           ),
         ),
       ),
@@ -121,6 +138,35 @@ class _UpdateSocialProfilesPageState extends State<UpdateSocialProfilesPage> {
                 _linkedInController.text.isNotEmpty ||
                 _twitterController.text.isNotEmpty ||
                 _youTubeController.text.isNotEmpty) {
+              if (!sl<CommonFunctions>().isValidUrl(_fbController.text) &&
+                  _fbController.text.isNotEmpty) {
+                showMessage(
+                    isError: true, message: '${StringResources.enterValidURL} for facebook');
+                return;
+              } else if (!sl<CommonFunctions>().isValidUrl(_instaController.text) &&
+                  _instaController.text.isNotEmpty &&
+                  !_instaController.text.startsWith('http')) {
+                showMessage(
+                    isError: true, message: '${StringResources.enterValidURL} for instagram');
+                return;
+              } else if (!sl<CommonFunctions>().isValidUrl(_linkedInController.text) &&
+                  _linkedInController.text.isNotEmpty &&
+                  !_linkedInController.text.startsWith('http')) {
+                showMessage(
+                    isError: true, message: '${StringResources.enterValidURL} for linkedin');
+                return;
+              } else if (!sl<CommonFunctions>().isValidUrl(_twitterController.text) &&
+                  _twitterController.text.isNotEmpty &&
+                  !_twitterController.text.startsWith('http')) {
+                showMessage(isError: true, message: '${StringResources.enterValidURL} for twitter');
+                return;
+              } else if (!sl<CommonFunctions>().isValidUrl(_youTubeController.text) &&
+                  _youTubeController.text.isNotEmpty &&
+                  !_youTubeController.text.startsWith('http')) {
+                showMessage(isError: true, message: '${StringResources.enterValidURL} for youtube');
+                return;
+              }
+
               final socialLinks = SocialMediaLinksRequestModel(
                   instagram: _instaController.text,
                   twitter: _twitterController.text,
@@ -147,13 +193,12 @@ class _UpdateSocialProfilesPageState extends State<UpdateSocialProfilesPage> {
     }
   }
 
-  void showMessage({required bool isError, required String message}) {
+  Future<void> showMessage({required bool isError, required String message}) async {
     if (mounted) {
-      sl<CommonFunctions>().showSnackBar(
+      await sl<CommonFunctions>().showFlushBar(
         context: context,
         message: message,
-        bgColor: isError ? Colors.red : ColorConstants.appColor,
-        textColor: Colors.white,
+        bgColor: isError ? ColorConstants.messageErrorBgColor : ColorConstants.messageBgColor,
       );
     }
   }

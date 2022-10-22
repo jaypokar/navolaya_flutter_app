@@ -6,7 +6,7 @@ import '../../resources/color_constants.dart';
 
 // ignore: must_be_immutable
 class DropDownWidget<T> extends StatefulWidget {
-  T? value;
+  final T? value;
   final List<T> list;
   final bool isExpanded;
   final double paddingLeft;
@@ -18,9 +18,10 @@ class DropDownWidget<T> extends StatefulWidget {
   final double textSize;
   final bool showDropDown;
   final Function? onValueSelect;
+  final bool isDropDownEnabled;
 
-  DropDownWidget({
-    this.value,
+  const DropDownWidget({
+    required this.value,
     required this.list,
     this.isExpanded = true,
     this.paddingLeft = 10,
@@ -31,6 +32,7 @@ class DropDownWidget<T> extends StatefulWidget {
     this.height = 50,
     this.textSize = 14,
     this.showDropDown = true,
+    this.isDropDownEnabled = true,
     this.onValueSelect,
     Key? key,
   }) : super(key: key);
@@ -40,6 +42,13 @@ class DropDownWidget<T> extends StatefulWidget {
 }
 
 class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
+  T? _selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedValue = widget.value;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,44 +63,47 @@ class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
       margin: EdgeInsets.all(widget.margin),
       decoration: BoxDecoration(
         border: Border.all(
-          color: ColorConstants.inputBorderColor,
+          color: widget.isDropDownEnabled
+              ? ColorConstants.inputBorderColor
+              : ColorConstants.disabledColor,
           width: 1,
         ),
         borderRadius: BorderRadius.circular(
           5,
         ),
       ),
-      child: DropdownButton<T>(
-        value: widget.value,
-        underline: const SizedBox.shrink(),
-        isDense: true,
-        items: widget.list.map((value) {
-          return DropdownMenuItem<T>(
-            value: value,
-            child: setText(value),
-          );
-        }).toList(),
-        isExpanded: widget.isExpanded,
-        icon: widget.showDropDown
-            ? const Padding(
-                padding: EdgeInsets.only(left: 5),
-                child: Icon(
-                  FontAwesomeIcons.chevronDown,
-                  size: 10,
-                ))
-            : const SizedBox.shrink(),
-        style: TextStyle(
-          fontSize: widget.textSize,
-          color: ColorConstants.textColor3,
-          fontFamily: 'Montserrat',
+      child: IgnorePointer(
+        ignoring: !widget.isDropDownEnabled,
+        child: DropdownButton<T>(
+          value: _selectedValue,
+          underline: const SizedBox.shrink(),
+          isDense: true,
+          items: widget.list.map((value) {
+            return DropdownMenuItem<T>(
+              value: value,
+              child: setText(value),
+            );
+          }).toList(),
+          isExpanded: widget.isExpanded,
+          icon: widget.showDropDown
+              ? const Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Icon(
+                    FontAwesomeIcons.chevronDown,
+                    size: 10,
+                  ))
+              : const SizedBox.shrink(),
+          style: TextStyle(
+              fontSize: widget.textSize,
+              color: widget.isDropDownEnabled ? Colors.black : ColorConstants.disabledColor),
+          onChanged: (newValue) {
+            _selectedValue = newValue;
+            if (widget.onValueSelect != null) {
+              widget.onValueSelect!(newValue);
+            }
+            setState(() {});
+          },
         ),
-        onChanged: (newValue) {
-          widget.value = newValue;
-          if (widget.onValueSelect != null) {
-            widget.onValueSelect!(newValue);
-          }
-          setState(() {});
-        },
       ),
     );
   }
@@ -113,9 +125,7 @@ class _DropDownWidgetState<T> extends State<DropDownWidget<T>> {
     }
 
     return Text(title,
-        style: const TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.w600,
-        ));
+        style: TextStyle(
+            color: widget.isDropDownEnabled ? Colors.black : ColorConstants.disabledColor));
   }
 }

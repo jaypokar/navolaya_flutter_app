@@ -143,11 +143,13 @@ class Data {
 class NotificationDataModel {
   NotificationDataModel({
     String? id,
+    String? title,
     String? message,
     int? isRead,
     String? createdAt,
   }) {
     _id = id;
+    _title = message;
     _message = message;
     _isRead = isRead;
     _createdAt = createdAt;
@@ -155,17 +157,21 @@ class NotificationDataModel {
 
   NotificationDataModel.fromJson(dynamic json) {
     _id = json['_id'];
+    _title = json['title'];
     _message = json['message'];
     _isRead = json['is_read'];
     _createdAt = json['createdAt'];
   }
 
   String? _id;
+  String? _title;
   String? _message;
   int? _isRead;
   String? _createdAt;
 
   String? get id => _id;
+
+  String? get title => _title;
 
   String? get message => _message;
 
@@ -176,6 +182,7 @@ class NotificationDataModel {
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['_id'] = _id;
+    map['title'] = _title;
     map['message'] = _message;
     map['is_read'] = _isRead;
     map['createdAt'] = _createdAt;

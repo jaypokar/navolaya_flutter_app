@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 class BasicInfoRequestModel {
   String countryCode;
@@ -8,8 +7,9 @@ class BasicInfoRequestModel {
   String relationWithJNV;
   String fromYear;
   String toYear;
-  Map<String, dynamic> qualification;
-  Map<String, dynamic> occupation;
+  String qualification;
+  String occupation;
+  String occupationArea;
   String gender;
   String password;
 
@@ -23,6 +23,7 @@ class BasicInfoRequestModel {
       this.toYear,
       this.qualification,
       this.occupation,
+      this.occupationArea,
       this.gender,
       this.password);
 
@@ -35,8 +36,9 @@ class BasicInfoRequestModel {
     map['relation_with_jnv'] = relationWithJNV;
     map['from_year'] = fromYear;
     map['to_year'] = toYear;
-    map['qualification'] = json.encode(qualification);
-    map['occupation'] = json.encode(occupation);
+    map['qualification'] = qualification;
+    map['occupation'] = occupation;
+    map['occupation_area'] = occupationArea;
     map['gender'] = gender;
     map['password'] = password;
     return map;

@@ -7,6 +7,7 @@ import 'package:navolaya_flutter/presentation/ui/editProfile/widget/update_phone
 import 'package:navolaya_flutter/presentation/ui/editProfile/widget/verify_otp_widget.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 
+import '../../../resources/color_constants.dart';
 import '../../../resources/string_resources.dart';
 import '../../cubit/mobileVerificationCubit/mobile_verification_cubit.dart';
 
@@ -21,35 +22,49 @@ class UpdatePhoneOrEmailPage extends StatefulWidget {
 
 class _UpdatePhoneOrEmailPageState extends State<UpdatePhoneOrEmailPage> {
   final PageController _controller = PageController();
-  final ValueNotifier<String> _titleChangeNotifier = ValueNotifier(StringResources.updatePhone);
+  late final ValueNotifier<String> _titleChangeNotifier;
 
   String _countryCode = '';
   String _number = '';
   String _email = '';
 
   @override
+  void initState() {
+    super.initState();
+    _titleChangeNotifier =
+        ValueNotifier(widget.isEmail ? StringResources.updateEmail : StringResources.updatePhone);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<ProfileBloc, ProfileState>(
-      listener: (_, state) {
+      listener: (_, state) async {
         if (state is ProfileErrorState) {
-          sl<CommonFunctions>().showSnackBar(
+          sl<CommonFunctions>().showFlushBar(
             context: context,
             message: state.message,
-            bgColor: Colors.red,
-            textColor: Colors.white,
+            bgColor: ColorConstants.messageErrorBgColor,
           );
         } else if (state is LoadUpdateOTPState) {
-          sl<CommonFunctions>().showSnackBar(
+          /*  sl<CommonFunctions>().showFlushBar(
             context: context,
             message: state.updateSendOtpResponse.message!,
-            bgColor: Colors.green,
-            textColor: Colors.white,
-          );
+          );*/
           _controller.jumpToPage(1);
           _titleChangeNotifier.value = StringResources.verificationPageTitle;
-          if (!widget.isEmail) {
-            context.read<MobileVerificationCubit>().changeNumber(_countryCode + _number);
-          }
+          context
+              .read<MobileVerificationCubit>()
+              .changeNumber(widget.isEmail ? _email : '$_countryCode-$_number');
+        } else if (state is LoadUpdateEmailState) {
+          await sl<CommonFunctions>().showFlushBar(
+              context: context, message: state.updateEmailResponse.message!, duration: 1);
+          if (!mounted) return;
+          Navigator.of(context).pop();
+        } else if (state is LoadUpdatePhoneState) {
+          await sl<CommonFunctions>().showFlushBar(
+              context: context, message: state.updatePhoneResponse.message!, duration: 1);
+          if (!mounted) return;
+          Navigator.of(context).pop();
         }
       },
       child: Scaffold(
@@ -67,7 +82,7 @@ class _UpdatePhoneOrEmailPageState extends State<UpdatePhoneOrEmailPage> {
         ),
         body: PageView(
           controller: _controller,
-          /*physics: const NeverScrollableScrollPhysics(),*/
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             if (widget.isEmail) ...[
               UpdateEmailWidget(sendOTPViaEmail: sendOTPViaEmail),

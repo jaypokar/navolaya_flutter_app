@@ -18,80 +18,78 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc(this._repository) : super(const AuthInitial()) {
     on<AuthEvent>((event, emit) async {
-      emit(const AuthLoadingState());
-      try {
-        late final AuthState data;
+      if (event is InitiateLogout) {
+        await _repository.logoutAPI();
+      } else {
+        emit(const AuthLoadingState());
+        try {
+          late final AuthState data;
 
-        if (event is InitiateValidatePhoneEvent) {
-          final possibleData = await _repository.validatePhoneAPI(
-            countryCode: event.countryCode,
-            phone: event.phone,
-          );
-          data = possibleData.fold(
-            (l) => AuthErrorState(message: l.error),
-            (r) => ValidatePhoneState(validatePhoneData: r),
-          );
-        } else if (event is InitiateVerifyOtpEvent) {
-          final possibleData = await _repository.verifyOtpAPI(
-            countryCode: event.countryCode,
-            phone: event.phone,
-            otpNumber: event.otpNumber,
-          );
-          data = possibleData.fold(
-            (l) => AuthErrorState(message: l.error),
-            (r) => VerifyOtpState(verifyOtpData: r),
-          );
-        } else if (event is InitiateSendOtpEvent) {
-          final possibleData = await _repository.sendOtpAPI(
-            countryCode: event.countryCode,
-            phone: event.phone,
-            otpFor: event.otpFor,
-          );
-          data = possibleData.fold(
-            (l) => AuthErrorState(message: l.error),
-            (r) => SendOtpState(sendOtpData: r),
-          );
-        } else if (event is InitiateLoginEvent) {
-          final possibleData = await _repository.loginAPI(
-            countryCode: event.countryCode,
-            phone: event.phone,
-            password: event.password,
-          );
-          data = possibleData.fold(
-            (l) => AuthErrorState(message: l.error),
-            (r) => LoginState(loginAndBasicInfoData: r),
-          );
-        } else if (event is InitiateUpdateBasicInfoEvent) {
-          final possibleData = await _repository.updateBasicInfoAPI(
-            basicInfoRequestData: event.basicInfoRequestData,
-          );
-          data = possibleData.fold(
-            (l) => AuthErrorState(message: l.error),
-            (r) => UpdateBasicInfoState(loginAndBasicInfoData: r),
-          );
-        } else if (event is InitiateUpdateForgotPasswordEvent) {
-          final possibleData = await _repository.updateForgotPasswordAPI(
-            countryCode: event.countryCode,
-            phone: event.phone,
-            otpNumber: event.otpNumber,
-            newPassword: event.newPassword,
-          );
-          data = possibleData.fold(
-            (l) => AuthErrorState(message: l.error),
-            (r) => UpdateForgotPasswordState(updateForgotPasswordData: r),
-          );
-        } else if (event is InitiateLogout) {
-          final possibleData = await _repository.logoutAPI();
-          data = possibleData.fold(
-            (l) => AuthErrorState(message: l.error),
-            (r) => const LogoutState(),
-          );
+          if (event is InitiateValidatePhoneEvent) {
+            final possibleData = await _repository.validatePhoneAPI(
+              countryCode: event.countryCode,
+              phone: event.phone,
+            );
+            data = possibleData.fold(
+              (l) => AuthErrorState(message: l.error),
+              (r) => ValidatePhoneState(validatePhoneData: r),
+            );
+          } else if (event is InitiateVerifyOtpEvent) {
+            final possibleData = await _repository.verifyOtpAPI(
+              countryCode: event.countryCode,
+              phone: event.phone,
+              otpNumber: event.otpNumber,
+            );
+            data = possibleData.fold(
+              (l) => AuthErrorState(message: l.error),
+              (r) => VerifyOtpState(verifyOtpData: r),
+            );
+          } else if (event is InitiateSendOtpEvent) {
+            final possibleData = await _repository.sendOtpAPI(
+              countryCode: event.countryCode,
+              phone: event.phone,
+              otpFor: event.otpFor,
+            );
+            data = possibleData.fold(
+              (l) => AuthErrorState(message: l.error),
+              (r) => SendOtpState(sendOtpData: r),
+            );
+          } else if (event is InitiateLoginEvent) {
+            final possibleData = await _repository.loginAPI(
+              countryCode: event.countryCode,
+              phone: event.phone,
+              password: event.password,
+            );
+            data = possibleData.fold(
+              (l) => AuthErrorState(message: l.error),
+              (r) => LoginState(loginAndBasicInfoData: r),
+            );
+          } else if (event is InitiateUpdateBasicInfoEvent) {
+            final possibleData = await _repository.updateBasicInfoAPI(
+              basicInfoRequestData: event.basicInfoRequestData,
+            );
+            data = possibleData.fold(
+              (l) => AuthErrorState(message: l.error),
+              (r) => UpdateBasicInfoState(loginAndBasicInfoData: r),
+            );
+          } else if (event is InitiateUpdateForgotPasswordEvent) {
+            final possibleData = await _repository.updateForgotPasswordAPI(
+              countryCode: event.countryCode,
+              phone: event.phone,
+              otpNumber: event.otpNumber,
+              newPassword: event.newPassword,
+            );
+            data = possibleData.fold(
+              (l) => AuthErrorState(message: l.error),
+              (r) => UpdateForgotPasswordState(updateForgotPasswordData: r),
+            );
+          }
+
+          emit(data);
+        } catch (e) {
+          logger.e(e.toString());
+          emit(AuthErrorState(message: e.toString()));
         }
-
-        emit(data);
-      } catch (e) {
-        logger.e(e.toString());
-        emit(AuthErrorState(message: e.toString()));
       }
     });
   }

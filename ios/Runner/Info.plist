@@ -18,17 +18,24 @@
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleShortVersionString</key>
-        <string>$(FLUTTER_BUILD_NAME)</string>
+        <string>$(MARKETING_VERSION)</string>
         <key>CFBundleSignature</key>
         <string>????</string>
         <key>CFBundleVersion</key>
-        <string>$(FLUTTER_BUILD_NUMBER)</string>
+        <string>$(CURRENT_PROJECT_VERSION)</string>
+        <key>FirebaseAppDelegateProxyEnabled</key>
+        <string>0</string>
+        <key>LSApplicationQueriesSchemes</key>
+        <array>
+            <string>sms</string>
+            <string>tel</string>
+        </array>
         <key>LSRequiresIPhoneOS</key>
         <true />
         <key>NSCameraUsageDescription</key>
-        <string>This app requires access to the camera for uploading user profile picture.</string>
-        <key>NSPhotoLibraryUsageDescription</key>
-        <string>Photo Library Access Warning</string>
+        <string>Navolaya app is community app and we are asking users to upload their profile image and any pdf documents to verify their identity.
+            Uploading images is not a mandatory features in the app.
+        </string>
         <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
         <string>This app needs access your location to fetch near by users to you while filtering the user from filter section and Near by Users
             Tab.
@@ -41,6 +48,15 @@
         <string>This app needs access your location to fetch near by users to you while filtering the user from filter section and Near by Users
             Tab.
         </string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>Navolaya app is community app and we are asking users to upload their profile image and any pdf documents to verify their identity.
+            Uploading images is not a mandatory features in the app.
+        </string>
+        <key>UIBackgroundModes</key>
+        <array>
+            <string>fetch</string>
+            <string>remote-notification</string>
+        </array>
         <key>UILaunchStoryboardName</key>
         <string>LaunchScreen</string>
         <key>UIMainStoryboardFile</key>
@@ -48,8 +64,6 @@
         <key>UISupportedInterfaceOrientations</key>
         <array>
             <string>UIInterfaceOrientationPortrait</string>
-            <string>UIInterfaceOrientationLandscapeLeft</string>
-            <string>UIInterfaceOrientationLandscapeRight</string>
         </array>
         <key>UISupportedInterfaceOrientations~ipad</key>
         <array>

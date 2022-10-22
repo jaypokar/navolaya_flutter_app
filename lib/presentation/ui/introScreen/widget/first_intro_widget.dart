@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:navolaya_flutter/resources/color_constants.dart';
-import 'package:navolaya_flutter/resources/image_resources.dart';
-import 'package:navolaya_flutter/resources/string_resources.dart';
 
 class FirstIntroWidget extends StatelessWidget {
-  const FirstIntroWidget({Key? key}) : super(key: key);
+  final String image;
+  final String title;
+  final String desc;
+
+  const FirstIntroWidget({required this.image, required this.title, required this.desc, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,33 +17,33 @@ class FirstIntroWidget extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Image.asset(
-            ImageResources.firstIntroImg,
-            height: MediaQuery.of(context).size.height * 0.30,
+            image,
+            height: MediaQuery.of(context).size.height * 0.40,
             width: MediaQuery.of(context).size.width * 0.80,
-            fit: BoxFit.cover,
+            /*fit: BoxFit.cover,*/
           ),
         ),
         const SizedBox(
           height: 20,
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            StringResources.introScreenTitleOne,
+            title,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 22, fontWeight: FontWeight.w800, color: ColorConstants.textColor1),
           ),
         ),
         const SizedBox(
           height: 20,
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 50),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 50),
           child: Text(
-            StringResources.introScreenSubTitleOne,
+            desc,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: ColorConstants.textColor2,

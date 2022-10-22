@@ -2,16 +2,18 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:navolaya_flutter/core/logger.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/country_flag_and_code_rich_text_widget.dart';
 import 'package:navolaya_flutter/presentation/bloc/authBloc/auth_bloc.dart';
-import 'package:navolaya_flutter/presentation/cubit/keyboardVisibiltyCubit/key_board_visibility_cubit.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
+import 'package:phone_number/phone_number.dart';
 
 import '../../../../injection_container.dart';
 import '../../../../resources/color_constants.dart';
 import '../../../basicWidget/custom_button.dart';
 import '../../../basicWidget/loading_widget.dart';
+import '../../../cubit/keyboardVisibilityCubit/key_board_visibility_cubit.dart';
 
 class MobileNumberWidget extends StatefulWidget {
   final PageController pageController;
@@ -47,15 +49,10 @@ class _MobileNumberWidgetState extends State<MobileNumberWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<KeyBoardVisibilityCubit, bool>(
-      listener: (_, isVisible) {
-        _scrollController.animateTo(
-          isVisible
-              ? _scrollController.position.pixels + 80
-              : _scrollController.position.pixels - 80,
-          curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 300),
-        );
-      },
+      listener: (_, isVisible) => sl<CommonFunctions>().animateWidgetWhenKeyboardOpens(
+        scrollController: _scrollController,
+        isKeyBoardVisible: isVisible,
+      ),
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
@@ -137,7 +134,7 @@ class _MobileNumberWidgetState extends State<MobileNumberWidget> {
                         style: const TextStyle(
                           fontSize: 14,
                         ),
-                        maxLength: 10,
+                        maxLength: 15,
                         textInputAction: TextInputAction.done,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(RegExp('[0-9]')),
@@ -188,6 +185,7 @@ class _MobileNumberWidgetState extends State<MobileNumberWidget> {
             labelText: StringResources.searchByCountry,
             hintText: 'Start typing to search',
             prefixIcon: const Icon(Icons.search),
+            contentPadding: EdgeInsets.zero,
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: const Color(0xFF8C98A8).withOpacity(0.2),
@@ -209,17 +207,35 @@ class _MobileNumberWidgetState extends State<MobileNumberWidget> {
       } else {
         return ButtonWidget(
           buttonText: StringResources.continueText.toUpperCase(),
-          onPressButton: () {
+          onPressButton: () async {
             if (_textController.text.isEmpty) {
-              sl<CommonFunctions>().showSnackBar(
-                  context: context,
-                  message: StringResources.phoneNumberHint,
-                  bgColor: Colors.orange,
-                  textColor: Colors.white);
+              sl<CommonFunctions>().showFlushBar(
+                context: context,
+                message: StringResources.phoneNumberHint,
+                bgColor: ColorConstants.messageErrorBgColor,
+              );
+              return;
+            } else if (_textController.text.length < 7) {
+              sl<CommonFunctions>().showFlushBar(
+                context: context,
+                message: StringResources.pleaseEnterValidPhoneNumber,
+                bgColor: ColorConstants.messageErrorBgColor,
+              );
               return;
             }
-            FocusManager.instance.primaryFocus?.unfocus();
-            widget.validatePhone(_countryCode, _textController.text);
+            bool isValid = await PhoneNumberUtil().validate('$_countryCode${_textController.text}');
+            logger.i('phone number is valid: $isValid');
+            if (isValid) {
+              FocusManager.instance.primaryFocus?.unfocus();
+              widget.validatePhone(_countryCode, _textController.text);
+            } else {
+              sl<CommonFunctions>().showFlushBar(
+                context: context,
+                message: StringResources.phoneNumberIsInvalid,
+                bgColor: ColorConstants.messageErrorBgColor,
+              );
+              return;
+            }
           },
         );
       }

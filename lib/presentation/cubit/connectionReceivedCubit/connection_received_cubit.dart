@@ -15,17 +15,23 @@ class ConnectionReceivedCubit extends Cubit<ConnectionReceivedState> {
 
   ConnectionReceivedCubit(this._repository) : super(const ConnectionReceivedInitial());
 
-  void loadUsers({bool reset = false}) async {
-    if (state is LoadingConnectionReceivedState) return;
+  void loadUsers({bool reset = false, bool update = false}) async {
+    if (reset || update) {
+      _page = 1;
+    }
+    if (state is LoadingConnectionReceivedState || _isListFetchingComplete && !reset && !update)
+      return;
 
     final currentState = state;
 
     List<UserDataModel> oldPosts = [];
-    if (currentState is LoadConnectionReceivedState && !reset) {
+    if (currentState is LoadConnectionReceivedState && _page != 1) {
       oldPosts = currentState.usersData;
     }
 
-    emit(LoadingConnectionReceivedState(oldPosts, isFirstFetch: _page == 1));
+    if (!update) {
+      emit(LoadingConnectionReceivedState(oldPosts, isFirstFetch: _page == 1));
+    }
 
     final possibleData = await _repository.getConnectionsAPI('received', page: _page);
 
@@ -39,8 +45,12 @@ class ConnectionReceivedCubit extends Cubit<ConnectionReceivedState> {
     }
 
     _page++;
-    final List<UserDataModel> users =
-        reset ? [] : (state as LoadingConnectionReceivedState).oldUsers;
+    late final List<UserDataModel> users;
+    if (state is LoadingConnectionReceivedState) {
+      users = (state as LoadingConnectionReceivedState).oldUsers;
+    } else {
+      users = [];
+    }
     users.addAll(possibleData.getRight()!.data!.docs!);
     emit(LoadConnectionReceivedState(usersData: users));
   }
@@ -53,10 +63,8 @@ class ConnectionReceivedCubit extends Cubit<ConnectionReceivedState> {
       emit(ErrorLoadingConnectionReceivedState(message: possibleData.getLeft()!.error));
       return;
     }
-    emit(UpdateReceivedConnectionState(
-        createOrUpdateConnectionRequestResponse: possibleData.getRight()!));
-    _page = 1;
-    loadUsers(reset: true);
+
+    loadUsers(update: true);
   }
 
   bool get isListFetchingComplete => _isListFetchingComplete;

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 import '../../../injection_container.dart';
+import '../../../resources/color_constants.dart';
 import '../../../resources/string_resources.dart';
 import '../../../util/common_functions.dart';
 import '../../cubit/helpAndInfoCubit/help_and_info_cubit.dart';
@@ -17,11 +18,10 @@ class PrivacyPolicyPage extends StatelessWidget {
     return BlocListener<HelpAndInfoCubit, HelpAndInfoState>(
       listener: (_, state) {
         if (state is HelpAndInfoErrorState) {
-          sl<CommonFunctions>().showSnackBar(
+          sl<CommonFunctions>().showFlushBar(
             context: context,
             message: state.error,
-            bgColor: Colors.red,
-            textColor: Colors.white,
+            bgColor: ColorConstants.messageErrorBgColor,
           );
         }
       },
@@ -36,7 +36,7 @@ class PrivacyPolicyPage extends StatelessWidget {
         body: BlocBuilder<HelpAndInfoCubit, HelpAndInfoState>(
           builder: (_, state) {
             if (state is LoadPrivacyPolicyState) {
-              return Html(data: state.privacyPolicy);
+              return SingleChildScrollView(child: Html(data: state.privacyPolicy));
             }
             return const SizedBox.shrink();
           },

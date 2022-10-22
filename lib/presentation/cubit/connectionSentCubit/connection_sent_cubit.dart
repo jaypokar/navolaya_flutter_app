@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/core/either_extension_function.dart';
 
 import '../../../data/model/create_or_update_connection_request_model.dart';
@@ -15,17 +15,22 @@ class ConnectionSentCubit extends Cubit<ConnectionSentState> {
 
   ConnectionSentCubit(this._repository) : super(const ConnectionSentInitial());
 
-  void loadUsers({bool reset = false}) async {
-    if (state is LoadingConnectionSentState) return;
+  void loadUsers({bool reset = false, bool update = false}) async {
+    if (reset || update) {
+      _page = 1;
+    }
+    if (state is LoadingConnectionSentState || _isListFetchingComplete && !reset && !update) return;
 
     final currentState = state;
 
     List<UserDataModel> oldPosts = [];
-    if (currentState is LoadConnectionSentState && !reset) {
+    if (currentState is LoadConnectionSentState && _page != 1) {
       oldPosts = currentState.usersData;
     }
 
-    emit(LoadingConnectionSentState(oldPosts, isFirstFetch: _page == 1));
+    if (!update) {
+      emit(LoadingConnectionSentState(oldPosts, isFirstFetch: _page == 1));
+    }
 
     final possibleData = await _repository.getConnectionsAPI('sent', page: _page);
 
@@ -39,7 +44,12 @@ class ConnectionSentCubit extends Cubit<ConnectionSentState> {
     }
 
     _page++;
-    final List<UserDataModel> users = reset ? [] : (state as LoadingConnectionSentState).oldUsers;
+    late final List<UserDataModel> users;
+    if (state is LoadingConnectionSentState) {
+      users = (state as LoadingConnectionSentState).oldUsers;
+    } else {
+      users = [];
+    }
     users.addAll(possibleData.getRight()!.data!.docs!);
     emit(LoadConnectionSentState(usersData: users));
   }
@@ -52,10 +62,17 @@ class ConnectionSentCubit extends Cubit<ConnectionSentState> {
       emit(ErrorLoadingConnectionSentState(message: possibleData.getLeft()!.error));
       return;
     }
-    emit(UpdateSentConnectionState(
-        createOrUpdateConnectionRequestResponse: possibleData.getRight()!));
-    _page = 1;
-    loadUsers(reset: true);
+    loadUsers(update: true);
+  }
+
+  void updateUsersAfterBlockingOrCancelSenRequest(UserDataModel user) {
+    final currentState = state;
+    if (currentState is LoadConnectionSentState) {
+      final users = currentState.usersData;
+      users.remove(user);
+      emit(LoadingConnectionSentState(users, isFirstFetch: false));
+      emit(LoadConnectionSentState(usersData: users));
+    }
   }
 
   bool get isListFetchingComplete => _isListFetchingComplete;

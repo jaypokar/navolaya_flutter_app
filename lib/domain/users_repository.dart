@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:navolaya_flutter/data/model/filter_data_request_model.dart';
+import 'package:navolaya_flutter/data/model/update_user_viewed_model.dart';
 import 'package:navolaya_flutter/data/model/users_model.dart';
 
 import '../core/failure.dart';
@@ -19,6 +20,8 @@ abstract class UsersRepository {
 
   Future<Either<Failure, UpdateUserVerificationModel>> updateUsersVerificationsAPI(
       {required String action, required String userID});
+
+  Future<Either<Failure, UpdateUserViewedModel>> updateUsersViewedAPI({required String userID});
 
   Map<String, dynamic> fetchCachedFilterData();
 

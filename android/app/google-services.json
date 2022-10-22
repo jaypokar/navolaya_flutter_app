@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "31458043035",
+    "project_id": "navolaya",
+    "storage_bucket": "navolaya.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31458043035:android:9d1c507c1dd0f380f2d23e",
+        "android_client_info": {
+          "package_name": "com.navolaya"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "31458043035-2asel76k6k1k6avsktg7iqoujisff3h5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-Xcr75AY8h5-xknc28eM6-98QLwvDIzs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "31458043035-2asel76k6k1k6avsktg7iqoujisff3h5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

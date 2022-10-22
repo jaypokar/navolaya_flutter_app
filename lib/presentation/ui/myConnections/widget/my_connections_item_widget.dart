@@ -1,6 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:navolaya_flutter/data/model/users_model.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/user_circular_picture_widget.dart';
 import 'package:navolaya_flutter/presentation/cubit/connectionReceivedCubit/connection_received_cubit.dart';
@@ -9,13 +9,17 @@ import 'package:navolaya_flutter/presentation/cubit/myConnectionsCubit/my_connec
 import 'package:navolaya_flutter/resources/image_resources.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
+import '../../../../core/logger.dart';
 import '../../../../core/route_generator.dart';
+import '../../../../injection_container.dart';
 import '../../../../resources/color_constants.dart';
+import '../../../../resources/value_key_resources.dart';
+import '../../../../util/common_functions.dart';
 import '../../../basicWidget/loading_widget.dart';
 
 enum ConnectionsType { myConnections, connectionsReceived, connectionsSent }
 
-class MyConnectionsItemWidget extends StatelessWidget {
+class MyConnectionsItemWidget extends StatefulWidget {
   final ConnectionsType connectionsType;
   final UserDataModel user;
 
@@ -23,18 +27,29 @@ class MyConnectionsItemWidget extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    String image = ImageResources.userAvatarImg;
-    if (user.displaySettings != null) {
-      if (user.displaySettings!.userImage == 'all' ||
-          (user.isConnected! && user.displaySettings!.userImage == 'my_connections')) {
-        image = user.userImage != null ? user.userImage!.filepath! : ImageResources.userAvatarImg;
-      }
-    }
+  State<MyConnectionsItemWidget> createState() => _MyConnectionsItemWidgetState();
+}
 
+class _MyConnectionsItemWidgetState extends State<MyConnectionsItemWidget> {
+  String image = ImageResources.userAvatarImg;
+  late UserDataModel user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = widget.user;
+
+    if ((user.displaySettings!.userImage! == 'my_connections' && user.isConnected!) ||
+        user.displaySettings!.userImage == 'all') {
+      image = user.userImage != null ? user.userImage!.thumburl! : ImageResources.userAvatarImg;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(RouteGenerator.userDetailPage, arguments: user);
+        callUserDetail();
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -47,43 +62,54 @@ class MyConnectionsItemWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
+                  AutoSizeText(
                     user.fullName!,
+                    softWrap: true,
+                    maxLines: 1,
+                    minFontSize: 15,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.black, fontSize: 14),
+                        fontWeight: FontWeight.bold, color: Colors.black, fontSize: 15),
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 2),
                   Row(
                     children: [
-                      const Icon(
-                        FontAwesomeIcons.school,
+                      Image.asset(
+                        ImageResources.schoolIcon,
                         color: ColorConstants.textColor3,
-                        size: 14,
+                        height: 13,
+                        width: 13,
                       ),
-                      const SizedBox(width: 10),
-                      Text(
-                        user.school!.city!,
-                        style: const TextStyle(
-                          color: ColorConstants.textColor3,
-                          fontSize: 12,
+                      const SizedBox(width: 5),
+                      Expanded(
+                        child: AutoSizeText(
+                          'JNV ${user.school!.district!}',
+                          softWrap: true,
+                          maxLines: 1,
+                          minFontSize: 13,
+                          style: const TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            color: ColorConstants.textColor3,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 2),
                   Row(
                     children: [
-                      const Icon(
-                        FontAwesomeIcons.link,
+                      Image.asset(
+                        ImageResources.jnvRelationIcon,
                         color: ColorConstants.textColor3,
-                        size: 14,
+                        height: 13,
+                        width: 13,
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 5),
                       Text(
                         user.relationWithJnv!,
                         style: const TextStyle(
                           color: ColorConstants.textColor3,
-                          fontSize: 12,
+                          fontSize: 13,
                         ),
                       ),
                     ],
@@ -92,59 +118,98 @@ class MyConnectionsItemWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 15),
-            actionWidget(context),
+            actionWidget(),
           ],
         ),
       ),
     );
   }
 
-  Widget actionWidget(BuildContext context) {
+  void callUserDetail() async {
+    final userDetail = await Navigator.of(context).pushNamed(RouteGenerator.userDetailPage,
+        arguments: {
+          ValueKeyResources.userDataKey: user,
+          ValueKeyResources.nearByDistanceKey: false
+        }) as Map<String, dynamic>?;
+
+    if (userDetail != null) {
+      if (userDetail.containsKey(ValueKeyResources.userDataKey)) {
+        user = userDetail[ValueKeyResources.userDataKey];
+        logger.i('the data is ${user.isConnected}');
+
+        if (!mounted) return;
+        if (widget.connectionsType == ConnectionsType.connectionsSent &&
+            (!user.isRequestSent! || userDetail[ValueKeyResources.userIsBlocked])) {
+          context.read<ConnectionSentCubit>().loadUsers(update: true);
+        } else if (widget.connectionsType == ConnectionsType.connectionsReceived &&
+            (!user.isRequestReceived! || userDetail[ValueKeyResources.userIsBlocked])) {
+          context.read<ConnectionReceivedCubit>().loadUsers(update: true);
+        } else if (widget.connectionsType == ConnectionsType.myConnections &&
+            (!user.isConnected! || userDetail[ValueKeyResources.userIsBlocked])) {
+          context.read<MyConnectionsCubit>().loadUsers(update: true);
+        }
+      }
+    }
+  }
+
+  Widget actionWidget() {
     bool isLoading = false;
-    if (connectionsType == ConnectionsType.myConnections) {
+    if (widget.connectionsType == ConnectionsType.myConnections) {
       return InkWell(
-        onTap: () {
-          isLoading = true;
-          context.read<MyConnectionsCubit>().removeMyConnection(user.id!);
+        onTap: () async {
+          final result = await sl<CommonFunctions>().showConfirmationDialog(
+            context: context,
+            title: StringResources.removeConnection,
+            message: StringResources.connectionRemoveDescription,
+            buttonPositiveText: StringResources.confirm,
+            buttonNegativeText: StringResources.cancel,
+          );
+          if (!mounted) return;
+          if (result) {
+            isLoading = true;
+            context.read<MyConnectionsCubit>().removeMyConnection(user.id!);
+          }
         },
         child: BlocBuilder<MyConnectionsCubit, MyConnectionsState>(
           builder: (_, state) {
             if (state is RemoveLoadingState && isLoading) {
-              return const LoadingWidget();
+              return const FittedBox(
+                  alignment: Alignment.centerRight,
+                  child: LoadingWidget(
+                    size: 30,
+                    margin: 0,
+                  ));
             }
+
             isLoading = false;
-            return Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: ColorConstants.red),
-                  borderRadius: BorderRadius.circular(5)),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: const Text(
-                StringResources.remove,
-                style: TextStyle(color: ColorConstants.red, fontSize: 12),
-              ),
+            return Image.asset(
+              ImageResources.cancelIcon,
+              height: 35,
+              width: 35,
             );
           },
         ),
       );
-    } else if (connectionsType == ConnectionsType.connectionsReceived) {
+    } else if (widget.connectionsType == ConnectionsType.connectionsReceived) {
       return BlocBuilder<ConnectionReceivedCubit, ConnectionReceivedState>(
         builder: (_, state) {
           if (state is UpdateConnectionLoadingState && isLoading) {
-            return const LoadingWidget();
+            return const LoadingWidget(
+              size: 35,
+            );
           }
-
           isLoading = false;
           return Row(
             children: [
               InkWell(
                 onTap: () {
                   isLoading = true;
-                  context.read<ConnectionReceivedCubit>().updateConnection('cancel', user.id!);
+                  context.read<ConnectionReceivedCubit>().updateConnection('accept', user.id!);
                 },
                 child: Image.asset(
-                  ImageResources.cancelIcon,
-                  height: 25,
-                  width: 25,
+                  ImageResources.acceptIcon,
+                  height: 35,
+                  width: 35,
                 ),
               ),
               const SizedBox(
@@ -153,12 +218,12 @@ class MyConnectionsItemWidget extends StatelessWidget {
               InkWell(
                 onTap: () {
                   isLoading = true;
-                  context.read<ConnectionReceivedCubit>().updateConnection('accept', user.id!);
+                  context.read<ConnectionReceivedCubit>().updateConnection('cancel', user.id!);
                 },
                 child: Image.asset(
-                  ImageResources.acceptIcon,
-                  height: 25,
-                  width: 25,
+                  ImageResources.cancelIcon,
+                  height: 35,
+                  width: 35,
                 ),
               ),
             ],
@@ -169,7 +234,12 @@ class MyConnectionsItemWidget extends StatelessWidget {
       return BlocBuilder<ConnectionSentCubit, ConnectionSentState>(
         builder: (_, state) {
           if (state is UpdateConnectionSentLoadingState && isLoading) {
-            return const LoadingWidget();
+            return const FittedBox(
+                alignment: Alignment.centerRight,
+                child: LoadingWidget(
+                  size: 30,
+                  margin: 0,
+                ));
           }
           isLoading = false;
           return InkWell(
@@ -177,15 +247,10 @@ class MyConnectionsItemWidget extends StatelessWidget {
               isLoading = true;
               context.read<ConnectionSentCubit>().updateConnection(user.id!);
             },
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: ColorConstants.red),
-                  borderRadius: BorderRadius.circular(5)),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: const Text(
-                StringResources.cancel,
-                style: TextStyle(color: ColorConstants.red, fontSize: 12),
-              ),
+            child: Image.asset(
+              ImageResources.cancelIcon,
+              height: 35,
+              width: 35,
             ),
           );
         },

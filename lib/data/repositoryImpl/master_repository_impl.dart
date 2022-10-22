@@ -22,7 +22,7 @@ class MasterRepositoryImpl implements MasterRepository {
         url: ConfigFile.allMastersAPIUrl,
         queryParameters: {},
         isTokenNeeded: false,
-        apiType: ApiType.get);
+        apiType: ApiType.GET);
 
     if (possibleData.isLeft()) {
       return left(Failure(possibleData.getLeft()!.error));
@@ -39,7 +39,7 @@ class MasterRepositoryImpl implements MasterRepository {
         url: ConfigFile.allContentsAPIUrl,
         queryParameters: {},
         isTokenNeeded: false,
-        apiType: ApiType.get);
+        apiType: ApiType.GET);
 
     if (possibleData.isLeft()) {
       return left(Failure(possibleData.getLeft()!.error));

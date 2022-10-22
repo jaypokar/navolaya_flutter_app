@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:navolaya_flutter/presentation/basicWidget/image_loader_widget.dart';
 
 import '../../../../data/model/users_model.dart';
-import '../../../../injection_container.dart';
-import '../../../basicWidget/loading_widget.dart';
+import '../../../../resources/image_resources.dart';
+import '../../../../resources/string_resources.dart';
+import '../../../basicWidget/no_data_widget.dart';
 import '../../../cubit/connectionSentCubit/connection_sent_cubit.dart';
 import '../../myConnections/widget/my_connections_item_widget.dart';
 
@@ -31,15 +33,15 @@ class _ConnectionSentRequestWidgetState extends State<ConnectionSentRequestWidge
     _scrollController.addListener(() {
       if (_scrollController.position.atEdge) {
         if (_scrollController.position.pixels != 0 &&
-            !sl<ConnectionSentCubit>().isListFetchingComplete) {
-          loadUsers();
+            !context.read<ConnectionSentCubit>().isListFetchingComplete) {
+          context.read<ConnectionSentCubit>().loadUsers();
         }
       }
     });
   }
 
   void loadUsers() {
-    context.read<ConnectionSentCubit>().loadUsers();
+    context.read<ConnectionSentCubit>().loadUsers(reset: true);
   }
 
   @override
@@ -54,7 +56,7 @@ class _ConnectionSentRequestWidgetState extends State<ConnectionSentRequestWidge
       },
       builder: (_, state) {
         if (state is LoadingConnectionSentState && state.isFirstFetch) {
-          return const LoadingWidget();
+          return const ImageLoaderWidget();
         }
         List<UserDataModel> users = [];
         bool isLoading = false;
@@ -64,6 +66,14 @@ class _ConnectionSentRequestWidgetState extends State<ConnectionSentRequestWidge
         } else if (state is LoadConnectionSentState) {
           users = state.usersData;
         }
+
+        if (users.isEmpty && !isLoading) {
+          return const NoDataWidget(
+            message: StringResources.noDataAvailableMessage,
+            icon: ImageResources.connectionsIcon,
+          );
+        }
+
         return ListView.separated(
           itemCount: users.length + (isLoading ? 1 : 0),
           controller: _scrollController,
@@ -71,17 +81,31 @@ class _ConnectionSentRequestWidgetState extends State<ConnectionSentRequestWidge
           shrinkWrap: true,
           itemBuilder: (ctx, index) {
             if (index < users.length) {
-              return MyConnectionsItemWidget(
-                key: ValueKey(users[index].id!),
-                connectionsType: ConnectionsType.connectionsSent,
-                user: users[index],
-              );
+              return index == users.length - 1
+                  ? Column(
+                      children: [
+                        MyConnectionsItemWidget(
+                          key: ValueKey(users[index].id!),
+                          connectionsType: ConnectionsType.connectionsSent,
+                          user: users[index],
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Divider(height: 1, color: Colors.grey),
+                        )
+                      ],
+                    )
+                  : MyConnectionsItemWidget(
+                      key: ValueKey(users[index].id!),
+                      connectionsType: ConnectionsType.connectionsSent,
+                      user: users[index],
+                    );
             } else {
               Timer(const Duration(milliseconds: 30), () {
                 _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
               });
 
-              return const LoadingWidget();
+              return const ImageLoaderWidget();
             }
           },
           separatorBuilder: (context, index) {

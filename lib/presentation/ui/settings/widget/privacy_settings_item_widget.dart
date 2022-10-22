@@ -28,6 +28,12 @@ class _PrivacySettingsItemWidgetState extends State<PrivacySettingsItemWidget> {
     }
   });
 
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProfileBloc>().updatePrivacySettingsMap(widget.title, widget.value);
+  }
+
   //String _value = StringResources.all;
 
   @override
@@ -51,7 +57,7 @@ class _PrivacySettingsItemWidgetState extends State<PrivacySettingsItemWidget> {
           paddingBottom: 2,
           paddingTop: 2,
           margin: 5,
-          height: 30,
+          height: 25,
           textSize: 12,
           showDropDown: true,
           onValueSelect: (String value) {

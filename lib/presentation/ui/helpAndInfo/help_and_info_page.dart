@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:navolaya_flutter/core/logger.dart';
+import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/data/model/app_contact_details_model.dart';
 import 'package:navolaya_flutter/presentation/cubit/helpAndInfoCubit/help_and_info_cubit.dart';
 import 'package:navolaya_flutter/presentation/ui/helpAndInfo/about_us_page.dart';
@@ -13,7 +15,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../../../resources/color_constants.dart';
 import '../../basicWidget/divider_and_space_widget.dart';
 
-enum SocialType { fb, insta, youtube, linkedin }
+enum SocialType { fb, insta, youtube, linkedin, twitter }
 
 class HelpAndInfoPage extends StatelessWidget {
   const HelpAndInfoPage({Key? key}) : super(key: key);
@@ -152,6 +154,29 @@ class HelpAndInfoPage extends StatelessWidget {
                     ),
                   ),
                   const DividerAndSpaceWidget(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, RouteGenerator.supportChatPage);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Text(
+                          StringResources.chatWithSupport,
+                          style: TextStyle(
+                              color: Colors.black, fontSize: 14, fontWeight: FontWeight.w700),
+                        ),
+                        Spacer(),
+                        Icon(
+                          Icons.navigate_next,
+                          color: ColorConstants.navigateIconColor,
+                          size: 28,
+                        )
+                      ],
+                    ),
+                  ),
+                  const DividerAndSpaceWidget(),
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -175,7 +200,7 @@ class HelpAndInfoPage extends StatelessWidget {
                     collapsed: const SizedBox.shrink(),
                     expanded: const ContactUsWidget(),
                   ),*/
-                  const DividerAndSpaceWidget(),
+                  const SizedBox(height: 15),
                 ],
               ),
             )
@@ -195,35 +220,56 @@ class ContactUsWidget extends StatelessWidget {
       buildWhen: (_, state) => state is LoadAppContactDetailsState,
       builder: (_, state) {
         if (state is LoadAppContactDetailsState) {
+          logger.i('the address : ${state.appContactDetails.officialAddress}');
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (state.appContactDetails.officialPhone!.isNotEmpty) ...[
+                const Text(
+                  StringResources.phoneNumbers,
+                  style: TextStyle(color: ColorConstants.appColor, fontSize: 14),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  state.appContactDetails.officialPhone ?? '-',
+                  style: const TextStyle(color: ColorConstants.textColor2, fontSize: 13),
+                ),
+                const SizedBox(height: 15),
+              ],
+              if (state.appContactDetails.officialEmail!.isNotEmpty) ...[
+                const Text(
+                  StringResources.email,
+                  style: TextStyle(color: ColorConstants.appColor, fontSize: 14),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  state.appContactDetails.officialEmail ?? '-',
+                  style: const TextStyle(color: ColorConstants.textColor2, fontSize: 13),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+              ],
+              if (state.appContactDetails.officialAddress!.isNotEmpty) ...[
+                const Text(
+                  StringResources.address,
+                  style: TextStyle(color: ColorConstants.appColor, fontSize: 14),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  state.appContactDetails.officialAddress ?? '-',
+                  style: const TextStyle(color: ColorConstants.textColor2, fontSize: 13),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+              ],
               const Text(
-                StringResources.phoneNumbers,
-                style: TextStyle(color: ColorConstants.appColor, fontSize: 14),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                state.appContactDetails.officialPhone ?? '-',
-                style: const TextStyle(color: ColorConstants.textColor2, fontSize: 13),
-              ),
-              const SizedBox(height: 15),
-              const Text(
-                StringResources.emailAddress,
-                style: TextStyle(color: ColorConstants.appColor, fontSize: 14),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Text(
-                state.appContactDetails.officialEmail ?? '-',
-                style: const TextStyle(color: ColorConstants.textColor2, fontSize: 13),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              const Text(
-                StringResources.socialMedia,
+                StringResources.followUsOn,
                 style: TextStyle(
                   color: ColorConstants.appColor,
                   fontSize: 14,
@@ -235,14 +281,19 @@ class ContactUsWidget extends StatelessWidget {
               Row(
                 children: [
                   manageSocialWidget(state.appContactDetails, SocialType.fb),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 15),
                   manageSocialWidget(state.appContactDetails, SocialType.linkedin),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 15),
                   manageSocialWidget(state.appContactDetails, SocialType.youtube),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 15),
                   manageSocialWidget(state.appContactDetails, SocialType.insta),
+                  const SizedBox(width: 15),
+                  manageSocialWidget(state.appContactDetails, SocialType.twitter),
                 ],
-              )
+              ),
+              const SizedBox(
+                height: 10,
+              ),
             ],
           );
         }
@@ -261,8 +312,8 @@ class ContactUsWidget extends StatelessWidget {
             },
             child: Image.asset(
               ImageResources.fbIcon,
-              height: 24,
-              width: 24,
+              height: 32,
+              width: 32,
             ),
           );
         }
@@ -274,8 +325,8 @@ class ContactUsWidget extends StatelessWidget {
             },
             child: Image.asset(
               ImageResources.instaIcon,
-              height: 24,
-              width: 24,
+              height: 32,
+              width: 32,
             ),
           );
         }
@@ -287,8 +338,8 @@ class ContactUsWidget extends StatelessWidget {
             },
             child: Image.asset(
               ImageResources.linkedinIcon,
-              height: 24,
-              width: 24,
+              height: 32,
+              width: 32,
             ),
           );
         }
@@ -300,8 +351,21 @@ class ContactUsWidget extends StatelessWidget {
             },
             child: Image.asset(
               ImageResources.youtubeIcon,
-              height: 24,
-              width: 24,
+              height: 32,
+              width: 32,
+            ),
+          );
+        }
+      } else if (socialType == SocialType.twitter) {
+        if (details.socialMediaLinks!.twitter!.isNotEmpty) {
+          return InkWell(
+            onTap: () {
+              launchUrlString(details.socialMediaLinks!.twitter.toString());
+            },
+            child: Image.asset(
+              ImageResources.twitterIcon,
+              height: 32,
+              width: 32,
             ),
           );
         }

@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/core/either_extension_function.dart';
 import 'package:navolaya_flutter/data/model/block_user_model.dart';
 import 'package:navolaya_flutter/domain/blocked_users_repository.dart';
@@ -15,17 +15,22 @@ class BlockUsersCubit extends Cubit<BlockUsersState> {
 
   BlockUsersCubit(this._repository) : super(const BlockUsersInitial());
 
-  void loadUsers({bool reset = false}) async {
-    if (state is LoadingBlockedUsersState) return;
+  void loadUsers({bool reset = false, bool update = false}) async {
+    if (reset || update) {
+      _page = 1;
+    }
+    if (state is LoadingBlockedUsersState || _isListFetchingComplete && !reset && update) return;
 
     final currentState = state;
 
     List<UserDataModel> oldPosts = [];
-    if (currentState is LoadBlockUsersState && !reset) {
+    if (currentState is LoadBlockUsersState && _page != 1) {
       oldPosts = currentState.usersData;
     }
 
-    emit(LoadingBlockedUsersState(oldPosts, isFirstFetch: _page == 1));
+    if (!update) {
+      emit(LoadingBlockedUsersState(oldPosts, isFirstFetch: _page == 1));
+    }
 
     final possibleData = await _repository.fetchBlockedUsersAPI(page: _page);
 
@@ -39,7 +44,12 @@ class BlockUsersCubit extends Cubit<BlockUsersState> {
     }
 
     _page++;
-    final List<UserDataModel> users = reset ? [] : (state as LoadingBlockedUsersState).oldUsers;
+    late final List<UserDataModel> users;
+    if (state is LoadingBlockedUsersState) {
+      users = (state as LoadingBlockedUsersState).oldUsers;
+    } else {
+      users = [];
+    }
     users.addAll(possibleData.getRight()!.data!.docs!);
     emit(LoadBlockUsersState(usersData: users));
   }
@@ -63,9 +73,7 @@ class BlockUsersCubit extends Cubit<BlockUsersState> {
       emit(ErrorLoadingBlockUsersState(message: possibleData.getLeft()!.error));
       return;
     }
-    emit(UnBlockUserState(response: possibleData.getRight()!));
-    _page = 1;
-    loadUsers(reset: true);
+    loadUsers(update: true);
   }
 
   bool get isListFetchingComplete => _isListFetchingComplete;

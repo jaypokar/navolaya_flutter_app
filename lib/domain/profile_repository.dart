@@ -4,9 +4,11 @@ import 'package:navolaya_flutter/data/model/basic_info_request_model.dart';
 import 'package:navolaya_flutter/data/model/change_password_model.dart';
 import 'package:navolaya_flutter/data/model/delete_profile_model.dart';
 import 'package:navolaya_flutter/data/model/login_and_basic_info_model.dart';
+import 'package:navolaya_flutter/data/model/profile_image_or_allow_notification_model.dart';
 import 'package:navolaya_flutter/data/model/social_media_links_request_model.dart';
 import 'package:navolaya_flutter/data/model/social_media_profiles_model.dart';
 import 'package:navolaya_flutter/data/model/update_email_model.dart';
+import 'package:navolaya_flutter/data/model/update_jnv_verification_model.dart';
 import 'package:navolaya_flutter/data/model/update_phone_model.dart';
 import 'package:navolaya_flutter/data/model/update_privacy_settings_model.dart' as privacy_settings;
 import 'package:navolaya_flutter/data/model/update_send_otp_model.dart';
@@ -15,7 +17,11 @@ import '../data/model/update_additional_info_model.dart';
 
 abstract class ProfileRepository {
   Future<Either<Failure, UpdateAdditionalInfoModel>> updateAdditionalInfoAPI(
-      {required String house, required String aboutMe, required String birthDate});
+      {required String house,
+      required String aboutMe,
+      required String birthDate,
+      required String currentAddress,
+      required String permanentAddress});
 
   Future<Either<Failure, LoginAndBasicInfoModel>> fetchPersonalDetails();
 
@@ -43,4 +49,12 @@ abstract class ProfileRepository {
   Either<Failure, DisplaySettings> fetchPrivacySettings();
 
   Future<Either<Failure, DeleteProfileModel>> deleteProfile();
+
+  Future<Either<Failure, UpdateJnvVerificationModel>> updateJnvVerificationAPI(
+      Map<String, dynamic> reqData);
+
+  Future<Either<Failure, ProfileImageOrAllowNotificationModel>>
+      updateProfileImageOrAllowNotificationAPI(Map<String, dynamic> reqData);
+
+  Future<Either<Failure, LoginAndBasicInfoModel>> getProfileAPI();
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:navolaya_flutter/data/model/users_model.dart';
 import 'package:navolaya_flutter/presentation/ui/user/widget/user_social_media_item_widget.dart';
+import 'package:navolaya_flutter/resources/string_resources.dart';
 
 class UserSocialMediaWidget extends StatefulWidget {
   final UserDataModel user;
@@ -75,19 +76,32 @@ class _UserSocialMediaWidgetState extends State<UserSocialMediaWidget> {
   Widget build(BuildContext context) {
     return data.isEmpty
         ? const SizedBox.shrink()
-        : GridView.builder(
-            itemCount: data.length,
-            physics: const ClampingScrollPhysics(),
-            shrinkWrap: true,
-            padding: const EdgeInsets.all(20),
-            itemBuilder: (ctx, index) => UserSocialMedialItemWidget(
-              data: data[index],
-            ),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 3.5,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 10,
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  StringResources.socialMedia,
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 21),
+                ),
+                const SizedBox(height: 10),
+                GridView.builder(
+                  itemCount: data.length,
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  itemBuilder: (ctx, index) => UserSocialMedialItemWidget(
+                    data: data[index],
+                  ),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 3.2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                )
+              ],
             ),
           );
   }

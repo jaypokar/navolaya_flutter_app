@@ -6,13 +6,27 @@ class ButtonWidget extends StatelessWidget {
   final Function onPressButton;
   final bool isWrap;
   final double padding;
+  final double buttonPaddingLeft;
+  final double buttonPaddingRight;
+  final double buttonPaddingTop;
+  final double buttonPaddingBottom;
   final Color color;
+  final double textSize;
+  final double height;
+  final bool isEnabled;
 
   const ButtonWidget({
     required this.buttonText,
     required this.onPressButton,
     this.isWrap = false,
     this.padding = 10,
+    this.textSize = 16,
+    this.isEnabled = true,
+    this.buttonPaddingLeft = 0,
+    this.buttonPaddingRight = 0,
+    this.buttonPaddingTop = 0,
+    this.buttonPaddingBottom = 0,
+    this.height = 40,
     this.color = ColorConstants.appColor,
     Key? key,
   }) : super(key: key);
@@ -29,21 +43,28 @@ class ButtonWidget extends StatelessWidget {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
               )
             : ElevatedButton.styleFrom(
-          minimumSize: const Size.fromHeight(40),
+                minimumSize: Size.fromHeight(height),
                 onPrimary: Colors.white,
                 primary: color,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
               ),
-        onPressed: () {
-          onPressButton();
-        },
+        onPressed: isEnabled
+            ? () {
+                onPressButton();
+              }
+            : null,
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.only(
+            left: buttonPaddingLeft,
+            right: buttonPaddingRight,
+            top: buttonPaddingTop,
+            bottom: buttonPaddingTop,
+          ),
           child: Text(
             buttonText,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: textSize,
               fontWeight: FontWeight.bold,
             ),
           ),

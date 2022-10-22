@@ -25,6 +25,15 @@ class UpdateConnectionRequestEvent extends UserConnectionsEvent {
   List<Object?> get props => [userID, acceptOrCancel, isRequestAccepted];
 }
 
+class UpdateUserViewedEvent extends UserConnectionsEvent {
+  final String userID;
+
+  const UpdateUserViewedEvent({required this.userID});
+
+  @override
+  List<Object?> get props => [userID];
+}
+
 class RemoveConnectionEvent extends UserConnectionsEvent {
   final String userID;
 

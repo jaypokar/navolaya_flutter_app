@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/data/model/notification_model.dart';
+import 'package:navolaya_flutter/presentation/basicWidget/image_loader_widget.dart';
 import 'package:navolaya_flutter/presentation/cubit/notificationsCubit/notifications_cubit.dart';
 
-import '../../../injection_container.dart';
-import '../../basicWidget/loading_widget.dart';
+import '../../../resources/image_resources.dart';
+import '../../../resources/string_resources.dart';
+import '../../basicWidget/no_data_widget.dart';
 import 'widget/notifications_item_widget.dart';
 
 class NotificationsWidget extends StatefulWidget {
@@ -16,36 +18,33 @@ class NotificationsWidget extends StatefulWidget {
   State<NotificationsWidget> createState() => _NotificationsWidgetState();
 }
 
-class _NotificationsWidgetState extends State<NotificationsWidget>
-    with AutomaticKeepAliveClientMixin {
+class _NotificationsWidgetState extends State<NotificationsWidget> {
   final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    setupScrollController();
     loadUsers();
+    setupScrollController();
   }
 
   void setupScrollController() {
     _scrollController.addListener(() {
       if (_scrollController.position.atEdge) {
         if (_scrollController.position.pixels != 0 &&
-            !sl<NotificationsCubit>().isListFetchingComplete) {
-          loadUsers();
+            !context.read<NotificationsCubit>().isListFetchingComplete) {
+          context.read<NotificationsCubit>().loadNotifications();
         }
       }
     });
   }
 
   void loadUsers() {
-    context.read<NotificationsCubit>().loadNotifications();
+    context.read<NotificationsCubit>().loadNotifications(reset: true);
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     return BlocBuilder<NotificationsCubit, NotificationsState>(
       buildWhen: (_, state) {
         if (state is LoadingNotificationsState || state is LoadNotificationsState) {
@@ -55,7 +54,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget>
       },
       builder: (_, state) {
         if (state is LoadingNotificationsState && state.isFirstFetch) {
-          return const LoadingWidget();
+          return const ImageLoaderWidget();
         }
         List<NotificationDataModel> notifications = [];
         bool isLoading = false;
@@ -65,10 +64,17 @@ class _NotificationsWidgetState extends State<NotificationsWidget>
         } else if (state is LoadNotificationsState) {
           notifications = state.notificationsData;
         }
+
+        if (notifications.isEmpty && !isLoading) {
+          return const NoDataWidget(
+            message: StringResources.noDataAvailableMessage,
+            icon: ImageResources.notificationBellIcon,
+          );
+        }
+
         return ListView.builder(
           itemCount: notifications.length + (isLoading ? 1 : 0),
           controller: _scrollController,
-          physics: const ClampingScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (ctx, index) {
             if (index < notifications.length) {
@@ -78,17 +84,16 @@ class _NotificationsWidgetState extends State<NotificationsWidget>
               );
             } else {
               Timer(const Duration(milliseconds: 30), () {
-                _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+                if (notifications.length > 5) {
+                  _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+                }
               });
 
-              return const LoadingWidget();
+              return const ImageLoaderWidget();
             }
           },
         );
       },
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

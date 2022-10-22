@@ -184,6 +184,8 @@ class UserDataModel {
     bool? isConnected,
     bool? isRequestSent,
     bool? isRequestReceived,
+    bool? isViewed,
+    String? email,
   }) {
     _id = id;
     _countryCode = countryCode;
@@ -208,6 +210,8 @@ class UserDataModel {
     this.isConnected;
     this.isRequestSent;
     this.isRequestReceived;
+    this.isViewed;
+    this.email;
   }
 
   UserDataModel.fromJson(dynamic json) {
@@ -238,7 +242,9 @@ class UserDataModel {
     _distance = json['distance'];
     isConnected = json['is_connected'];
     isRequestSent = json['is_request_sent'];
+    isViewed = json['is_viewed'];
     isRequestReceived = json['is_request_received'];
+    email = json['email'];
   }
 
   String? _id;
@@ -264,6 +270,8 @@ class UserDataModel {
   bool? isConnected;
   bool? isRequestSent;
   bool? isRequestReceived;
+  bool? isViewed;
+  String? email;
 
   String? get id => _id;
 
@@ -340,6 +348,7 @@ class UserDataModel {
     map['is_connected'] = isConnected;
     map['is_request_sent'] = isRequestSent;
     map['is_request_received'] = isRequestReceived;
+    map['email'] = email;
     return map;
   }
 }
@@ -363,6 +372,7 @@ class DisplaySettings {
     String? currentAddress,
     String? permanentAddress,
     String? socialProfileLinks,
+    String? sendMessage,
   }) {
     _phone = phone;
     _email = email;
@@ -372,6 +382,7 @@ class DisplaySettings {
     _currentAddress = currentAddress;
     _permanentAddress = permanentAddress;
     _socialProfileLinks = socialProfileLinks;
+    _sendMessage = sendMessage;
   }
 
   DisplaySettings.fromJson(dynamic json) {
@@ -383,6 +394,9 @@ class DisplaySettings {
     _currentAddress = json['current_address'];
     _permanentAddress = json['permanent_address'];
     _socialProfileLinks = json['social_profile_links'];
+    if (json['send_messages'] != null) {
+      _sendMessage = json['send_messages'];
+    }
   }
 
   String? _phone;
@@ -393,6 +407,7 @@ class DisplaySettings {
   String? _currentAddress;
   String? _permanentAddress;
   String? _socialProfileLinks;
+  String? _sendMessage;
 
   String? get phone => _phone;
 
@@ -409,6 +424,8 @@ class DisplaySettings {
   String? get permanentAddress => _permanentAddress;
 
   String? get socialProfileLinks => _socialProfileLinks;
+
+  String? get sendMessage => _sendMessage;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

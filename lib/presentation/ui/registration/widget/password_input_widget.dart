@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../resources/string_resources.dart';
 
@@ -23,15 +24,20 @@ class _PasswordInputWidgetState extends State<PasswordInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      margin: const EdgeInsets.all(10),
+    return SizedBox(
+      height: 50,
       child: TextField(
         controller: widget.textEditingController,
         obscureText: _isObscure,
         keyboardType: TextInputType.text,
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(
+            RegExp(
+                r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])'),
+          )
+        ],
         style: const TextStyle(
-          fontSize: 14,
+          fontSize: 16,
         ),
         decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),

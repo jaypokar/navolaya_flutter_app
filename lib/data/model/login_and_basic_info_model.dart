@@ -1,3 +1,5 @@
+import 'package:navolaya_flutter/data/model/profile_image_or_allow_notification_model.dart';
+
 /// message : "You have logged in successfully"
 /// data : {"full_name":"Jay Pokar","user_code":"1657916130UF","email":"","school":{"_id":"62879b983a3e730c64e33d7e","region":"Jaipur","state":"Rajasthan","district":"Barmer","city":"Pachpadra","pincode":"344032","latitude":25.9126614,"longitude":72.2547811},"relation_with_jnv":"Alumni","from_year":1970,"to_year":2022,"qualification":null,"occupation":null,"gender":"male","house":"Shivalik","birth_date":"1992-11-03T00:00:00.000Z","about_me":"Many careers—like becoming a doctor, a scientist, a teacher, and more—require a certain level of education and specific skills. If you are looking to pursue similar careers to these, then you almost always need to graduate from college—and often even obtain further education, like a Master’s or Doctoral Degree. Going to college is the only way to become qualified for these types of jobs and prepare you for a career in a certain specialized field.","current_address":null,"permanent_address":null,"user_image":null,"auth_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbl91c2VyX2lkIjoiNjJkMWJhYTBjYTA4OTZlYWQ3ZGY3NjRlIiwibG9naW5fdXNlcl9yb2xlIjoidXNlciIsImxvZ2luX3VzZXJfbmFtZSI6IkpheSBQb2thciIsImlhdCI6MTY1ODE2Njc1MCwiZXhwIjoxNjU4NzcxNTUwfQ.HZtkeYQS9vkayZ6MD2m_gDW_Prjh63CPHAxts-HVnJ0","last_login_time":"2022-07-18T17:52:30.378Z","is_user_account_verified":1,"is_phone_verified":1,"is_basic_profile_updated":1,"jnv_verification_status":0,"allow_notifications":1,"social_profile_links":{"facebook":"www.facebook.com","instagram":"www.instagram.com","linkedin":"www.linkedIn.com","twitter":"www.twitter.com","youtube":"www.youtube.com"},"display_settings":{"phone":"my_connections","email":"none","user_image":"all","birth_day_month":"all","birth_year":"none","current_address":"my_connections","permanent_address":"my_connections","social_profile_links":"all","find_me_nearby":"all"},"_id":"62d1baa0ca0896ead7df764e","country_code":"+91","phone":"8160231082"}
 
@@ -78,7 +80,7 @@ class Data {
     String? aboutMe,
     dynamic currentAddress,
     dynamic permanentAddress,
-    dynamic userImage,
+    UserImage? userImage,
     String? authToken,
     String? lastLoginTime,
     int? isUserAccountVerified,
@@ -106,10 +108,10 @@ class Data {
 
     this.birthDate;
     this.aboutMe;
-    _currentAddress = currentAddress;
-    _permanentAddress = permanentAddress;
-    _userImage = userImage;
-    _authToken = authToken;
+    this.currentAddress;
+    this.permanentAddress;
+    this.userImage;
+    this.authToken;
     _lastLoginTime = lastLoginTime;
     _isUserAccountVerified = isUserAccountVerified;
     _isPhoneVerified = isPhoneVerified;
@@ -140,10 +142,12 @@ class Data {
     house = json['house'];
     birthDate = json['birth_date'];
     aboutMe = json['about_me'];
-    _currentAddress = json['current_address'];
-    _permanentAddress = json['permanent_address'];
-    _userImage = json['user_image'];
-    _authToken = json['auth_token'];
+    currentAddress = json['current_address'];
+    permanentAddress = json['permanent_address'];
+    if (json['user_image'] != null) {
+      userImage = UserImage.fromJson(json['user_image']);
+    }
+    authToken = json['auth_token'];
     _lastLoginTime = json['last_login_time'];
     _isUserAccountVerified = json['is_user_account_verified'];
     _isPhoneVerified = json['is_phone_verified'];
@@ -174,10 +178,10 @@ class Data {
   String? house;
   String? birthDate;
   String? aboutMe;
-  dynamic _currentAddress;
-  dynamic _permanentAddress;
-  dynamic _userImage;
-  String? _authToken;
+  dynamic currentAddress;
+  dynamic permanentAddress;
+  UserImage? userImage;
+  String? authToken;
   String? _lastLoginTime;
   int? _isUserAccountVerified;
   int? _isPhoneVerified;
@@ -191,14 +195,6 @@ class Data {
   String? phone;
 
   String? get userCode => _userCode;
-
-  dynamic get currentAddress => _currentAddress;
-
-  dynamic get permanentAddress => _permanentAddress;
-
-  dynamic get userImage => _userImage;
-
-  String? get authToken => _authToken;
 
   String? get lastLoginTime => _lastLoginTime;
 
@@ -234,10 +230,10 @@ class Data {
     map['house'] = house;
     map['birth_date'] = birthDate;
     map['about_me'] = aboutMe;
-    map['current_address'] = _currentAddress;
-    map['permanent_address'] = _permanentAddress;
-    map['user_image'] = _userImage;
-    map['auth_token'] = _authToken;
+    map['current_address'] = currentAddress;
+    map['permanent_address'] = permanentAddress;
+    map['user_image'] = userImage;
+    map['auth_token'] = authToken;
     map['last_login_time'] = _lastLoginTime;
     map['is_user_account_verified'] = _isUserAccountVerified;
     map['is_phone_verified'] = _isPhoneVerified;
@@ -268,17 +264,17 @@ class Data {
 /// find_me_nearby : "all"
 
 class DisplaySettings {
-  DisplaySettings({
-    String? phone,
-    String? email,
-    String? userImage,
-    String? birthDayMonth,
-    String? birthYear,
-    String? currentAddress,
-    String? permanentAddress,
-    String? socialProfileLinks,
-    String? findMeNearby,
-  }) {
+  DisplaySettings(
+      {String? phone,
+      String? email,
+      String? userImage,
+      String? birthDayMonth,
+      String? birthYear,
+      String? currentAddress,
+      String? permanentAddress,
+      String? socialProfileLinks,
+      String? findMeNearby,
+      String? sendMessages}) {
     this.phone;
     this.email;
     this.userImage;
@@ -288,6 +284,7 @@ class DisplaySettings {
     this.permanentAddress;
     this.socialProfileLinks;
     this.findMeNearby;
+    this.sendMessages;
   }
 
   DisplaySettings.fromJson(dynamic json) {
@@ -300,6 +297,7 @@ class DisplaySettings {
     permanentAddress = json['permanent_address'];
     socialProfileLinks = json['social_profile_links'];
     findMeNearby = json['find_me_nearby'];
+    sendMessages = json['send_messages'];
   }
 
   String? phone;
@@ -311,6 +309,7 @@ class DisplaySettings {
   String? permanentAddress;
   String? socialProfileLinks;
   String? findMeNearby;
+  String? sendMessages;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -323,6 +322,7 @@ class DisplaySettings {
     map['permanent_address'] = permanentAddress;
     map['social_profile_links'] = socialProfileLinks;
     map['find_me_nearby'] = findMeNearby;
+    map['send_messages'] = sendMessages;
     return map;
   }
 }

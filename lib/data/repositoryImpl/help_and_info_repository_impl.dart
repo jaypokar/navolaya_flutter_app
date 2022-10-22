@@ -31,11 +31,12 @@ class HelpAndInfoRepositoryImpl implements HelpAndInfoRepository {
         final socialMediaLinks = _masterRepository.appContents.data!.settings!.socialMediaLinks!;
         final officialPhone = _masterRepository.appContents.data!.settings!.officialPhone!;
         final officialEmail = _masterRepository.appContents.data!.settings!.officialEmail!;
+        final officialAddress = _masterRepository.appContents.data!.settings!.officialAddress!;
         return right(AppContactDetails(
           socialMediaLinks: socialMediaLinks,
           officialPhone: officialPhone,
           officialEmail: officialEmail,
-          officialAddress: 'officialAddress',
+          officialAddress: officialAddress,
         ));
       }
       return left(const Failure(StringResources.noDataAvailable));

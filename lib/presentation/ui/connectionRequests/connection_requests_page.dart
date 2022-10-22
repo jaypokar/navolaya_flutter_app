@@ -29,11 +29,11 @@ class _ConnectionRequestsPageState extends State<ConnectionRequestsPage>
     super.initState();
     _widgetOptions = <Widget>[
       const ConnectionReceivedRequestWidget(
-        key: PageStorageKey('connectionReceived'),
-      ),
+          /*key: PageStorageKey('connectionReceived'),*/
+          ),
       const ConnectionSentRequestWidget(
-        key: PageStorageKey('connectionSent'),
-      ),
+          /*key: PageStorageKey('connectionSent'),*/
+          ),
     ];
 
     sl<UiNotifiers>().createConnectionRequestTabNotifier();
@@ -47,18 +47,10 @@ class _ConnectionRequestsPageState extends State<ConnectionRequestsPage>
         BlocListener<ConnectionReceivedCubit, ConnectionReceivedState>(
           listener: (_, state) {
             if (state is ErrorLoadingConnectionReceivedState) {
-              sl<CommonFunctions>().showSnackBar(
+              sl<CommonFunctions>().showFlushBar(
                 context: context,
                 message: state.message,
-                bgColor: ColorConstants.red,
-                textColor: Colors.white,
-              );
-            } else if (state is UpdateReceivedConnectionState) {
-              sl<CommonFunctions>().showSnackBar(
-                context: context,
-                message: state.createOrUpdateConnectionRequestResponse.message!,
-                bgColor: Colors.green,
-                textColor: Colors.white,
+                bgColor: ColorConstants.messageErrorBgColor,
               );
             }
           },
@@ -66,45 +58,41 @@ class _ConnectionRequestsPageState extends State<ConnectionRequestsPage>
         BlocListener<ConnectionSentCubit, ConnectionSentState>(
           listener: (_, state) {
             if (state is ErrorLoadingConnectionSentState) {
-              sl<CommonFunctions>().showSnackBar(
+              sl<CommonFunctions>().showFlushBar(
                 context: context,
                 message: state.message,
-                bgColor: ColorConstants.red,
-                textColor: Colors.white,
-              );
-            } else if (state is UpdateSentConnectionState) {
-              sl<CommonFunctions>().showSnackBar(
-                context: context,
-                message: state.createOrUpdateConnectionRequestResponse.message!,
-                bgColor: Colors.green,
-                textColor: Colors.white,
+                bgColor: ColorConstants.messageErrorBgColor,
               );
             }
           },
         ),
       ],
-      child: Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
-          title: const Text(
-            StringResources.connectionRequests,
-            style: TextStyle(color: Colors.white),
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: const Text(
+              StringResources.connectionRequests,
+              style: TextStyle(color: Colors.white),
+            ),
           ),
-        ),
-        body: Column(
-          children: [
-            const ConnectionTabsWidget(),
-            Expanded(
-              child: ValueListenableBuilder<int>(
-                  valueListenable: sl<UiNotifiers>().connectionRequestTabNotifier,
-                  builder: (_, pos, __) {
-                    return PageStorage(
-                      bucket: _bucket,
-                      child: _widgetOptions[pos],
-                    );
-                  }),
-            )
-          ],
+          body: Column(
+            children: [
+              const ConnectionTabsWidget(),
+              Expanded(
+                child: ValueListenableBuilder<int>(
+                    valueListenable: sl<UiNotifiers>().connectionRequestTabNotifier,
+                    builder: (_, pos, __) {
+                      return _widgetOptions[pos];
+                      /*return PageStorage(
+                        bucket: _bucket,
+                        child: _widgetOptions[pos],
+                      );*/
+                    }),
+              )
+            ],
+          ),
         ),
       ),
     );

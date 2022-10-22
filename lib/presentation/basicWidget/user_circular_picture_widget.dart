@@ -13,8 +13,8 @@ class UserCircularPictureWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 65,
-      width: 65,
+      height: 60,
+      width: 60,
       decoration: BoxDecoration(
           color: ColorConstants.colorPrimary.withOpacity(0.5),
           shape: BoxShape.circle,

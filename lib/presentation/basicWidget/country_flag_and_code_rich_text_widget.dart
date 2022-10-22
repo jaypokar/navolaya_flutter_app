@@ -6,9 +6,9 @@ class CountryFlagAndCodeRichTextWidget extends StatelessWidget {
   final Function? onClickEvent;
   final String textOne;
   final String textTwo;
-  Color? color;
+  final Color? color;
 
-  CountryFlagAndCodeRichTextWidget(
+  const CountryFlagAndCodeRichTextWidget(
       {required this.onClickEvent,
       required this.textOne,
       required this.textTwo,

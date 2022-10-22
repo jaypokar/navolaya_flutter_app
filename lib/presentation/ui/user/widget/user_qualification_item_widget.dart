@@ -1,34 +1,66 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../resources/color_constants.dart';
 
 class UserQualificationItemWidget extends StatelessWidget {
   final String title;
-  final IconData iconData;
-  const UserQualificationItemWidget({required this.title,required this.iconData,Key? key}) : super(key: key);
+  final String icon;
+  final Color? color;
+  final bool shouldItemExpanded;
+  final double iconHeight;
+  final double iconWidth;
+  final double textSize;
+
+  const UserQualificationItemWidget({
+    required this.title,
+    required this.icon,
+    this.color = ColorConstants.userDetailIconsColor,
+    this.shouldItemExpanded = false,
+    this.iconHeight = 14,
+    this.iconWidth = 14,
+    this.textSize = 13,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      children:  [
-        Icon(
-          iconData,
-          color: iconData == FontAwesomeIcons.shirt ? Colors.red : ColorConstants.textColor2,
-          size: 14,
+      children: [
+        Image.asset(
+          icon,
+          color: color,
+          height: iconHeight,
+          width: iconWidth,
         ),
         const SizedBox(
-          width: 10,
+          width: 8,
         ),
-        Text(
-          title,
-          style: const TextStyle(
-            color: ColorConstants.textColor2,
-            fontSize: 12,
-          ),
-        ),
+        shouldItemExpanded
+            ? Expanded(
+                child: AutoSizeText(
+                  title,
+                  softWrap: true,
+                  wrapWords: true,
+                  maxLines: 1,
+                  minFontSize: 12,
+                  style: TextStyle(
+                      color: ColorConstants.textColor3,
+                      fontSize: textSize,
+                      fontWeight: FontWeight.w400),
+                ),
+              )
+            : Text(
+                title,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+                style: TextStyle(
+                    color: ColorConstants.textColor3,
+                    fontSize: textSize,
+                    fontWeight: FontWeight.w400),
+              ),
         const SizedBox(
-          width: 10,
+          width: 8,
         ),
       ],
     );

@@ -15,13 +15,16 @@ class PopularUsersCubit extends Cubit<PopularUsersState> {
 
   PopularUsersCubit(this._repository) : super(const PopularUsersInitial());
 
-  void loadUsers() async {
-    if (state is LoadingPopularUsersState) return;
+  void loadUsers({bool reset = false}) async {
+    if (reset) {
+      _page = 1;
+    }
+    if (state is LoadingPopularUsersState || _isListFetchingComplete && !reset) return;
 
     final currentState = state;
 
     List<UserDataModel> oldPosts = [];
-    if (currentState is LoadPopularUsersState) {
+    if (currentState is LoadPopularUsersState && _page != 1) {
       oldPosts = currentState.usersData;
     }
 
@@ -40,14 +43,17 @@ class PopularUsersCubit extends Cubit<PopularUsersState> {
     }
 
     _page++;
-    final users = (state as LoadingPopularUsersState).oldUsers;
+    List<UserDataModel> users = (state as LoadingPopularUsersState).oldUsers;
     users.addAll(possibleData.getRight()!.data!.docs!);
     emit(LoadPopularUsersState(usersData: users));
   }
 
+  bool get hasDataLoaded => state is PopularUsersInitial;
+
   bool get isListFetchingComplete => _isListFetchingComplete;
 
   void filterList({required FilterDataRequestModel filterData}) async {
+    clearData();
     emit(LoadingPopularUsersState(const [], isFirstFetch: _page == 1));
 
     final possibleData = await _repository.fetchPopularUsersAPI(filterDataRequestData: filterData);
@@ -60,5 +66,20 @@ class PopularUsersCubit extends Cubit<PopularUsersState> {
     final List<UserDataModel> users = [];
     users.addAll(possibleData.getRight()!.data!.docs!);
     emit(LoadPopularUsersState(usersData: users));
+  }
+
+  void updateUsersAfterBlockingUser(UserDataModel user) {
+    final currentState = state;
+    if (currentState is LoadPopularUsersState) {
+      final users = currentState.usersData;
+      users.remove(user);
+      emit(LoadingPopularUsersState(users, isFirstFetch: false));
+      emit(LoadPopularUsersState(usersData: users));
+    }
+  }
+
+  void clearData() {
+    _page = 1;
+    _isListFetchingComplete = false;
   }
 }

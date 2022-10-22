@@ -4,6 +4,7 @@ import 'package:navolaya_flutter/core/route_generator.dart';
 import 'package:navolaya_flutter/presentation/basicWidget/custom_button.dart';
 import 'package:navolaya_flutter/presentation/cubit/pageIndicatorCubit/page_indicator_page_cubit.dart';
 import 'package:navolaya_flutter/presentation/ui/introScreen/widget/indicator_widget.dart';
+import 'package:navolaya_flutter/resources/image_resources.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
 import 'widget/first_intro_widget.dart';
@@ -29,9 +30,21 @@ class _IntroPageState extends State<IntroPage> {
               onPageChanged: (int page) => context.read<PageIndicatorPageCubit>().changePage(page),
               controller: _controller,
               children: const [
-                FirstIntroWidget(),
-                FirstIntroWidget(),
-                FirstIntroWidget(),
+                FirstIntroWidget(
+                  image: ImageResources.introScreenSmartSearchImg,
+                  title: StringResources.introScreenSmartSearchTitle,
+                  desc: StringResources.introScreenSmartSearchDesc,
+                ),
+                FirstIntroWidget(
+                  image: ImageResources.introScreenConnectivityImg,
+                  title: StringResources.introScreenConnectivityTitle,
+                  desc: StringResources.introScreenConnectivityDesc,
+                ),
+                FirstIntroWidget(
+                  image: ImageResources.introScreenSecurityImg,
+                  title: StringResources.introScreenSecurityTitle,
+                  desc: StringResources.introScreenSecurityDesc,
+                ),
               ],
             ),
           ),
@@ -47,5 +60,4 @@ class _IntroPageState extends State<IntroPage> {
       ),
     );
   }
-
 }

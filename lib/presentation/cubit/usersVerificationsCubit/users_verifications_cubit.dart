@@ -14,17 +14,23 @@ class UsersVerificationsCubit extends Cubit<UsersVerificationsState> {
 
   UsersVerificationsCubit(this._repository) : super(const UsersVerificationsInitial());
 
-  void loadUsers({bool reset = false}) async {
-    if (state is LoadingUsersVerificationsState) return;
+  void loadUsers({bool reset = false, bool update = true}) async {
+    if (reset || update) {
+      _page = 1;
+    }
+    if (state is LoadingUsersVerificationsState || _isListFetchingComplete && !reset && !update)
+      return;
 
     final currentState = state;
 
     List<UserDataModel> oldPosts = [];
-    if (currentState is LoadUsersVerificationsState && !reset) {
+    if (currentState is LoadUsersVerificationsState && _page != 1) {
       oldPosts = currentState.usersData;
     }
 
-    emit(LoadingUsersVerificationsState(oldPosts, isFirstFetch: _page == 1));
+    if (!update) {
+      emit(LoadingUsersVerificationsState(oldPosts, isFirstFetch: _page == 1));
+    }
 
     final possibleData = await _repository.fetchUsersVerificationsAPI(page: _page);
 
@@ -38,25 +44,27 @@ class UsersVerificationsCubit extends Cubit<UsersVerificationsState> {
     }
 
     _page++;
-    final users = (state as LoadingUsersVerificationsState).oldUsers;
+    late final List<UserDataModel> users;
+    if (state is LoadingUsersVerificationsState) {
+      users = (state as LoadingUsersVerificationsState).oldUsers;
+    } else {
+      users = [];
+    }
     users.addAll(possibleData.getRight()!.data!.docs!);
     emit(LoadUsersVerificationsState(usersData: users));
   }
 
   void updateUserVerificationRequest(String acceptOrDecline, String userID) async {
-    if (acceptOrDecline == 'confirm') {
-      emit(const ConfirmLoadingState());
-    } else {
-      emit(const DeclineLoadingState());
-    }
+    emit(const UpdateVerificationLoadingState());
 
     final possibleData =
         await _repository.updateUsersVerificationsAPI(action: acceptOrDecline, userID: userID);
     if (possibleData.isLeft()) {
       emit(ErrorLoadingUsersVerificationsState(message: possibleData.getLeft()!.error));
+      return;
     }
-    _page = 1;
-    loadUsers(reset: true);
+
+    loadUsers(update: true);
   }
 
   bool get isListFetchingComplete => _isListFetchingComplete;

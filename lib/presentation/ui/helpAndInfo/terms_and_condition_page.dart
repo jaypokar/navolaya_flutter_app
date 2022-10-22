@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 import '../../../injection_container.dart';
+import '../../../resources/color_constants.dart';
 import '../../../resources/string_resources.dart';
 import '../../../util/common_functions.dart';
 import '../../cubit/helpAndInfoCubit/help_and_info_cubit.dart';
@@ -20,7 +21,7 @@ class TermsAndConditionPage extends StatelessWidget {
           sl<CommonFunctions>().showSnackBar(
             context: context,
             message: state.error,
-            bgColor: Colors.red,
+            bgColor: ColorConstants.messageErrorBgColor,
             textColor: Colors.white,
           );
         }
@@ -36,7 +37,7 @@ class TermsAndConditionPage extends StatelessWidget {
         body: BlocBuilder<HelpAndInfoCubit, HelpAndInfoState>(
           builder: (_, state) {
             if (state is LoadTermsAndConditionState) {
-              return Html(data: state.termAndCondition);
+              return SingleChildScrollView(child: Html(data: state.termAndCondition));
             }
             return const SizedBox.shrink();
           },

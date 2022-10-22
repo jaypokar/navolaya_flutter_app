@@ -5,6 +5,7 @@ import 'package:navolaya_flutter/injection_container.dart';
 import 'package:navolaya_flutter/presentation/cubit/helpAndInfoCubit/help_and_info_cubit.dart';
 import 'package:navolaya_flutter/util/common_functions.dart';
 
+import '../../../resources/color_constants.dart';
 import '../../../resources/string_resources.dart';
 
 class AboutUsPage extends StatelessWidget {
@@ -17,11 +18,10 @@ class AboutUsPage extends StatelessWidget {
     return BlocListener<HelpAndInfoCubit, HelpAndInfoState>(
       listener: (_, state) {
         if (state is HelpAndInfoErrorState) {
-          sl<CommonFunctions>().showSnackBar(
+          sl<CommonFunctions>().showFlushBar(
             context: context,
             message: state.error,
-            bgColor: Colors.red,
-            textColor: Colors.white,
+            bgColor: ColorConstants.messageErrorBgColor,
           );
         }
       },
@@ -36,7 +36,11 @@ class AboutUsPage extends StatelessWidget {
         body: BlocBuilder<HelpAndInfoCubit, HelpAndInfoState>(
           builder: (_, state) {
             if (state is LoadAboutUsState) {
-              return Html(data: state.aboutUs);
+              return SingleChildScrollView(
+                child: Html(
+                  data: state.aboutUs,
+                ),
+              );
             }
             return const SizedBox.shrink();
           },

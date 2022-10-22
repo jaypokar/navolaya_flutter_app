@@ -17,16 +17,20 @@ class UpdatePrivacySettingRequestModel {
 
   String findMeNearby;
 
-  UpdatePrivacySettingRequestModel(
-      {this.phone = 'all',
-      this.email = 'all',
-      this.userImage = 'all',
-      this.birthDayMonth = 'all',
-      this.birthYear = 'all',
-      this.currentAddress = 'all',
-      this.permanentAddress = 'all',
-      this.socialProfileLinks = 'all',
-      this.findMeNearby = 'all'});
+  String sendMessages;
+
+  UpdatePrivacySettingRequestModel({
+    this.phone = 'all',
+    this.email = 'all',
+    this.userImage = 'all',
+    this.birthDayMonth = 'all',
+    this.birthYear = 'all',
+    this.currentAddress = 'all',
+    this.permanentAddress = 'all',
+    this.socialProfileLinks = 'all',
+    this.findMeNearby = 'all',
+    this.sendMessages = 'all',
+  });
 
   Map<String, dynamic> toJson() {
     Map<String, String> json = {};
@@ -39,6 +43,7 @@ class UpdatePrivacySettingRequestModel {
     json['permanent_address'] = permanentAddress;
     json['social_profile_links'] = socialProfileLinks;
     json['find_me_nearby'] = findMeNearby;
+    json['send_messages'] = sendMessages;
     return json;
   }
 }

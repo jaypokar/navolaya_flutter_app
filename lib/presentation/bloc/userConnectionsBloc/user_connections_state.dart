@@ -56,6 +56,15 @@ class GetConnectionsState extends UserConnectionsState {
   List<Object> get props => [usersResponse];
 }
 
+class UpdateUserViewedState extends UserConnectionsState {
+  final UpdateUserViewedModel response;
+
+  const UpdateUserViewedState({required this.response});
+
+  @override
+  List<Object> get props => [response];
+}
+
 class UserConnectionErrorState extends UserConnectionsState {
   final String error;
 

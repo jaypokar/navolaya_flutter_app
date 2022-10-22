@@ -5,6 +5,7 @@ import 'package:navolaya_flutter/data/model/social_media_profiles_model.dart';
 import 'package:navolaya_flutter/data/model/update_privacy_settings_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/profile_image_or_allow_notification_model.dart';
 import '../model/update_additional_info_model.dart';
 
 class SessionManager {
@@ -14,6 +15,7 @@ class SessionManager {
   final String userDataKey = 'user_data';
   final String isLoggedInKey = 'is_logged_in';
   final String isUserFirstTimeInKey = 'is_userFirstTime_in';
+  final String isVerificationPopupDisplayed = 'is_verification_popup_displayed';
 
   LoginAndBasicInfoModel? _loginData;
 
@@ -40,7 +42,20 @@ class SessionManager {
     initiateUserLogin(_loginData!);
   }
 
+  void updateToken(String token) {
+    if (_loginData == null) {
+      final value = _preferences.getString(userDataKey) ?? '';
+      final userDetails = json.decode(value) as Map<String, dynamic>;
+      _loginData = LoginAndBasicInfoModel.fromJson(userDetails);
+    }
+    _loginData!.data!.authToken = token;
+    initiateUserLogin(_loginData!);
+  }
+
   void updateBasicInfo(LoginAndBasicInfoModel basicInfoData) {
+    if (basicInfoData.data!.school != null) {
+      _loginData?.data!.fullName = basicInfoData.data!.fullName!;
+    }
     if (basicInfoData.data!.school != null) {
       _loginData?.data!.school = basicInfoData.data!.school!;
     }
@@ -62,7 +77,14 @@ class SessionManager {
     if (basicInfoData.data!.occupation != null) {
       _loginData?.data!.occupation = basicInfoData.data!.occupation!;
     }
+    if (basicInfoData.data!.authToken != null) {
+      _loginData?.data!.authToken = basicInfoData.data!.authToken!;
+    }
     initiateUserLogin(_loginData!);
+  }
+
+  void updateProfileDetailsToSession(LoginAndBasicInfoModel basicInfoData) {
+    initiateUserLogin(basicInfoData);
   }
 
   void updatePrivacySettings(UpdatePrivacySettingsModel updatePrivacySettingsData) {
@@ -84,13 +106,44 @@ class SessionManager {
         updatePrivacySettingsData.data!.displaySettings!.birthDayMonth!;
     _loginData!.data!.displaySettings!.userImage =
         updatePrivacySettingsData.data!.displaySettings!.userImage!;
+    _loginData!.data!.displaySettings!.sendMessages =
+        updatePrivacySettingsData.data!.displaySettings!.sendMessages!;
+    if (updatePrivacySettingsData.data!.authToken != null) {
+      _loginData!.data!.authToken = updatePrivacySettingsData.data!.authToken;
+    }
     initiateUserLogin(_loginData!);
   }
 
   void updateAdditionalInfo(UpdateAdditionalInfoModel data) {
-    _loginData!.data!.aboutMe = data.data!.aboutMe!;
-    _loginData!.data!.birthDate = data.data!.birthDate!;
-    _loginData!.data!.house = data.data!.house!;
+    if (data.data!.aboutMe != null) {
+      _loginData!.data!.aboutMe = data.data!.aboutMe!;
+    }
+    if (data.data!.birthDate != null) {
+      _loginData!.data!.birthDate = data.data!.birthDate!;
+    }
+    if (data.data!.house != null) {
+      _loginData!.data!.house = data.data!.house!;
+    }
+    if (data.data!.currentAddress != null) {
+      _loginData!.data!.currentAddress = data.data!.currentAddress;
+    }
+
+    if (data.data!.permanentAddress != null) {
+      _loginData!.data!.permanentAddress = data.data!.permanentAddress;
+    }
+    initiateUserLogin(_loginData!);
+  }
+
+  void updateProfileImageOrAllowNotificationData(ProfileImageOrAllowNotificationModel data) {
+    if (data.data!.allowNotifications != null) {
+      _loginData!.data!.allowNotifications = data.data!.allowNotifications!;
+    }
+    if (data.data!.userImage != null) {
+      _loginData!.data!.userImage = data.data!.userImage!;
+    }
+    if (data.data!.authToken != null) {
+      _loginData!.data!.authToken = data.data!.authToken!;
+    }
     initiateUserLogin(_loginData!);
   }
 
@@ -122,6 +175,12 @@ class SessionManager {
   bool isUserFirstTimeIn() {
     return _preferences.getBool(isUserFirstTimeInKey) ?? true;
   }
+
+  bool checkVerificationPopupDisplayed() =>
+      _preferences.getBool(isVerificationPopupDisplayed) ?? false;
+
+  void jnvVerificationPopupHasBeenDisplayed() =>
+      _preferences.setBool(isVerificationPopupDisplayed, true);
 
   void setUserFirstTimeIn() {
     _preferences.setBool(isUserFirstTimeInKey, false);

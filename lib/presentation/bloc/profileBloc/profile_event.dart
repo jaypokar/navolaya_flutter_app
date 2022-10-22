@@ -8,15 +8,19 @@ class InitiateUpdateAdditionalInfo extends ProfileEvent {
   final String house;
   final String birthDate;
   final String aboutMe;
+  final String currentAddress;
+  final String permanentAddress;
 
   const InitiateUpdateAdditionalInfo({
     required this.house,
     required this.birthDate,
     required this.aboutMe,
+    required this.currentAddress,
+    required this.permanentAddress,
   });
 
   @override
-  List<Object?> get props => [house, birthDate, aboutMe];
+  List<Object?> get props => [house, birthDate, aboutMe, currentAddress, permanentAddress];
 }
 
 class UpdateProfileBasicInfoEvent extends ProfileEvent {
@@ -101,8 +105,33 @@ class DeleteProfileEvent extends ProfileEvent {
   List<Object?> get props => [];
 }
 
+class UpdateJNVVerificationEvent extends ProfileEvent {
+  final Map<String, dynamic> reqData;
+
+  const UpdateJNVVerificationEvent({required this.reqData});
+
+  @override
+  List<Object?> get props => [reqData];
+}
+
+class UpdateProfileImageOrAllowNotificationEvent extends ProfileEvent {
+  final Map<String, dynamic> reqData;
+
+  const UpdateProfileImageOrAllowNotificationEvent({required this.reqData});
+
+  @override
+  List<Object?> get props => [reqData];
+}
+
 class FetchPersonalDetails extends ProfileEvent {
   const FetchPersonalDetails();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class GetProfileEvent extends ProfileEvent {
+  const GetProfileEvent();
 
   @override
   List<Object?> get props => [];

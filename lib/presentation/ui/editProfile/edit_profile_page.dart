@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navolaya_flutter/core/route_generator.dart';
+import 'package:navolaya_flutter/data/sessionManager/session_manager.dart';
 import 'package:navolaya_flutter/presentation/bloc/profileBloc/profile_bloc.dart';
 import 'package:navolaya_flutter/resources/string_resources.dart';
 
+import '../../../injection_container.dart';
 import '../../../resources/color_constants.dart';
 import '../../profileImageWidget/profile_image_widget.dart';
 
@@ -33,22 +35,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
             const ProfileImageWidget(),
             const SizedBox(height: 20),
             BlocBuilder<ProfileBloc, ProfileState>(
-              buildWhen: (previousState, state) => state is LoadPersonalDetailsState,
+              buildWhen: (previousState, state) =>
+                  state is LoadPersonalDetailsState ||
+                  state is GetProfileState ||
+                  state is LoadUpdateProfileBasicInfoState,
               builder: (_, state) {
-                if (state is LoadPersonalDetailsState) {
-                  return Text(
-                    state.loginAndBasicInfoData.data!.fullName!,
-                    style: const TextStyle(
-                      color: ColorConstants.textColor7,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
+                final fullName = sl<SessionManager>().getUserDetails()!.data!.fullName!;
+                return Text(
+                  fullName,
+                  style: const TextStyle(
+                    color: ColorConstants.textColor7,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
               },
             ),
             const SizedBox(height: 40),
+
+            InkWell(
+                onTap: () {
+                  Navigator.of(context).pushNamed(RouteGenerator.myProfilePage);
+                },
+                child: const EditProfileOptionsItemWidget(
+                  title: StringResources.viewMyProfile,
+                )),
             InkWell(
                 onTap: () => Navigator.of(context).pushNamed(RouteGenerator.updateBasicInfoPage),
                 child: const EditProfileOptionsItemWidget(

@@ -15,6 +15,7 @@ class MastersModel {
 
   MastersModel.fromJson(dynamic json) {
     message = json['message'];
+
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
@@ -72,7 +73,7 @@ class Data {
 
     if (json['jnvHouses'] != null) {
       jnvHouses = [];
-      jnvHouses?.add(JnvHouses(id: '', title: 'House'));
+      jnvHouses?.add(JnvHouses(id: '', title: 'House (Optional)'));
       json['jnvHouses'].forEach((v) {
         jnvHouses?.add(JnvHouses.fromJson(v));
       });
@@ -88,11 +89,40 @@ class Data {
 
     if (json['schools'] != null) {
       schools = [];
-      schools?.add(Schools(
-          id: '', city: "Select School", district: "Select School", state: "Select School"));
       json['schools'].forEach((v) {
-        schools?.add(Schools.fromJson(v));
+        Map<String, dynamic> keyValues = v as Map<String, dynamic>;
+        final key1 = keyValues.keys.toList()[0];
+        final key2 = keyValues.keys.toList()[1];
+        /* schools?.add(Schools(
+            id: '',
+            city: keyValues[key1],
+            district: keyValues[key1],
+            state: keyValues[key1],
+            isSeparator: true));*/
+        keyValues[key2].forEach((element) {
+          schools?.add(Schools.fromJson(element, false));
+        });
       });
+      /*schools?.add(Schools(
+          id: '',
+          city: "School",
+          district: "School",
+          state: "School",
+          isSeparator: false));
+      json['schools'].forEach((v) {
+        Map<String, dynamic> keyValues = v as Map<String, dynamic>;
+        final key1 = keyValues.keys.toList()[0];
+        final key2 = keyValues.keys.toList()[1];
+        schools?.add(Schools(
+            id: '',
+            city: keyValues[key1],
+            district: keyValues[key1],
+            state: keyValues[key1],
+            isSeparator: true));
+        keyValues[key2].forEach((element) {
+          schools?.add(Schools.fromJson(element, false));
+        });
+      });*/
     }
 
     if (json['occupationAreas'] != null) {
@@ -105,35 +135,60 @@ class Data {
 
     if (json['occupations'] != null) {
       occupations = [];
-      occupations
-          ?.add(Occupations(id: '', area: 'Profession', title: 'Profession', isSeparator: false));
+
       json['occupations'].forEach((v) {
         Map<String, dynamic> keyValues = v as Map<String, dynamic>;
-        final key = keyValues.keys.first;
-        occupations?.add(Occupations(isSeparator: true, id: key, title: key, area: key));
-        v[key].forEach((element) {
-          occupations?.add(Occupations.fromJson(element, false, key));
+        final key1 = keyValues.keys.toList()[0];
+        final key2 = keyValues.keys.toList()[1];
+        /*occupations?.add(Occupations(
+            isSeparator: true, id: keyValues[key1], title: keyValues[key1], type: keyValues[key1]));*/
+        keyValues[key2].forEach((element) {
+          occupations?.add(Occupations.fromJson(element, false));
         });
-      });
+      }); /*occupations?.add(Occupations(
+          id: '', type: 'Occupation', title: 'Occupation', isSeparator: false));
+      json['occupations'].forEach((v) {
+        Map<String, dynamic> keyValues = v as Map<String, dynamic>;
+        final key1 = keyValues.keys.toList()[0];
+        final key2 = keyValues.keys.toList()[1];
+        occupations?.add(Occupations(
+            isSeparator: true, id: keyValues[key1], title: keyValues[key1], type: keyValues[key1]));
+        keyValues[key2].forEach((element) {
+          occupations?.add(Occupations.fromJson(element, false));
+        });
+      });*/
     }
 
     if (json['qualifications'] != null) {
       qualifications = [];
-      qualifications?.add(Qualifications(
-          id: '',
-          area: 'Graduation',
-          title: 'Graduation',
-          isSeparator: false,
-          shortName: 'Graduation'));
       json['qualifications'].forEach((v) {
         Map<String, dynamic> keyValues = v as Map<String, dynamic>;
-        final key = keyValues.keys.first;
-        qualifications?.add(
-            Qualifications(isSeparator: true, area: key, id: key, shortName: key, title: key));
-        v[key].forEach((element) {
-          qualifications?.add(Qualifications.fromJson(element, false, key));
+        final key1 = keyValues.keys.toList()[0];
+        final key2 = keyValues.keys.toList()[1];
+        keyValues[key2].forEach((element) {
+          qualifications?.add(Qualifications.fromJson(element, false));
         });
       });
+      /* qualifications?.add(Qualifications(
+          id: '',
+          area: 'Qualification',
+          title: 'Qualification',
+          isSeparator: false,
+          shortName: 'Qualification'));
+      json['qualifications'].forEach((v) {
+        Map<String, dynamic> keyValues = v as Map<String, dynamic>;
+        final key1 = keyValues.keys.toList()[0];
+        final key2 = keyValues.keys.toList()[1];
+        qualifications?.add(Qualifications(
+            isSeparator: true,
+            area: keyValues[key1],
+            id: keyValues[key1],
+            shortName: keyValues[key1],
+            title: keyValues[key1]));
+        keyValues[key2].forEach((element) {
+          qualifications?.add(Qualifications.fromJson(element, false));
+        });
+      });*/
     }
 
     if (json['stateCities'] != null) {
@@ -187,7 +242,7 @@ class OccupationAreas {
   });
 
   OccupationAreas.fromJson(dynamic json) {
-    id = json['id'];
+    id = json['_id'];
     title = json['title'];
   }
 
@@ -207,7 +262,7 @@ class OccupationAreas {
 /// district : "Barmer"
 /// city : "Pachpadra"
 
-Schools schoolsFromJson(String str) => Schools.fromJson(json.decode(str));
+//Schools schoolsFromJson(String str) => Schools.fromJson(json.decode(str));
 
 String schoolsToJson(Schools data) => json.encode(data.toJson());
 
@@ -217,15 +272,17 @@ class Schools {
     this.state,
     this.district,
     this.city,
+    this.isSeparator,
   });
 
-  Schools.fromJson(dynamic json) {
+  Schools.fromJson(dynamic json, this.isSeparator) {
     id = json['_id'];
     state = json['state'];
     district = json['district'];
     city = json['city'];
   }
 
+  bool? isSeparator;
   String? id;
   String? state;
   String? district;
@@ -255,7 +312,7 @@ class JnvRelations {
   });
 
   JnvRelations.fromJson(dynamic json) {
-    id = json['id'];
+    id = json['_id'];
     title = json['title'];
   }
 
@@ -264,7 +321,7 @@ class JnvRelations {
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['id'] = id;
+    map['_id'] = id;
     map['title'] = title;
     return map;
   }
@@ -284,7 +341,7 @@ class JnvHouses {
   });
 
   JnvHouses.fromJson(dynamic json) {
-    id = json['id'];
+    id = json['_id'];
     title = json['title'];
   }
 
@@ -293,7 +350,7 @@ class JnvHouses {
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['id'] = id;
+    map['_id'] = id;
     map['title'] = title;
     return map;
   }
@@ -313,7 +370,7 @@ class JnvRegions {
   });
 
   JnvRegions.fromJson(dynamic json) {
-    id = json['id'];
+    id = json['_id'];
     title = json['title'];
   }
 
@@ -322,7 +379,7 @@ class JnvRegions {
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['id'] = id;
+    map['_id'] = id;
     map['title'] = title;
     return map;
   }
@@ -334,13 +391,14 @@ class Occupations {
   bool? isSeparator;
   String? id;
   String? title;
-  String? area;
+  String? type;
 
-  Occupations({this.isSeparator, this.id, this.title, this.area});
+  Occupations({this.isSeparator, this.id, this.title, this.type});
 
-  Occupations.fromJson(dynamic json, this.isSeparator, this.area) {
-    id = json['id'];
+  Occupations.fromJson(dynamic json, this.isSeparator) {
+    id = json['_id'];
     title = json['title'];
+    type = json['type'];
   }
 
   @override
@@ -359,10 +417,11 @@ class Qualifications {
 
   Qualifications({this.isSeparator, this.area, this.id, this.shortName, this.title});
 
-  Qualifications.fromJson(dynamic json, this.isSeparator, this.area) {
-    id = json['id'];
+  Qualifications.fromJson(dynamic json, this.isSeparator) {
+    id = json['_id'];
     title = json['title'];
     shortName = json['shortname'];
+    area = json['area'];
   }
 
   @override
